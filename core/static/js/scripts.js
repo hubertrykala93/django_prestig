@@ -69,7 +69,7 @@ if ($mobileNavToggler && $headerNav) {
 /**
 * HOME PAGE
 */
-const swiper = new Swiper('.js-slider', {
+const slider = new Swiper('.js-slider', {
     loop: true,
     draggable: true,
     grabCursor: true,
@@ -84,3 +84,19 @@ const swiper = new Swiper('.js-slider', {
       clickable: true,
     },
   });
+
+const testimonials = new Swiper('.js-testimonials-slider', {
+loop: true,
+draggable: true,
+grabCursor: true,
+effect: 'slide',
+autoplay: {
+    delay: 5000,
+},
+speed: 1000,
+
+navigation: {
+    nextEl: '.js-arrow-right',
+    prevEl: '.js-arrow-left',
+  },
+});

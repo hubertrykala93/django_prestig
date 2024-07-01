@@ -18,7 +18,7 @@
 
   --fs-300: .875rem; /* 14px */
   --fs-400: 1rem;    /* 16px */
-  --fs-500: 1.25rem; /* 20px */
+  --fs-500: 1.1875rem; /* 19px */
   --fs-600: 1.5rem; /* 24px */
   --fs-700: 1.875rem; /* 30px */
   --fs-800: 1.875rem; /* 30px */
@@ -89,7 +89,7 @@ body {
 }
 
 .container--narrow {
-  max-width: var(--container-400) - calc(--container-side-space * 2);
+  max-width: calc(var(--container-400) + var(--container-side-space) * 2);
 }
 
 .visually-hidden {
@@ -168,6 +168,51 @@ body {
 .btn--primary:hover,
 .btn--primary:focus-visible {
   background-color: var(--clr-accent-400);
+}
+
+/* TESTIMONIALS */
+.testimonials {
+  padding: 3.75rem 0;
+  background-color: var(--clr-gray-200);
+}
+
+.testimonials__heading {
+  text-align: center;
+}
+
+.testimonials__slider {
+  margin-top: 1.8125rem;
+}
+
+.testimonials__slider__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 54rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.testimonials__content {
+  font-size: var(--fs-500);
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+.testimonials__author {
+  margin-top: 2.6875rem;
+}
+
+.testimonials__author__image {
+  margin: 0 auto 1.25rem auto;
+  width: 3.75rem;
+  height: 3.75rem;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.testimonials__slider__arrow {
+  display: none;
 }
 
 
@@ -359,6 +404,39 @@ body {
   opacity: 1;
 }
 
+/* HOME ABOUT */
+.home-about {
+  padding: 3.75rem 0;
+}
+
+.home-about .row {
+  display: grid;
+  gap: var(--column-gap);
+}
+
+.home-about__text {
+  padding: 1.1875rem 0 2.75rem;
+}
+
+/* SIDE IMAGE */
+.side-image {
+  padding: 3.75rem 0;
+}
+
+.side-image .row {
+  display: grid;
+  gap: var(--column-gap);
+}
+
+.side-image__text {
+  padding: 1.1875rem 0 2.75rem;
+}
+
+.side-image__image img {
+  width: 100%;
+  object-fit: cover;
+}
+
 
 /**
 * BREAKPOINTS
@@ -392,10 +470,45 @@ body {
     --fs-500: 1.3125rem; /* 21px */
     --fs-600: 1.75rem; /* 28px */
     --fs-700: 2.3125rem; /* 37px */
-    --fs-800: 3.125rem; /* 50px */
-    --fs-900: 3.4375rem; /* 55px */
+    --fs-800: 2.6875rem; /* 43px */
+    --fs-900: 3rem; /* 48px */
 
     --container-side-space: 4.6em;
+  }
+
+  /**
+  * COMPONENTS
+  */
+
+  /* TESTIMONIALS */
+  .testimonials {
+    padding: 7.5rem 4.6875rem;
+  }
+
+  .testimonials__slider__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: block;
+    cursor: pointer;
+    font-size: 2rem;
+    color: var(--clr-accent-400);
+    z-index: 2;
+    outline: none;
+    transition: color .3s;
+  }
+
+  .testimonials__slider__arrow:hover,
+  .testimonials__slider__arrow:focus-visible {
+    color: var(--clr-black);
+  }
+
+  .testimonials__slider__arrow--left {
+    left: 0;
+  }
+
+  .testimonials__slider__arrow--right {
+    right: 0;
   }
 
   /**
@@ -470,9 +583,61 @@ body {
   .categories .row {
     grid-template-columns: repeat(3, 1fr);
   }
+
+  /* HOME ABOUT */
+  .home-about {
+    padding: 8.75rem 0 7rem;
+  }
+
+  .home-about .row {
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+  }
+
+  .home-about__text {
+    max-width: 35rem;
+  }
+
+  .home-about__image {
+    order: -1;
+  }
+
+  /* SIDE IMAGE */
+  .side-image {
+    padding: 7.5rem 0;
+  }
+
+  .side-image .row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .side-image__content {
+    padding: 7rem 0;
+  }
+
+  .side-image__text {
+    max-width: 35rem;
+  }
+
+  .side-image__image {
+    margin-right: calc(var(--container-side-space) * -1);
+  }
+
+  .side-image__image img {
+    height: 100%;
+  }
 }
 
 @media screen and (min-width: 1200px) {
+  /**
+  * VARIABLES
+  */
+  :root {
+    --fs-800: 3.125rem; /* 50px */
+    --fs-900: 3.4375rem; /* 55px */
+
+    --container-side-space: 4.6em;
+  }
 
   /**
   * HOME PAGE
@@ -481,6 +646,19 @@ body {
   /* SLIDER */
   .slider__item {
     grid-template-columns: 40% auto;
+  }
+
+  /* SIDE IMAGE */
+  .side-image .row {
+    grid-template-columns: 7fr 5fr;
+  }
+
+  .side-image__content {
+    padding: 9.5rem 0;
+  }
+
+  .side-image__image {
+    margin-right: -10rem;
   }
 }
 
@@ -499,5 +677,10 @@ body {
   /* CATEGORIES */
   .categories__block {
     height: 28rem;
+  }
+
+  /* SIDE IMAGE */
+  .side-image__image {
+    margin-right: calc((100vw - var(--container-400)) / 2 * -1);
   }
 }
