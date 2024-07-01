@@ -1,7 +1,53 @@
 <header class="header">
   <div class="container">
     <div class="row">
-      <a href="#" class="header__logo heading heading--h4">Prestig.</a>
+      <a href="/" class="header__logo heading heading--h4" aria-label="Back to home">Prestig.</a>
+
+      <nav class="header__nav js-header-nav" aria-label="Main" id="main-navigation">
+        <ul role="list">
+          <li>
+            <a class="active" href="/">Home</a>
+          </li>
+
+          <li>
+            <a href="#">Shop</a>
+          </li>
+
+          <li>
+            <a href="#">Product</a>
+          </li>
+
+          <li>
+            <a href="#">Blog</a>
+          </li>
+
+          <li>
+            <a href="#">Contact</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="header__buttons">
+        <button class="mobile-nav-toggler js-mobile-nav-toggler" aria-controls="main-navigation" aria-expanded="false">
+          <span class="visually-hidden">Menu</span>
+          <i class="ri-menu-3-line" aria-hidden="true"></i>
+        </button>
+
+        <button>
+          <span class="visually-hidden">Search products</span>
+          <i class="ri-search-line" aria-hidden="true"></i>
+        </button>
+
+        <button>
+          <span class="visually-hidden">User menu</span>
+          <i class="ri-user-3-line" aria-hidden="true"></i>
+        </button>
+
+        <button>
+          <span class="visually-hidden">Shopping cart</span>
+          <i class="ri-shopping-cart-line" aria-hidden="true"></i>
+        </button>
+      </div>
     </div>
   </div>
 </header>

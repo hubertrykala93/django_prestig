@@ -1,26 +1,86 @@
-const $form = document.querySelector('form')
+// const $form = document.querySelector('form')
 
-const sendData = (data) => {
-    const url = 'send-file'
-    fetch(url, {
-       method:'POST',
-       headers:{
-//        'X-CSRFToken':csrftoken,
-       },
-       body: data
-      })
-      .then((response) => {
-         return response.json()
-      })
-      .then((data) => {
-          console.log('data:',data)
-      });
+// const sendData = (data) => {
+//     const url = 'send-file'
+//     fetch(url, {
+//        method:'POST',
+//        headers:{
+// //        'X-CSRFToken':csrftoken,
+//        },
+//        body: data
+//       })
+//       .then((response) => {
+//          return response.json()
+//       })
+//       .then((data) => {
+//           console.log('data:',data)
+//       });
+//     }
+
+// $form.addEventListener('submit', function (e) {
+//     e.preventDefault()
+
+//     let data = new FormData($form)
+//     console.log(data)
+//     sendData(data)
+// })
+
+/**
+* HEADER
+*/
+const $mobileNavToggler = document.querySelector('.js-mobile-nav-toggler')
+const $mobileNavTogglerIcon = document.querySelector('.js-mobile-nav-toggler i')
+const $headerNav = document.querySelector('.js-header-nav')
+
+/**
+ * Changes mobile nav toggler icon into hamburger
+ */
+const togglerHamburgerIcon = () => {
+    $mobileNavTogglerIcon.classList.remove('ri-close-line')
+    $mobileNavTogglerIcon.classList.add('ri-menu-3-line')
+}
+
+/**
+ * Changes mobile nav toggler icon into closing
+ */
+const togglerCloseIcon = () => {
+    $mobileNavTogglerIcon.classList.remove('ri-menu-3-line')
+    $mobileNavTogglerIcon.classList.add('ri-close-line')
+}
+
+/**
+ * Show and hide mobile version of main navigation
+ */
+const mobileMenuToggle = () => {
+    if ($headerNav.classList.contains('active')) {
+        $mobileNavToggler.setAttribute('aria-expanded', "false")
+        togglerHamburgerIcon()
+    } else {
+        $mobileNavToggler.setAttribute('aria-expanded', "true")
+        togglerCloseIcon()
     }
+    $headerNav.classList.toggle('active')
+}
 
-$form.addEventListener('submit', function (e) {
-    e.preventDefault()
+if ($mobileNavToggler && $headerNav) {
+    $mobileNavToggler.addEventListener('click', mobileMenuToggle)
+}
 
-    let data = new FormData($form)
-    console.log(data)
-    sendData(data)
-})
+/**
+* HOME PAGE
+*/
+const swiper = new Swiper('.js-slider', {
+    loop: true,
+    draggable: true,
+    grabCursor: true,
+    effect: 'slide',
+    autoplay: {
+        delay: 5000,
+    },
+    speed: 1500,
+
+    pagination: {
+      el: '.js-slider-pagination',
+      clickable: true,
+    },
+  });
