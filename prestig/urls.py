@@ -18,10 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from prestig.settings import development as development_settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path(route='', view=include(arg="core.urls")),
 ]
 
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(prefix=settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(prefix=development_settings.MEDIA_URL, document_root=development_settings.MEDIA_ROOT)
