@@ -387,7 +387,6 @@ body {
 
 .featured-icons .row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
   gap: var(--column-gap);
 }
 
@@ -399,6 +398,7 @@ body {
 
 .featured-icons__block__icon {
   display: flex;
+  flex: 0 0 3.125rem;
   margin-right: 1.25rem;
 }
 
@@ -460,6 +460,10 @@ body {
   padding: 3.75rem 0;
 }
 
+.logos img {
+  margin: 0 auto;
+}
+
 /* SIDE IMAGE */
 .side-image {
   padding: 3.75rem 0;
@@ -495,6 +499,11 @@ body {
   /**
   * HOME PAGE
   */
+
+  /* FEATURED ICONS */
+  .featured-icons .row {
+    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  }
 
   /* CATEGORIES */
   .categories__block {
