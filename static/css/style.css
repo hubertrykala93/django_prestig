@@ -171,6 +171,16 @@ body {
   background-color: var(--clr-accent-400);
 }
 
+.btn--accent {
+  background-color: var(--clr-accent-400);
+  color: var(--clr-white);
+}
+
+.btn--accent:hover,
+.btn--accent:focus-visible {
+  background-color: var(--clr-black);
+}
+
 /* TESTIMONIALS */
 .testimonials {
   padding: 3.75rem 0;
@@ -252,6 +262,126 @@ body {
   transition: filter .4s;
 }
 
+/* SWIPER ROUND ARROW */
+.swiper-round-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.8125rem;
+  height: 2.8125rem;
+  border: 1px solid var(--clr-gray-400);
+  border-radius: 50%;
+  color: #323232;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: background-color .3s, color .3s;
+}
+
+.swiper-round-arrow:hover,
+.swiper-round-arrow:focus-visible {
+  background-color: var(--clr-accent-400);
+  color: white;
+}
+
+.swiper-round-arrow[aria-disabled="true"] {
+  opacity: .4;
+  background-color: transparent !important;
+  color: #323232;
+  cursor: default;
+}
+
+/* PRODUCT CARD */
+.product-card__top {
+  position: relative;
+  padding: 1.4rem;
+  height: 25rem;
+}
+
+.product-card__top__image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  object-fit: cover;
+}
+
+.product-card__top__elements {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.product-card__top__elements__buttons,
+.product-card__add-to-cart {
+  position: absolute;
+  transition: all .4s;
+}
+
+.product-card__top__elements__buttons {
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  right: 0;
+  transform: translateX(100%);
+  transition-delay: .3s;
+}
+
+.product-card__top__elements__buttons__btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.6875rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: var(--clr-accent-400);
+  color: var(--clr-white);
+  font-size: 1rem;
+  border-radius: 50%;
+  transition: background-color .3s;
+}
+
+.product-card__top__elements__buttons__btn:hover,
+.product-card__top__elements__buttons__btn:focus-visible {
+  background-color: var(--clr-black);
+}
+
+.product-card__add-to-cart {
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  justify-content: center;
+  transform: translateY(100%);
+}
+
+.product-card__top:hover .product-card__add-to-cart {
+  transform: translateY(0);
+}
+
+.product-card__top:hover .product-card__top__elements__buttons{
+  transform: translateX(0);
+}
+
+.product-card__bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1.625rem;
+  text-align: center;
+}
+
+.product-card__title:hover,
+.product-card__title:focus-visible {
+  color: var(--clr-accent-400);
+}
+
+.product-card__price {
+  margin-top: .4rem;
+  font-weight: 500;
+  color: var(--clr-accent-400);
+}
 
 /**
 * HEADER
@@ -483,6 +613,21 @@ body {
   object-fit: cover;
 }
 
+/* NEW ITEMS & TOP SELLING PRODUCTS */
+.top-products__heading-row,
+.new-products__heading-row {
+  margin-bottom: 2em;
+}
+
+.top-products__arrows,
+.new-products__arrows {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: start;
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
 /**
 * FOOTER
 */
@@ -615,6 +760,18 @@ body {
     height: 25rem;
   }
 
+  /* NEW ITEMS & TOP SELLING PRODUCTS */
+  .top-products__heading-row,
+  .new-products__heading-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .top-products__arrows {
+    margin-top: 0;
+  }
+
   /**
   * FOOTER
   */
@@ -672,6 +829,12 @@ body {
 
   .testimonials__slider__arrow--right {
     right: 0;
+  }
+
+  /* PRODUCT CARD */
+  .product-card__top {
+    padding: 1.875rem;
+    height: 30rem;
   }
 
   /**
@@ -795,6 +958,12 @@ body {
     height: 100%;
   }
 
+  /* NEW ITEMS & TOP SELLING PRODUCTS */
+  .top-products__heading-row,
+  .new-products__heading-row {
+    margin-bottom: 4em;
+  }
+
   /**
   * FOOTER
   */
@@ -823,6 +992,15 @@ body {
     --fs-900: 3.4375rem; /* 55px */
 
     --container-side-space: 4.6em;
+  }
+
+  /**
+  * COMPONENTS
+  */
+
+  /* PRODUCT CARD */
+  .product-card__top {
+    height: 34rem;
   }
 
   /**

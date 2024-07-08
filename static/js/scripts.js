@@ -83,7 +83,73 @@ const slider = new Swiper('.js-slider', {
       el: '.js-slider-pagination',
       clickable: true,
     },
-  });
+});
+
+const $topProductsSection = document.querySelector('.js-top-products')
+
+if ($topProductsSection) {
+    const $leftArrow = $topProductsSection.querySelector('.js-arrow-left')
+    const $rightArrow = $topProductsSection.querySelector('.js-arrow-right')
+
+    const topProductsCarousel = new Swiper('.js-top-products-carousel', {
+        draggable: true,
+        grabCursor: true,
+        effect: 'slide',
+        autoplay: {
+            delay: 5000,
+        },
+        speed: 1000,
+        navigation: {
+            nextEl: $rightArrow,
+            prevEl: $leftArrow,
+        },
+        spaceBetween: 30,
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+            },
+            992: {
+                slidesPerView: 3,
+            },
+            1200: {
+                slidesPerView: 4,
+            }
+        }
+    });
+}
+
+const $newProductsSection = document.querySelector('.js-new-products')
+
+if ($newProductsSection) {
+    const $leftArrow = $newProductsSection.querySelector('.js-arrow-left')
+    const $rightArrow = $newProductsSection.querySelector('.js-arrow-right')
+
+    const newProductsCarousel = new Swiper('.js-new-products-carousel', {
+        draggable: true,
+        grabCursor: true,
+        effect: 'slide',
+        autoplay: {
+            delay: 5000,
+        },
+        speed: 1000,
+        navigation: {
+            nextEl: $rightArrow,
+            prevEl: $leftArrow,
+        },
+        spaceBetween: 30,
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+            },
+            992: {
+                slidesPerView: 3,
+            },
+            1200: {
+                slidesPerView: 4,
+            }
+        }
+    });
+}
 
 const testimonials = new Swiper('.js-testimonials-slider', {
 loop: true,
