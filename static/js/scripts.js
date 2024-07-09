@@ -218,3 +218,44 @@ const bottomGallery = new Swiper('.js-bottom-gallery-carousel', {
         }
     }
 });
+
+// FEATURED PRODUCTS TABS
+const $featuredProducts = document.querySelector('.js-featured-products')
+
+/**
+ * Show and hide chosen category rows
+ * @param {string} category - Name of category to show
+ */
+const toggleTabsContents = (category) => {
+    $rows = $featuredProducts.querySelectorAll('.js-featured-products-row')
+    
+    $rows.forEach(row => {
+        if (row.dataset.category === category) {
+            row.classList.add('active')
+        } else {
+            row.classList.remove('active')
+        }
+    })
+}
+
+/**
+ * Handles tabs navigation click event
+ */
+const handleNav = (e) => {
+    const $target = e.target
+    if ($target.tagName !== 'BUTTON') { return false }
+    const $navItems = $featuredProducts.querySelectorAll('.js-featured-products-nav-item')
+    $navItems.forEach(btn => btn.classList.remove('active'))
+    $target.classList.add('active')
+    
+    const category = $target.dataset.category
+    toggleTabsContents(category)
+}
+
+if ($featuredProducts) {
+    const $nav = $featuredProducts.querySelector('.js-featured-products-nav')
+
+    $nav.addEventListener('click', (e) => {
+        handleNav(e)
+    })
+}

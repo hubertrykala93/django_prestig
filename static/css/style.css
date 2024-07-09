@@ -638,6 +638,10 @@ body {
   color: var(--clr-black);
 }
 
+.featured__nav__btn.active {
+  font-weight: 700;
+}
+
 .featured__products {
   padding-top: 3.125rem;
 }
