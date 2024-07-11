@@ -1,3 +1,14 @@
 from django.db import models
+from django.utils.timezone import now
 
-# Create your models here.
+
+class Newsletter(models.Model):
+    created_at = models.DateTimeField(default=now)
+    email = models.EmailField(max_length=100)
+
+    class Meta:
+        verbose_name = "Newsletter"
+        verbose_name_plural = "Newsletters"
+
+    def __str__(self):
+        return f"{self.email}"
