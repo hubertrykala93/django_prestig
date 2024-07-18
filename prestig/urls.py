@@ -22,7 +22,8 @@ from prestig.settings import development as development_settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path(route='', view=include(arg="core.urls")),
+    path(route="", view=include(arg="core.urls")),
+    path(route="", view=include(arg="core.api.urls")),
 ]
 
 if settings.DEBUG:
