@@ -1,3 +1,4 @@
 Hubert:
+1. W przypadku update lub delete obiektu Newslettera w API, jeśli właściciel usuwa lub updaetuje swoj obiekt jest błąd "CSRF Failed: CSRF token missing."
 
 Szymon:

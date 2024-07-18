@@ -5,14 +5,26 @@ from .serializers import NewsletterSerializer, NewsletterCreateSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from datetime import datetime
+from rest_framework.filters import OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from .permissions import CustomNewsletterPermission
 
 
 class NewsletterAPIView(ListAPIView):
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    ordering_fields = ["created_at", "email"]
+
+    def get_view_name(self):
+        return "API Newsletters"
+
     def get_queryset(self):
         return Newsletter.objects.all()
 
     def get_serializer_class(self):
         return NewsletterSerializer
+
+    def get_permissions(self):
+        return [CustomNewsletterPermission()]
 
 
 class NewsletterRetrieveAPIView(RetrieveAPIView):
@@ -22,10 +34,16 @@ class NewsletterRetrieveAPIView(RetrieveAPIView):
     def get_serializer_class(self):
         return NewsletterSerializer
 
+    def get_permissions(self):
+        return [CustomNewsletterPermission()]
+
 
 class NewsletterCreateAPIView(CreateAPIView):
     def get_serializer_class(self):
         return NewsletterCreateSerializer
+
+    def get_permissions(self):
+        return [CustomNewsletterPermission()]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -55,6 +73,9 @@ class NewsletterUpdateAPIView(RetrieveUpdateAPIView):
 
     def get_serializer_class(self):
         return NewsletterCreateSerializer
+
+    def get_permissions(self):
+        return [CustomNewsletterPermission()]
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -87,7 +108,11 @@ class NewsletterDeleteAPIView(RetrieveDestroyAPIView):
     def get_serializer_class(self):
         return NewsletterSerializer
 
+    # def get_permissions(self):
+    #     return [CustomNewsletterPermission()]
+
     def delete(self, request, *args, **kwargs):
+        print(self.headers)
         instance = self.get_object()
         id, created_at, email = instance.id, instance.created_at, instance.email
 
