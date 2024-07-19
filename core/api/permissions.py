@@ -1,45 +1,49 @@
-from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import BasePermission
-from rest_framework.generics import ListAPIView, RetrieveAPIView, RetrieveUpdateAPIView, RetrieveDestroyAPIView, \
-    CreateAPIView
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, RetrieveUpdateAPIView, \
+    RetrieveDestroyAPIView
 
 
-class CustomNewsletterPermission(BasePermission):
+class NewsletterCustomPermission(BasePermission):
     def has_permission(self, request, view):
-        if isinstance(view, ListAPIView):
-            return True
-
-        if isinstance(view, RetrieveAPIView):
-            return True
-
-        if request.user and request.user.is_staff:
+        if isinstance(view, (ListAPIView, RetrieveAPIView)):
             return True
 
         if isinstance(view, CreateAPIView):
-            raise PermissionDenied(
-                detail="To perform this action, you must be an administrator.",
-            )
-
-        if request.user and request.user.is_authenticated:
-            if isinstance(view, (RetrieveUpdateAPIView, RetrieveDestroyAPIView)):
+            if request.user.is_authenticated and request.user.is_staff:
                 return True
 
-        return False
+            else:
+                raise PermissionDenied(
+                    detail="To perform this action, you must be an administrator.",
+                )
+
+        if isinstance(view, (RetrieveUpdateAPIView, RetrieveDestroyAPIView)):
+            if request.user.is_authenticated or request.user.is_staff:
+                return True
+
+            else:
+                raise PermissionDenied(
+                    detail="To perform this action, you need to be the owner of this object or an administrator.",
+                )
+
+        raise PermissionDenied(
+            detail="To perform this action, you must be an administrator.",
+        )
 
     def has_object_permission(self, request, view, obj):
-        if isinstance(view, RetrieveAPIView):
+        if request.user.is_authenticated and request.user.is_staff:
             return True
 
-        if request.user and request.user.is_staff:
-            return True
+        if request.user.is_authenticated:
+            if obj.email == request.user.email:
+                return True
 
-        if request.user and request.user.is_authenticated:
-            if isinstance(view, (RetrieveUpdateAPIView, RetrieveDestroyAPIView)):
-                if obj.email == request.user.email:
-                    return obj.email == request.user.email
-                else:
-                    raise PermissionDenied(
-                        detail="To perform this action, you need to be the owner of this object or an administrator.",
-                    )
+            else:
+                raise PermissionDenied(
+                    detail="To perform this action, you need to be the owner of this object or an administrator."
+                )
 
-        return False
+        raise PermissionDenied(
+            detail="To perform this action, you need to be the owner of this object or an administrator.",
+        )

@@ -7,7 +7,9 @@ from rest_framework import status
 from datetime import datetime
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from .permissions import CustomNewsletterPermission
+from django.http import Http404
+from rest_framework.exceptions import ValidationError
+from .permissions import NewsletterCustomPermission
 
 
 class NewsletterAPIView(ListAPIView):
@@ -23,27 +25,27 @@ class NewsletterAPIView(ListAPIView):
     def get_serializer_class(self):
         return NewsletterSerializer
 
-    def get_permissions(self):
-        return [CustomNewsletterPermission()]
-
 
 class NewsletterRetrieveAPIView(RetrieveAPIView):
+    def get_view_name(self):
+        return "Newsletter Details"
+
     def get_queryset(self):
         return Newsletter.objects.all()
 
     def get_serializer_class(self):
         return NewsletterSerializer
 
-    def get_permissions(self):
-        return [CustomNewsletterPermission()]
-
 
 class NewsletterCreateAPIView(CreateAPIView):
+    def get_view_name(self):
+        return "Newsletter Create"
+
     def get_serializer_class(self):
         return NewsletterCreateSerializer
 
     def get_permissions(self):
-        return [CustomNewsletterPermission()]
+        return [NewsletterCustomPermission()]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -68,6 +70,9 @@ class NewsletterCreateAPIView(CreateAPIView):
 
 
 class NewsletterUpdateAPIView(RetrieveUpdateAPIView):
+    def get_view_name(self):
+        return "Newsletter Update"
+
     def get_queryset(self):
         return Newsletter.objects.all()
 
@@ -75,10 +80,12 @@ class NewsletterUpdateAPIView(RetrieveUpdateAPIView):
         return NewsletterCreateSerializer
 
     def get_permissions(self):
-        return [CustomNewsletterPermission()]
+        return [NewsletterCustomPermission()]
 
     def update(self, request, *args, **kwargs):
+        print(request)
         instance = self.get_object()
+        email = instance.email
         serializer = self.get_serializer(data=request.data, instance=instance)
 
         if serializer.is_valid():
@@ -86,7 +93,7 @@ class NewsletterUpdateAPIView(RetrieveUpdateAPIView):
 
             return Response(
                 data={
-                    "message": "The newsletter has been updated successfully.",
+                    "message": f"The newsletter {email} has been successfully updated to {serializer.data.get('email')}.",
                     "data": serializer.data,
                     "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     "updated_by": self.request.user.username,
@@ -100,19 +107,38 @@ class NewsletterUpdateAPIView(RetrieveUpdateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+    def handle_exception(self, exc):
+        if isinstance(exc, Http404):
+            return Response(
+                data={
+                    "message": "Newsletter not found.",
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        elif isinstance(exc, ValidationError):
+            return Response(
+                data=exc.detail,
+                status=exc.status_code,
+            )
+
+        return super().handle_exception(exc)
+
 
 class NewsletterDeleteAPIView(RetrieveDestroyAPIView):
+    def get_view_name(self):
+        return "Newsletter Delete"
+
     def get_queryset(self):
         return Newsletter.objects.all()
 
     def get_serializer_class(self):
         return NewsletterSerializer
 
-    # def get_permissions(self):
-    #     return [CustomNewsletterPermission()]
+    def get_permissions(self):
+        return [NewsletterCustomPermission()]
 
     def delete(self, request, *args, **kwargs):
-        print(self.headers)
         instance = self.get_object()
         id, created_at, email = instance.id, instance.created_at, instance.email
 
@@ -140,3 +166,20 @@ class NewsletterDeleteAPIView(RetrieveDestroyAPIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+    def handle_exception(self, exc):
+        if isinstance(exc, Http404):
+            return Response(
+                data={
+                    "message": "Newsletter not found.",
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        elif isinstance(exc, ValidationError):
+            return Response(
+                data=exc.detail,
+                status=exc.status_code,
+            )
+
+        return super().handle_exception(exc)
