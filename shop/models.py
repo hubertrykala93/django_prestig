@@ -46,7 +46,7 @@ class ProductCategory(models.Model):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(unique=True)
     image = models.ImageField(upload_to='shop/categories')
-    subcategory = models.ForeignKey(to=ProductSubCategory, on_delete=models.CASCADE, null=True)
+    subcategory = models.ManyToManyField(to=ProductSubCategory)
     is_active = models.BooleanField(default=True)
 
     class Meta:

@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_filters",
     "core",
+    "accounts",
     "shop",
 ]
 
@@ -40,6 +41,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+AUTH_USER_MODEL = "accounts.User"
 
 ROOT_URLCONF = "prestig.urls"
 

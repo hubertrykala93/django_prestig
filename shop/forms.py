@@ -13,16 +13,11 @@ from .models import (
 
 
 class BrandForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(BrandForm, self).__init__(*args, **kwargs)
-
-        self.fields["name"].help_text = "Provide the brand name."
-        self.fields["description"].help_text = "Provide a brief description of the brand."
-        self.fields["logo"].help_text = "Upload the brand logo."
-
-        self.fields["name"].label = "Brand Name"
-        self.fields["description"].label = "Brand Description"
-        self.fields["logo"].label = "Brand Logo"
+    name = forms.CharField(help_text="Provide the brand name.", label="Brand Name")
+    slug = forms.SlugField(help_text="It will be created automatically.")
+    description = forms.CharField(max_length=10000, help_text="Provide a brief description of the brand.",
+                                  label="Brand Description")
+    logo = forms.ImageField(help_text="Upload the brand logo.", label="Brand Logo")
 
     class Meta:
         model = Brand
@@ -30,12 +25,8 @@ class BrandForm(forms.ModelForm):
 
 
 class ProductTagsForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(ProductTagsForm, self).__init__(*args, **kwargs)
-
-        self.fields["name"].help_text = "Provide the tag name."
-
-        self.fields["name"].label = "Tag Name"
+    name = forms.CharField(help_text="Provide the tag name.", label="Tag Name")
+    slug = forms.SlugField(help_text="It will be created automatically.")
 
     class Meta:
         model = ProductTags
@@ -43,16 +34,14 @@ class ProductTagsForm(forms.ModelForm):
 
 
 class ProductCategoryForm(forms.ModelForm):
+    name = forms.CharField(help_text="Provide the category name.", label="Category Name")
+    image = forms.ImageField(help_text="Upload an image for this category.", label="Category Image")
+    is_active = forms.BooleanField(help_text="Indicate whether the category is active.")
+
     def __init__(self, *args, **kwargs):
         super(ProductCategoryForm, self).__init__(*args, **kwargs)
 
-        self.fields["name"].help_text = "Provide the category name."
-        self.fields["image"].help_text = "Upload an image for this category."
         self.fields["subcategory"].help_text = "Add a subcategory for this category."
-        self.fields["is_active"].help_text = "Indicate whether the category is active."
-
-        self.fields["name"].label = "Category Name"
-        self.fields["image"].label = "Category Image"
         self.fields["subcategory"].label = "Subcategory"
 
     class Meta:
@@ -61,14 +50,9 @@ class ProductCategoryForm(forms.ModelForm):
 
 
 class ProductSubCategoryForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(ProductSubCategoryForm, self).__init__(*args, **kwargs)
-
-        self.fields["name"].help_text = "Provide the subcategory name."
-        self.fields["image"].help_text = "Upload an image for this subcategory."
-
-        self.fields["name"].label = "Subcategory Name"
-        self.fields["image"].label = "Subcategory Image"
+    name = forms.CharField(help_text="Provide the subcategory name.", label="Subcategory Name")
+    slug = forms.SlugField(help_text="It will be created automatically.")
+    image = forms.ImageField(help_text="Upload an image for this subcategory.", label="Subcategory Image")
 
     class Meta:
         model = ProductSubCategory
@@ -76,12 +60,7 @@ class ProductSubCategoryForm(forms.ModelForm):
 
 
 class SizeForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(SizeForm, self).__init__(*args, **kwargs)
-
-        self.fields["size"].help_text = "Provide the size."
-
-        self.fields["size"].label = "Product Size"
+    size = forms.CharField(help_text="Provide the size.", label="Product Size")
 
     class Meta:
         model = Size
@@ -89,14 +68,8 @@ class SizeForm(forms.ModelForm):
 
 
 class ColorForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(ColorForm, self).__init__(*args, **kwargs)
-
-        self.fields["color"].help_text = "Provide the color."
-        self.fields["hex"].help_text = "Provide the hex."
-
-        self.fields["color"].label = "Product Color"
-        self.fields["hex"].label = "Color Hex"
+    color = forms.CharField(help_text="Provide the color.", label="Product Color")
+    hex = forms.CharField(help_text="Provide the hex.", label="Color Hex")
 
     class Meta:
         model = Color
@@ -104,10 +77,7 @@ class ColorForm(forms.ModelForm):
 
 
 class ProductGalleryForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(ProductGalleryForm, self).__init__(*args, **kwargs)
-
-        self.fields["image"].help_text = "Upload an image for product."
+    image = forms.ImageField(help_text="Upload an image for product.", label="Product Image")
 
     class Meta:
         model = ProductGallery
@@ -115,14 +85,14 @@ class ProductGalleryForm(forms.ModelForm):
 
 
 class StockForm(forms.ModelForm):
+    quantity = forms.IntegerField(help_text="Provide the quantity of the product.", label="Product Quantity")
+
     def __init__(self, *args, **kwargs):
         super(StockForm, self).__init__(*args, **kwargs)
 
-        self.fields["quantity"].help_text = "Provide the quantity of the product."
         self.fields["color"].help_text = "Provide the color of the product."
         self.fields["size"].help_text = "Provide the size of the product."
 
-        self.fields["quantity"].label = "Product Quantity"
         self.fields["color"].label = "Product Color"
         self.fields["size"].label = "Product Size"
 
@@ -132,29 +102,29 @@ class StockForm(forms.ModelForm):
 
 
 class ProductForm(forms.ModelForm):
+    name = forms.CharField(help_text="Provide the product name.", label="Product Name")
+    slug = forms.SlugField(help_text="It will be created automatically.")
+    short_description = forms.CharField(help_text="Provide a short description of the product.",
+                                        label="Product Short Description")
+    price = forms.FloatField(help_text="Provide the product price.", label="Product Price")
+    thumbnail = forms.ImageField(help_text="Upload a product thumbnail.", label="Product Thumbnail")
+    full_description = forms.CharField(max_length=100000, help_text="Provide a full description of the product.",
+                                       label="Product Full Description")
+    is_active = forms.BooleanField(help_text="Indicate if the product is active for sale.")
+    is_featured = forms.BooleanField(help_text="Indicate if you want to feature the product.")
+
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
 
         self.fields["brand"].help_text = "Provide or select the product brand."
         self.fields["category"].help_text = "Select the product category."
-        self.fields["name"].help_text = "Provide the product name."
-        self.fields["short_description"].help_text = "Provide a short description of the product."
-        self.fields["price"].help_text = "Provide the product price."
         self.fields["quantity"].help_text = "Provide the quantity, and select the color and size of the product."
-        self.fields["thumbnail"].help_text = "Upload a product thumbnail."
         self.fields["gallery"].help_text = "Upload a product image gallery or select images from the gallery."
         self.fields["tags"].help_text = "Provide or select the product tag(s)."
-        self.fields["full_description"].help_text = "Provide a full description of the product."
-        self.fields["is_active"].help_text = "Indicate if the product is active for sale."
-        self.fields["is_featured"].help_text = "Indicate if you want to feature the product."
 
         self.fields["brand"].label = "Product Brand"
         self.fields["category"].label = "Product Category"
-        self.fields["name"].label = "Product Name"
-        self.fields["short_description"].label = "Product Short Description"
-        self.fields["price"].label = "Product Price"
         self.fields["quantity"].label = "Product Quantity, Size and Color"
-        self.fields["thumbnail"].label = "Product Thumbnail"
         self.fields["gallery"].label = "Product Gallery"
         self.fields["tags"].label = "Product Tags"
         self.fields["full_description"].label = "Product Full Description"
