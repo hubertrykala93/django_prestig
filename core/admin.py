@@ -1,6 +1,9 @@
 from django.contrib import admin
 from .forms import NewsletterForm
 from .models import Newsletter
+from django.contrib.auth.models import Group
+
+admin.site.unregister(Group)
 
 
 @admin.register(Newsletter)

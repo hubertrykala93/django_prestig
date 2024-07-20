@@ -1,12 +1,39 @@
 from rest_framework.response import Response
 from accounts.models import User
 from rest_framework import status
-from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, RetrieveUpdateAPIView, \
-    RetrieveDestroyAPIView
-from .serializers import UserSerializer
+from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
+from .serializers import UserRegisterSerializer, UserSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework.filters import OrderingFilter, SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
+
+
+class UserRegisterAPIView(CreateAPIView):
+    def get_view_name(self):
+        return "User Register"
+
+    def get_serializer_class(self):
+        return UserRegisterSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            self.perform_create(serializer=serializer)
+
+            return Response(
+                data={
+                    "message": f"The user {serializer.data['username']} has been registered successfully.",
+                    "data": serializer.data,
+                },
+                status=status.HTTP_201_CREATED,
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class UsersAPIView(ListAPIView):
