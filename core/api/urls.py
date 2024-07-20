@@ -3,8 +3,13 @@ from . import views
 
 urlpatterns = [
     path(
+        route="api/v1",
+        view=views.api_endpoints,
+        name="api-endpoints",
+    ),
+    path(
         route="api/v1/newsletters",
-        view=views.NewsletterAPIView.as_view(),
+        view=views.NewslettersAPIView.as_view(),
         name="api-v1-newsletters",
     ),
     path(

@@ -10,9 +10,104 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.http import Http404
 from rest_framework.exceptions import ValidationError
 from .permissions import NewsletterCustomPermission
+from rest_framework.decorators import api_view
 
 
-class NewsletterAPIView(ListAPIView):
+@api_view(http_method_names=["GET"])
+def api_endpoints(request):
+    response = {
+        "General": {
+            "Method": "GET",
+            "URL": "api/v1",
+            "Description": "Endpoints",
+        },
+        "Newsletters": [
+            {
+                "Method": "GET",
+                "URL": "api/v1/newsletters",
+                "Description": "Retrieve all newsletters.",
+            },
+            {
+                "Method": "GET",
+                "URL": "api/v1/newsletters?ordering=created_at",
+                "Description": "Sorts newsletters by created at using the chosen method (ascending, descending) and retrieves them.",
+            },
+            {
+                "Method": "GET",
+                "URL": "api/v1/newsletters?ordering=email",
+                "Description": "Sorts newsletters by email using the chosen method (ascending, descending) and retrieves them.",
+            },
+            {
+                "Method": "GET",
+                "URL": "api/v1/newsletters/<int:pk>",
+                "Description": "Retrieve newsletter with a specific ID."
+            },
+            {
+                "Method": "POST",
+                "URL": "api/v1/newsletters/create",
+                "Description": "Create a new newsletter.",
+            },
+            {
+                "Method": "PATCH/PUT",
+                "URL": "api/v1/newsletters/update/<int:pk>",
+                "Description": "Update newsletter with a specific ID.",
+            },
+            {
+                "Method": "DELETE",
+                "URL": "api/v1/newsletters/delete/<int:pk>",
+                "Description": "Deleting newsletter with a specific ID.",
+            },
+        ],
+        "Users": [
+            {
+                "Method": "GET",
+                "URL": "api/v1/users",
+                "Description": "Retrieve all users."
+            },
+            {
+                "Method": "GET",
+                "URL": "api/v1/users?search={keyword}",
+                "Description": "Search and retrieve articles by username or email using a keyword.",
+            },
+            {
+                "Method": "GET",
+                "URL": "api/v1/users?ordering=date_joined",
+                "Description": "Sorts users by date_joined using the chosen method (ascending, descending) and retrieves them.",
+            },
+            {
+                "Method": "GET",
+                "URL": "api/v1/users?ordering=username",
+                "Description": "Sorts users by username using the chosen method (ascending, descending) and retrieves them.",
+            },
+            {
+                "Method": "GET",
+                "URL": "api/v1/users?ordering=email",
+                "Description": "Sorts users by email using the chosen method (ascending, descending) and retrieves them.",
+            },
+            {
+                "Method": "GET",
+                "URL": "api/v1/users?ordering=is_verified",
+                "Description": "Sorts users by is_verified using the chosen method (ascending, descending) and retrieves them.",
+            },
+            {
+                "Method": "GET",
+                "URL": "api/v1/users/<int:pk>",
+                "Description": "Retrieve user with a specific ID.",
+            },
+            {
+                "Method": "GET",
+                "URL": "api/v1/users/<str:username",
+                "Description": "Retrieve user with a specific username.",
+            }
+        ],
+    }
+    return Response(
+        data=response,
+        status=status.HTTP_200_OK,
+    )
+
+
+class NewslettersAPIView(ListAPIView):
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     ordering_fields = ["created_at", "email"]
 
