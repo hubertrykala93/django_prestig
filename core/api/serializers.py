@@ -50,17 +50,13 @@ class NewsletterCreateSerializer(serializers.ModelSerializer):
             if email and re.match(pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)",
                                   string=email) and Newsletter.objects.filter(email=email).exists():
                 raise serializers.ValidationError(
-                    detail={
-                        "message": f"The newsletter {email} already exists.",
-                    },
+                    detail=f"The newsletter {email} already exists.",
                     code=status.HTTP_400_BAD_REQUEST,
                 )
         else:
             if self.instance.email != email and Newsletter.objects.filter(email=email).exists():
                 raise serializers.ValidationError(
-                    detail={
-                        "message": f"The newsletter {email} already exists.",
-                    },
+                    detail=f"The newsletter {email} already exists.",
                     code=status.HTTP_400_BAD_REQUEST,
                 )
 

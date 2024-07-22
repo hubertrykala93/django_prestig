@@ -151,15 +151,15 @@ class NewsletterCreateAPIView(CreateAPIView):
             return Response(
                 data={
                     "message": f"The newsletter {serializer.data['email']} has been created successfully.",
-                    "data": serializer.data,
-                    "created_by": self.request.user.username,
                 },
                 status=status.HTTP_201_CREATED,
             )
 
         else:
             return Response(
-                data=serializer.errors,
+                data={
+                    "message": list(serializer.errors.values())[0][0],
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
