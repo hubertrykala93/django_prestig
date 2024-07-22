@@ -4,6 +4,7 @@ import re
 from rest_framework.generics import CreateAPIView, GenericAPIView
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
+from rest_framework import status
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -57,10 +58,16 @@ class UserRegisterSerializer(serializers.ModelSerializer):
                 detail="The e-mail address format is invalid.",
             )
 
-        if isinstance(self.context.get("view"), CreateAPIView):
+        if self.context.get("view").__class__.__name__ == "UserRegisterAPIView":
             if User.objects.filter(email=email).exists():
                 raise serializers.ValidationError(
                     detail=f"A user with this e-mail address '{email}' already exists.",
+                )
+
+        if self.context.get("view").__class__.__name__ == "UserLoginAPIView":
+            if not User.objects.filter(email=email).exists():
+                raise serializers.ValidationError(
+                    detail=f"The user with the email address '{email}' does not exist.",
                 )
 
         return email
@@ -71,15 +78,23 @@ class UserRegisterSerializer(serializers.ModelSerializer):
                 detail="Password is required.",
             )
 
-        if len(password) < 8:
-            raise serializers.ValidationError(
-                detail="The password must be at least 8 characters long.",
-            )
+        if self.context.get("view").__class__.__name__ == "UserRegisterAPIView":
+            if len(password) < 8:
+                raise serializers.ValidationError(
+                    detail="The password must be at least 8 characters long.",
+                )
 
-        if not re.match(pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", string=password):
-            raise serializers.ValidationError(
-                detail="The password should contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
-            )
+            if not re.match(pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", string=password):
+                raise serializers.ValidationError(
+                    detail="The password should contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
+                )
+
+        if self.context.get("view").__class__.__name__ == "UserLoginAPIView":
+            if User.objects.filter(email=self.context.get("email")).exists():
+                if not User.objects.get(email=self.context.get("email")).check_password(raw_password=password):
+                    raise serializers.ValidationError(
+                        detail=f"Incorrect password for the user '{User.objects.get(email=self.context.get('email')).username}'.",
+                    )
 
         return password
 

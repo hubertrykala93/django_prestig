@@ -107,6 +107,9 @@ def api_endpoints(request):
     )
 
 
+from rest_framework.permissions import IsAuthenticated
+
+
 class NewslettersAPIView(ListAPIView):
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     ordering_fields = ["created_at", "email"]
@@ -133,14 +136,15 @@ class NewsletterRetrieveAPIView(RetrieveAPIView):
 
 
 class NewsletterCreateAPIView(CreateAPIView):
+    permission_classes = [IsAuthenticated]
     def get_view_name(self):
         return "Newsletter Create"
 
     def get_serializer_class(self):
         return NewsletterCreateSerializer
 
-    def get_permissions(self):
-        return [NewsletterCustomPermission()]
+    # def get_permissions(self):
+    #     return [NewsletterCustomPermission()]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
