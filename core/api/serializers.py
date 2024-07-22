@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from core.models import Newsletter
 import re
+from rest_framework import status
 
 
 class NewsletterSerializer(serializers.ModelSerializer):
@@ -49,12 +50,18 @@ class NewsletterCreateSerializer(serializers.ModelSerializer):
             if email and re.match(pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)",
                                   string=email) and Newsletter.objects.filter(email=email).exists():
                 raise serializers.ValidationError(
-                    detail="The newsletter already exists.",
+                    detail={
+                        "message": f"The newsletter {email} already exists.",
+                    },
+                    code=status.HTTP_400_BAD_REQUEST,
                 )
         else:
             if self.instance.email != email and Newsletter.objects.filter(email=email).exists():
                 raise serializers.ValidationError(
-                    detail="The newsletter already exists.",
+                    detail={
+                        "message": f"The newsletter {email} already exists.",
+                    },
+                    code=status.HTTP_400_BAD_REQUEST,
                 )
 
         return email

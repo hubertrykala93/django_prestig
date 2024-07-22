@@ -266,12 +266,12 @@ const showFormErrors = ($form, errors) => {
 }
 
 const sendNewsletterRequest = (formData) => {
-    const url = 'join-newsletter'
+    const url = 'create-newsletter'
 
     fetch(url, {
         method:'POST',
         headers:{
-        // 'X-CSRFToken':csrftoken,
+         'X-CSRFToken':csrfToken,
         },
         body: formData
     }).then((response) => {

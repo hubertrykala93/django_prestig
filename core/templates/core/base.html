@@ -40,6 +40,7 @@
     {% include 'core/footer.html' %}
 
     {% block page_scripts %}
+    <script>const csrfToken = '{{ csrf_token }}'</script>
     {% endblock %}
 
     <!--swiper js-->

@@ -8,4 +8,5 @@ urlpatterns = [
     path(route="product", view=core_views.product, name="product"),
     path(route="blog", view=core_views.blog, name="blog"),
     path(route="contact-us", view=core_views.contact_us, name="contact-us"),
+    path(route="create-newsletter", view=core_views.create_newsletter, name="create-newsletter"),
 ]

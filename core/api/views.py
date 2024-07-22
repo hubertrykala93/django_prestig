@@ -136,15 +136,11 @@ class NewsletterRetrieveAPIView(RetrieveAPIView):
 
 
 class NewsletterCreateAPIView(CreateAPIView):
-    permission_classes = [IsAuthenticated]
     def get_view_name(self):
         return "Newsletter Create"
 
     def get_serializer_class(self):
         return NewsletterCreateSerializer
-
-    # def get_permissions(self):
-    #     return [NewsletterCustomPermission()]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -182,7 +178,6 @@ class NewsletterUpdateAPIView(RetrieveUpdateAPIView):
         return [NewsletterCustomPermission()]
 
     def update(self, request, *args, **kwargs):
-        print(request)
         instance = self.get_object()
         email = instance.email
         serializer = self.get_serializer(data=request.data, instance=instance)
