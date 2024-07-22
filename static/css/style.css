@@ -195,6 +195,12 @@ body {
   box-shadow: 5px 5px 5px hsla(0, 0%, 10%, 25%);
 }
 
+.form__error {
+  display: block;
+  margin-top: .4em;
+  font-size: var(--fs-300);
+} 
+
 /* TESTIMONIALS */
 .testimonials {
   padding: 3.75rem 0;
@@ -799,12 +805,19 @@ body {
 }
 
 .newsletter__form__input-wrapper {
+  position: relative;
   margin-bottom: 0.625rem;
 }
 
 .newsletter__form__btn {
   justify-content: center;
   width: 100%;
+}
+
+.newsletter__form .form__error {
+  position: absolute;
+  left: 0;
+  top: 100%;
 }
 
 /**

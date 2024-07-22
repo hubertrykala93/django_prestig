@@ -5,17 +5,15 @@
 //     fetch(url, {
 //        method:'POST',
 //        headers:{
-// //        'X-CSRFToken':csrftoken,
+//        'X-CSRFToken':csrftoken,
 //        },
 //        body: data
-//       })
-//       .then((response) => {
+//     }).then((response) => {
 //          return response.json()
-//       })
-//       .then((data) => {
+//     }).then((data) => {
 //           console.log('data:',data)
-//       });
-//     }
+//     })
+// }
 
 // $form.addEventListener('submit', function (e) {
 //     e.preventDefault()
@@ -69,6 +67,8 @@ if ($mobileNavToggler && $headerNav) {
 /**
 * HOME PAGE
 */
+
+// HOME SLIDER
 const slider = new Swiper('.js-slider', {
     loop: true,
     draggable: true,
@@ -83,140 +83,6 @@ const slider = new Swiper('.js-slider', {
       el: '.js-slider-pagination',
       clickable: true,
     },
-});
-
-const $topProductsSection = document.querySelector('.js-top-products')
-
-if ($topProductsSection) {
-    const $leftArrow = $topProductsSection.querySelector('.js-arrow-left')
-    const $rightArrow = $topProductsSection.querySelector('.js-arrow-right')
-
-    const topProductsCarousel = new Swiper('.js-top-products-carousel', {
-        draggable: true,
-        grabCursor: true,
-        effect: 'slide',
-        autoplay: {
-            delay: 5000,
-        },
-        speed: 1000,
-        navigation: {
-            nextEl: $rightArrow,
-            prevEl: $leftArrow,
-        },
-        spaceBetween: 30,
-        breakpoints: {
-            640: {
-                slidesPerView: 2,
-            },
-            992: {
-                slidesPerView: 3,
-            },
-            1200: {
-                slidesPerView: 4,
-            }
-        }
-    });
-}
-
-const $newProductsSection = document.querySelector('.js-new-products')
-
-if ($newProductsSection) {
-    const $leftArrow = $newProductsSection.querySelector('.js-arrow-left')
-    const $rightArrow = $newProductsSection.querySelector('.js-arrow-right')
-
-    const newProductsCarousel = new Swiper('.js-new-products-carousel', {
-        draggable: true,
-        grabCursor: true,
-        effect: 'slide',
-        autoplay: {
-            delay: 5000,
-        },
-        speed: 1000,
-        navigation: {
-            nextEl: $rightArrow,
-            prevEl: $leftArrow,
-        },
-        spaceBetween: 30,
-        breakpoints: {
-            640: {
-                slidesPerView: 2,
-            },
-            992: {
-                slidesPerView: 3,
-            },
-            1200: {
-                slidesPerView: 4,
-            }
-        }
-    });
-}
-
-const testimonials = new Swiper('.js-testimonials-slider', {
-loop: true,
-draggable: true,
-grabCursor: true,
-effect: 'slide',
-autoplay: {
-    delay: 5000,
-},
-speed: 1000,
-
-navigation: {
-    nextEl: '.js-arrow-right',
-    prevEl: '.js-arrow-left',
-  },
-});
-
-const logos = new Swiper('.js-logos-carousel', {
-    loop: true,
-    draggable: true,
-    grabCursor: true,
-    effect: 'slide',
-    autoplay: {
-        delay: 500,
-    },
-    speed: 800,
-    slidesPerView: 2,
-    spaceBetween: 50,
-    breakpoints: {
-        480: {
-            slidesPerView: 3,
-        },
-        768: {
-            slidesPerView: 4,
-        },
-        1200: {
-            slidesPerView: 5,
-        }
-    }
-});
-
-const bottomGallery = new Swiper('.js-bottom-gallery-carousel', {
-    loop: true,
-    draggable: true,
-    grabCursor: true,
-    effect: 'slide',
-    autoplay: {
-        delay: 1000,
-    },
-    speed: 800,
-    breakpoints: {
-        480: {
-            slidesPerView: 2,
-        },
-        768: {
-            slidesPerView: 3,
-        },
-        992: {
-            slidesPerView: 4,
-        },
-        1200: {
-            slidesPerView: 5,
-        },
-        1600: {
-            slidesPerView: 6,
-        }
-    }
 });
 
 // FEATURED PRODUCTS TABS
@@ -259,3 +125,194 @@ if ($featuredProducts) {
         handleNav(e)
     })
 }
+
+// NEW PRODUCTS CAROUSEL
+
+const $newProductsSection = document.querySelector('.js-new-products')
+
+if ($newProductsSection) {
+    const $leftArrow = $newProductsSection.querySelector('.js-arrow-left')
+    const $rightArrow = $newProductsSection.querySelector('.js-arrow-right')
+
+    const newProductsCarousel = new Swiper('.js-new-products-carousel', {
+        draggable: true,
+        grabCursor: true,
+        effect: 'slide',
+        autoplay: {
+            delay: 5000,
+        },
+        speed: 1000,
+        navigation: {
+            nextEl: $rightArrow,
+            prevEl: $leftArrow,
+        },
+        spaceBetween: 30,
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+            },
+            992: {
+                slidesPerView: 3,
+            },
+            1200: {
+                slidesPerView: 4,
+            }
+        }
+    });
+}
+
+// LOGOS CAROUSEL
+
+const logos = new Swiper('.js-logos-carousel', {
+    loop: true,
+    draggable: true,
+    grabCursor: true,
+    effect: 'slide',
+    autoplay: {
+        delay: 500,
+    },
+    speed: 800,
+    slidesPerView: 2,
+    spaceBetween: 50,
+    breakpoints: {
+        480: {
+            slidesPerView: 3,
+        },
+        768: {
+            slidesPerView: 4,
+        },
+        1200: {
+            slidesPerView: 5,
+        }
+    }
+});
+
+// TOP PRODUCTS CAROUSEL
+
+const $topProductsSection = document.querySelector('.js-top-products')
+
+if ($topProductsSection) {
+    const $leftArrow = $topProductsSection.querySelector('.js-arrow-left')
+    const $rightArrow = $topProductsSection.querySelector('.js-arrow-right')
+
+    const topProductsCarousel = new Swiper('.js-top-products-carousel', {
+        draggable: true,
+        grabCursor: true,
+        effect: 'slide',
+        autoplay: {
+            delay: 5000,
+        },
+        speed: 1000,
+        navigation: {
+            nextEl: $rightArrow,
+            prevEl: $leftArrow,
+        },
+        spaceBetween: 30,
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+            },
+            992: {
+                slidesPerView: 3,
+            },
+            1200: {
+                slidesPerView: 4,
+            }
+        }
+    });
+}
+
+// TESTIMONIALS CAROUSEL
+
+const testimonials = new Swiper('.js-testimonials-slider', {
+loop: true,
+draggable: true,
+grabCursor: true,
+effect: 'slide',
+autoplay: {
+    delay: 5000,
+},
+speed: 1000,
+
+navigation: {
+    nextEl: '.js-arrow-right',
+    prevEl: '.js-arrow-left',
+  },
+});
+
+// NEWSLETTER
+
+const $newsletterForm = document.querySelector('.js-newsletter-form')
+
+const clearFormErrors = ($form) => {
+    const $errors = $form.querySelectorAll('.js-error')
+
+    if ($errors.length) {
+        $errors.forEach($error => $error.remove())
+    }
+}
+
+const showFormErrors = ($form, errors) => {
+    for (const [key, value] of Object.entries(errors)) {
+        const $input = $form.querySelector(`[name="${key}"]`)
+    if ($input) {
+        const $error = document.createElement('span')
+        $error.classList.add('js-error')
+        $error.classList.add('form__error')
+        $error.textContent = value
+        $input.closest('.js-form-field').append($error)
+    }
+    }
+}
+
+const sendNewsletterRequest = (formData) => {
+    const url = 'join-newsletter'
+
+    fetch(url, {
+        method:'POST',
+        headers:{
+        // 'X-CSRFToken':csrftoken,
+        },
+        body: formData
+    }).then((response) => {
+         return response.json()
+    }).then((data) => {
+          console.log('data:', data)
+    })
+}
+
+const validateNewsletterForm = (formData) => {
+    const email = formData.get('email')
+    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+    if (email === '') {
+        return {'email': 'Email cannot be empty!'}
+    }
+    else if (!email.match(emailRegex)) {
+        return {'email': 'Wrong email format!'}
+    }
+
+    return ''
+}
+
+const handleNewsletterForm = (e) => {
+    const $form = e.target
+    const formData = new FormData($form)
+    const errors = validateNewsletterForm(formData)
+    clearFormErrors($form)
+
+    if (errors === '') {
+        sendNewsletterRequest(formData)
+    }
+    else {
+        showFormErrors($form, errors)
+    }
+}
+
+if ($newsletterForm) {
+    $newsletterForm.addEventListener('submit', (e) => {
+        e.preventDefault()
+        handleNewsletterForm(e)
+    })
+}
+
