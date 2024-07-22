@@ -17,8 +17,12 @@ def create_newsletter(request):
         response = requests.post(url="http://127.0.0.1:8000/api/v1/newsletters/create", json={
             "email": request.POST.get("email"),
         })
-
-        return JsonResponse(data=response.json())
+        
+        return JsonResponse(
+            data={} if response.status_code == 201 else {
+                "email": response.json()["message"]
+            }
+        )
 
 
 def shop(request):
