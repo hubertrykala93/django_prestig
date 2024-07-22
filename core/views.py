@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from django.contrib.auth import logout
+from rest_framework.authtoken.models import Token, TokenProxy
+import requests
 
 
 def index(request):

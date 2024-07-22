@@ -10,6 +10,9 @@ import datetime
 from django.http import Http404
 from rest_framework.exceptions import ValidationError
 from rest_framework.authtoken.models import Token
+from django.contrib.auth import login, logout, authenticate
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 
 class UserRegisterAPIView(CreateAPIView):
@@ -29,7 +32,7 @@ class UserRegisterAPIView(CreateAPIView):
                 data={
                     "message": f"The user '{serializer.data['username']}' has been registered successfully.",
                     "data": serializer.data,
-                    "token": Token.objects.get(user=User.objects.get(username=serializer.data.get("username"))).key,
+                    "token": Token.objects.get(user=User.objects.get(email=serializer.validated_data.get("email"))).key,
                 },
                 status=status.HTTP_201_CREATED,
             )
@@ -48,21 +51,46 @@ class UserLoginAPIView(GenericAPIView):
     def get_serializer_class(self):
         return UserRegisterSerializer
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+
+        context.update(
+            {
+                "email": self.request.data.get("email")
+            },
+        )
+
+        return context
+
     def post(self, request, *args, **kwargs):
-        serializer = UserRegisterSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
-            print("Is Valid.")
-            return Response(
-                data={
-                    "message": "You have been successfully log in.",
-                    "data": {
-                        "username": User.objects.get(email=serializer.data.get("email")).username,
-                        "email": serializer.data.get("email"),
+            user = authenticate(request=request, email=serializer.validated_data.get("email"),
+                                password=serializer.validated_data.get("password"))
+
+            if user is not None:
+                login(request=request, user=user)
+                token, created = Token.objects.get_or_create(user=user)
+
+                return Response(
+                    data={
+                        "message": "You have been successfully logged in.",
+                        "data": {
+                            "username": user.username,
+                            "email": user.email,
+                        },
+                        "token": token.key,
+                    }
+                )
+
+            else:
+                return Response(
+                    data={
+                        "message": "User authentication error, please enter the correct details.",
                     },
-                    "token": Token.objects.get(user=User.objects.get(email=serializer.data.get("email"))).key
-                }
-            )
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
         else:
             return Response(
                 data=serializer.errors,
@@ -70,9 +98,24 @@ class UserLoginAPIView(GenericAPIView):
             )
 
 
-class UserLogoutAPIView(GenericAPIView):
+class UserLogoutAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_view_name(self):
+        return "User Logout"
+
     def post(self, request, *args, **kwargs):
-        token = Token.objects.get(user=request.user)
+        try:
+            token = Token.objects.get(user=request.user)
+
+        except Token.DoesNotExist:
+            return Response(
+                data={
+                    "message": "Token does not exists.",
+                },
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
         token.delete()
 
         return Response(
@@ -109,7 +152,6 @@ class UserRetrieveAPIView(RetrieveAPIView):
         return UserSerializer
 
     def get_object(self):
-        print(self.kwargs.get("pk"))
         if self.kwargs.get("pk"):
             if self.get_queryset().filter(id=self.kwargs.get("pk")).exists():
                 obj = self.get_queryset().filter(id=self.kwargs.get("pk")).first()

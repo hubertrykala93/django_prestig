@@ -18,6 +18,7 @@ DEBUG = True
 
 # Application definition
 from django.apps import apps
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -140,7 +141,7 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
-    ]
+    ],
     # "DEFAULT_RENDERER_CLASSES": [
     #     "rest_framework.renderers.JSONOpenAPIRenderer",
     # ],
