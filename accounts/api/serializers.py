@@ -1,7 +1,9 @@
 from rest_framework import serializers
 from accounts.models import User
 import re
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, GenericAPIView
+from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -55,10 +57,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
                 detail="The e-mail address format is invalid.",
             )
 
-        if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError(
-                detail=f"A user with this e-mail address '{email}' already exists.",
-            )
+        if isinstance(self.context.get("view"), CreateAPIView):
+            if User.objects.filter(email=email).exists():
+                raise serializers.ValidationError(
+                    detail=f"A user with this e-mail address '{email}' already exists.",
+                )
 
         return email
 

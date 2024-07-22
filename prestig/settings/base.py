@@ -17,7 +17,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = True
 
 # Application definition
-
+from django.apps import apps
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -26,8 +26,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "django_filters",
     "corsheaders",
+    "rest_framework.authtoken",
+    "django_filters",
     "core",
     "accounts",
     "shop",
@@ -137,6 +138,9 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
     ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ]
     # "DEFAULT_RENDERER_CLASSES": [
     #     "rest_framework.renderers.JSONOpenAPIRenderer",
     # ],

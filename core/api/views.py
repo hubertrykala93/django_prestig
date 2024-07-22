@@ -257,7 +257,7 @@ class NewsletterDeleteAPIView(RetrieveDestroyAPIView):
         except Exception:
             return Response(
                 data={
-                    "An error occurred while deleting the object, please try again."
+                    "message": "An error occurred while deleting the object, please try again.",
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )

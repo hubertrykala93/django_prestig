@@ -1,11 +1,15 @@
 from rest_framework.response import Response
 from accounts.models import User
 from rest_framework import status
-from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, RetrieveDestroyAPIView, GenericAPIView
 from .serializers import UserRegisterSerializer, UserSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework.filters import OrderingFilter, SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
+import datetime
+from django.http import Http404
+from rest_framework.exceptions import ValidationError
+from rest_framework.authtoken.models import Token
 
 
 class UserRegisterAPIView(CreateAPIView):
@@ -23,8 +27,9 @@ class UserRegisterAPIView(CreateAPIView):
 
             return Response(
                 data={
-                    "message": f"The user {serializer.data['username']} has been registered successfully.",
+                    "message": f"The user '{serializer.data['username']}' has been registered successfully.",
                     "data": serializer.data,
+                    "token": Token.objects.get(user=User.objects.get(username=serializer.data.get("username"))).key,
                 },
                 status=status.HTTP_201_CREATED,
             )
@@ -34,6 +39,48 @@ class UserRegisterAPIView(CreateAPIView):
                 data=serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+class UserLoginAPIView(GenericAPIView):
+    def get_view_name(self):
+        return "User Login"
+
+    def get_serializer_class(self):
+        return UserRegisterSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = UserRegisterSerializer(data=request.data)
+
+        if serializer.is_valid():
+            print("Is Valid.")
+            return Response(
+                data={
+                    "message": "You have been successfully log in.",
+                    "data": {
+                        "username": User.objects.get(email=serializer.data.get("email")).username,
+                        "email": serializer.data.get("email"),
+                    },
+                    "token": Token.objects.get(user=User.objects.get(email=serializer.data.get("email"))).key
+                }
+            )
+        else:
+            return Response(
+                data=serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+
+class UserLogoutAPIView(GenericAPIView):
+    def post(self, request, *args, **kwargs):
+        token = Token.objects.get(user=request.user)
+        token.delete()
+
+        return Response(
+            data={
+                "message": "You have been successfully logged out.",
+            },
+            status=status.HTTP_200_OK,
+        )
 
 
 class UsersAPIView(ListAPIView):
@@ -94,3 +141,61 @@ class UserRetrieveAPIView(RetrieveAPIView):
             )
 
         return obj
+
+
+class UserDeleteAPIView(RetrieveDestroyAPIView):
+    def get_view_name(self):
+        return "Account Delete"
+
+    def get_queryset(self):
+        return User.objects.all()
+
+    def get_serializer_class(self):
+        return UserSerializer
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        id, date_joined, username, email = instance.id, instance.date_joined, instance.username, instance.email
+
+        try:
+            self.perform_destroy(instance=instance)
+
+            return Response(
+                data={
+                    "message": f"The account '{username}' with ID '{id}' has been successfully deleted.",
+                    "data": {
+                        "id": id,
+                        "date_joined": date_joined.strftime("%Y-%m-%d %H:%M:%S"),
+                        "username": username,
+                        "email": email,
+                    },
+                    "deleted_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "deleted_by": self.request.user.username,
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        except Exception:
+            return Response(
+                data={
+                    "message": "An error occurred while deleting the object, please try again.",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+    def handle_exception(self, exc):
+        if isinstance(exc, Http404):
+            return Response(
+                data={
+                    "message": "Account not found.",
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        elif isinstance(exc, ValidationError):
+            return Response(
+                data=exc.detail,
+                status=exc.status_code,
+            )
+
+        return super().handle_exception(exc)
