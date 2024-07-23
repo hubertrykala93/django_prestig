@@ -1,28 +1,3 @@
-// const $form = document.querySelector('form')
-
-// const sendData = (data) => {
-//     const url = 'send-file'
-//     fetch(url, {
-//        method:'POST',
-//        headers:{
-//        'X-CSRFToken':csrftoken,
-//        },
-//        body: data
-//     }).then((response) => {
-//          return response.json()
-//     }).then((data) => {
-//           console.log('data:',data)
-//     })
-// }
-
-// $form.addEventListener('submit', function (e) {
-//     e.preventDefault()
-
-//     let data = new FormData($form)
-//     console.log(data)
-//     sendData(data)
-// })
-
 /**
 * HEADER
 */
@@ -244,27 +219,10 @@ navigation: {
 
 const $newsletterForm = document.querySelector('.js-newsletter-form')
 
-const clearFormErrors = ($form) => {
-    const $errors = $form.querySelectorAll('.js-error')
-
-    if ($errors.length) {
-        $errors.forEach($error => $error.remove())
-    }
-}
-
-const showFormErrors = ($form, errors) => {
-    for (const [key, value] of Object.entries(errors)) {
-        const $input = $form.querySelector(`[name="${key}"]`)
-    if ($input) {
-        const $error = document.createElement('span')
-        $error.classList.add('js-error')
-        $error.classList.add('form__error')
-        $error.textContent = value
-        $input.closest('.js-form-field').append($error)
-    }
-    }
-}
-
+/**
+ * Sends newsletter's post data and handles messages.
+ * @param {Object} formData - Newsletter form data object.
+ */
 const sendNewsletterRequest = (formData) => {
     const url = 'create-newsletter'
 
@@ -276,32 +234,46 @@ const sendNewsletterRequest = (formData) => {
         body: formData
     }).then((response) => {
          return response.json()
-    }).then((data) => {
-          console.log('data:', data)
+    }).then((response) => {
+        if (Object.keys(response).length === 0) {
+            $newsletterForm.reset()
+            showAlert('Your email has been added to our newsletter list.', 'success')
+        }
+        else {
+            showFormErrors($newsletterForm, response)
+        }
     })
 }
 
+/**
+ * Validates newsletter form data.
+ * @returns {Object} Error messages with inpuut names as a key.
+ */
 const validateNewsletterForm = (formData) => {
     const email = formData.get('email')
     const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const result = {}
 
     if (email === '') {
-        return {'email': 'Email cannot be empty!'}
+        result.email = 'E-mail Address is required.'
     }
     else if (!email.match(emailRegex)) {
-        return {'email': 'Wrong email format!'}
+        result.email = 'The e-mail address format is invalid.'
     }
 
-    return ''
+    return result
 }
 
+/**
+ * Handles newsletter form actions.
+ */
 const handleNewsletterForm = (e) => {
     const $form = e.target
     const formData = new FormData($form)
     const errors = validateNewsletterForm(formData)
     clearFormErrors($form)
 
-    if (errors === '') {
+    if (Object.keys(errors).length === 0) {
         sendNewsletterRequest(formData)
     }
     else {

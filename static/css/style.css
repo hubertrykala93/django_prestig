@@ -12,6 +12,7 @@
   --clr-gray-300: #DFDFDF;
   --clr-gray-400: #5E5E5E;
   --clr-body-text: var(--clr-gray-400);
+  --clr-success-bg: rgb(172 255 177);
 
   --ff-body: "Red Hat Display", sans-serif;
   --ff-heading: "Red Hat Display", sans-serif;
@@ -179,6 +180,29 @@ body {
 .btn--accent:hover,
 .btn--accent:focus-visible {
   background-color: var(--clr-black);
+}
+
+/* ALERTS */
+.alert {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  padding: 1.4rem;
+  font-weight: 500;
+  color: black;
+  transform: translateY(100%);
+  animation: show-alert .3s linear forwards;
+  z-index: 5;
+}
+
+@keyframes show-alert {
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.alert--success {
+  background-color: var(--clr-success-bg);
 }
 
 /* FORM */
