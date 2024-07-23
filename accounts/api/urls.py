@@ -3,24 +3,24 @@ from . import views
 
 urlpatterns = [
     path(
-        route="api/v1/user-register",
+        route="api/v1/accounts/account-register",
         view=views.UserRegisterAPIView.as_view(),
-        name="api-v1-user-register",
+        name="api-v1-accounts-account-register",
     ),
     path(
-        route="api/v1/user-login",
+        route="api/v1/accounts/account-login",
         view=views.UserLoginAPIView.as_view(),
-        name="api-1-user-login",
+        name="api-1-accounts-account-login",
     ),
     path(
-        route="api/v1/user-logout",
+        route="api/v1/accounts/account-logout",
         view=views.UserLogoutAPIView.as_view(),
-        name="api-v1-user-logout",
+        name="api-v1-accounts-account-logout",
     ),
     path(
         route="api/v1/accounts",
         view=views.UsersAPIView.as_view(),
-        name="api-v1-users",
+        name="api-v1-accounts",
     ),
     path(
         route="api/v1/accounts/<int:pk>",

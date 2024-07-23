@@ -16,9 +16,6 @@ from rest_framework.permissions import IsAuthenticated
 
 
 class UserRegisterAPIView(CreateAPIView):
-    def get_view_name(self):
-        return "User Register"
-
     def get_serializer_class(self):
         return UserRegisterSerializer
 
@@ -45,9 +42,6 @@ class UserRegisterAPIView(CreateAPIView):
 
 
 class UserLoginAPIView(GenericAPIView):
-    def get_view_name(self):
-        return "User Login"
-
     def get_serializer_class(self):
         return UserRegisterSerializer
 
@@ -101,9 +95,6 @@ class UserLoginAPIView(GenericAPIView):
 class UserLogoutAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get_view_name(self):
-        return "User Logout"
-
     def post(self, request, *args, **kwargs):
         try:
             token = Token.objects.get(user=request.user)
@@ -127,13 +118,6 @@ class UserLogoutAPIView(APIView):
 
 
 class UsersAPIView(ListAPIView):
-    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
-    search_fields = ["username", "email"]
-    ordering_fields = ["date_joined", "username", "email", "is_verified"]
-
-    def get_view_name(self):
-        return "API Users"
-
     def get_queryset(self):
         return User.objects.all()
 
@@ -142,9 +126,6 @@ class UsersAPIView(ListAPIView):
 
 
 class UserRetrieveAPIView(RetrieveAPIView):
-    def get_view_name(self):
-        return "User Details"
-
     def get_queryset(self):
         return User.objects.all()
 
@@ -186,9 +167,6 @@ class UserRetrieveAPIView(RetrieveAPIView):
 
 
 class UserDeleteAPIView(RetrieveDestroyAPIView):
-    def get_view_name(self):
-        return "Account Delete"
-
     def get_queryset(self):
         return User.objects.all()
 

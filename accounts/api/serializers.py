@@ -1,10 +1,7 @@
 from rest_framework import serializers
 from accounts.models import User
 import re
-from rest_framework.generics import CreateAPIView, GenericAPIView
-from rest_framework.views import APIView
-from rest_framework.authtoken.models import Token
-from rest_framework import status
+from rest_framework.generics import CreateAPIView
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):

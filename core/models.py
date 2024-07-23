@@ -12,3 +12,18 @@ class Newsletter(models.Model):
 
     def __str__(self):
         return f"{self.email}"
+
+
+class ContactMail(models.Model):
+    date_sent = models.DateTimeField(default=now)
+    full_name = models.CharField(max_length=150)
+    email = models.EmailField(max_length=150)
+    subject = models.CharField(max_length=150)
+    message = models.TextField(max_length=2000)
+
+    class Meta:
+        verbose_name = "Contact Mail"
+        verbose_name_plural = "Contact Mails"
+
+    def __str__(self):
+        return f"{self.full_name} | {self.email} | {self.subject}"
