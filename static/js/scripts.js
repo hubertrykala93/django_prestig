@@ -215,7 +215,7 @@ navigation: {
   },
 });
 
-// NEWSLETTER
+// NEWSLETTER FORM
 
 const $newsletterForm = document.querySelector('.js-newsletter-form')
 
@@ -288,3 +288,103 @@ if ($newsletterForm) {
     })
 }
 
+/**
+* CONTACT PAGE
+*/
+
+// CONTACT FORM
+
+const $contactForm = document.querySelector('.js-contact-form')
+
+/**
+ * Sends contact's post data and handles messages.
+ * @param {Object} formData - Contact form data object.
+ */
+const sendContactRequest = (formData) => {
+    const url = 'contact'
+
+    fetch(url, {
+        method:'POST',
+        headers:{
+         'X-CSRFToken':csrfToken,
+        },
+        body: formData
+    }).then((response) => {
+         return response.json()
+    }).then((response) => {
+        if (Object.keys(response).length === 0) {
+            $contactForm.reset()
+            showAlert('Your message has been successfully sent.', 'success')
+        }
+        else {
+            showFormErrors($contactForm, response)
+        }
+    })
+}
+
+/**
+ * Validates contact form data.
+ * @returns {Object} Error messages with inpuut names as a key.
+ */
+const validateContactForm = (formData) => {
+    const fullname = formData.get('fullname')
+    const email = formData.get('email')
+    const subject = formData.get('subject')
+    const message = formData.get('message')
+    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const result = {}
+
+    if (fullname === '') {
+        result.fullname = 'Full name is required.'
+    }
+    else if (fullname.length < 8) {
+        result.fullname = 'The full name must be at least 8 characters long.'
+    }
+
+    if (email === '') {
+        result.email = 'E-mail address is required.'
+    }
+    else if (!email.match(emailRegex)) {
+        result.email = 'The e-mail address format is invalid.'
+    }
+
+    if (subject === '') {
+        result.subject = 'Subject is required.'
+    }
+    else if (subject.length < 8) {
+        result.subject = 'The subject must be at least 8 characters long.'
+    }
+
+    if (message === '') {
+        result.message = 'Message is required.'
+    }
+    else if (message.length < 8) {
+        result.message = 'The message must be at least 20 characters long.'
+    }
+
+    return result
+}
+
+/**
+ * Handles contact form actions.
+ */
+const handleContactForm = (e) => {
+    const $form = e.target
+    const formData = new FormData($form)
+    const errors = validateContactForm(formData)
+    clearFormErrors($form)
+
+    if (Object.keys(errors).length === 0) {
+        sendContactRequest(formData)
+    }
+    else {
+        showFormErrors($form, errors)
+    }
+}
+
+if ($contactForm) {
+    $contactForm.addEventListener('submit', (e) => {
+        e.preventDefault()
+        handleContactForm(e)
+    })
+}

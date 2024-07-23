@@ -3,4 +3,52 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
+<!-- CONTACT FORM -->
+<section class="contact-form">
+  <div class="container container--narrow">
+    <div class="row">
+      <form class="form form--narrow js-contact-form">
+        <div class="form__row">
+          <div class="form__field js-form-field">
+              <label for="fullname" class="form__label">full name *</label>
+              <div class="form__input-wrap">
+                  <input type="text" id="fullname" name="fullname" placeholder="Full Name">
+              </div>
+          </div>
+
+          <div class="form__field js-form-field">
+            <label for="email" class="form__label">email *</label>
+            <div class="form__input-wrap">
+                <input type="text" id="email" name="email" placeholder="Your email">
+            </div>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="form__field js-form-field">
+              <label for="subject" class="form__label">subject *</label>
+              <div class="form__input-wrap">
+                  <input type="text" id="subject" name="subject" placeholder="Email subject">
+              </div>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="form__field js-form-field">
+              <label for="message" class="form__label">message *</label>
+              <div class="form__input-wrap">
+                  <textarea type="text" id="message" name="message" placeholder="Message text"></textarea>
+              </div>
+          </div>
+        </div>
+
+        <div class="form__row form__row--submit">
+          <div class="form__field form__field--submit">
+              <button class="btn btn--primary" type="submit">Send message</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
 {% endblock %}
