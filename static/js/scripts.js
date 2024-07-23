@@ -301,7 +301,7 @@ const $contactForm = document.querySelector('.js-contact-form')
  * @param {Object} formData - Contact form data object.
  */
 const sendContactRequest = (formData) => {
-    const url = 'contact'
+    const url = 'send-contact-mail'
 
     fetch(url, {
         method:'POST',

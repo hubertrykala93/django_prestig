@@ -21,6 +21,6 @@ class AdminContactMail(admin.ModelAdmin):
     """
     Admin options and functionalities for ContactMail model.
     """
-    fields = ["full_name", "email", "subject", "message"]
-    list_display = ["id", "date_sent", "full_name", "email", "subject", "message"]
+    fields = ["fullname", "email", "subject", "message"]
+    list_display = ["id", "date_sent", "fullname", "email", "subject", "message"]
     form = ContactMailForm

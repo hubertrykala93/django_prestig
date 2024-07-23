@@ -19,7 +19,7 @@ def index(request):
 
 def create_newsletter(request):
     if request.method == "POST":
-        email = request.POST.get("email")
+        email = request.POST.get("email").strip()
         response = requests.post(url="http://127.0.0.1:8000/api/v1/newsletters/create", json={
             "email": email,
         })
@@ -99,3 +99,31 @@ def contact_us(request):
             "title": "Contact Us",
         }
     )
+
+
+def send_contact_mail(request):
+    if request.method == "POST":
+        fullname = request.POST.get("fullname").strip()
+        email = request.POST.get("email").strip()
+        subject = request.POST.get("subject").strip()
+        message = request.POST.get("message").strip()
+
+        response = requests.post(
+            url='http://127.0.0.1:8000/api/v1/contact-mails/create',
+            json={
+                "fullname": fullname,
+                "email": email,
+                "subject": subject,
+                "message": message,
+            }
+        )
+        print(response.json())
+        print(response.status_code)
+
+        if response.status_code:
+            return JsonResponse(
+                data={}, status=201
+            )
+
+        else:
+            return JsonResponse(data=response.json(), status=400)

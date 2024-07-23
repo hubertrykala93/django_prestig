@@ -11,7 +11,7 @@ class NewsletterForm(forms.ModelForm):
 
 
 class ContactMailForm(forms.ModelForm):
-    full_name = forms.CharField(help_text="Provide the full name.", label="Full Name")
+    fullname = forms.CharField(help_text="Provide the full name.", label="Full Name")
     email = forms.CharField(help_text="Provide the e-mail address.", label="E-mail Address")
     subject = forms.CharField(help_text="Provide the subject of the message.", label="Subject")
     message = forms.CharField(help_text="Provide the message.", label="Message", widget=forms.Textarea)

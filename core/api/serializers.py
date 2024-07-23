@@ -51,7 +51,7 @@ class NewsletterCreateSerializer(serializers.ModelSerializer):
 
 
 class ContactMailCreateSerializer(serializers.ModelSerializer):
-    full_name = serializers.CharField(allow_blank=True)
+    fullname = serializers.CharField(allow_blank=True)
     email = serializers.CharField(allow_blank=True)
     subject = serializers.CharField(allow_blank=True)
     message = serializers.CharField(allow_blank=True)
@@ -66,18 +66,18 @@ class ContactMailCreateSerializer(serializers.ModelSerializer):
             },
         }
 
-    def validate_full_name(self, full_name):
-        if full_name == "":
+    def validate_fullname(self, fullname):
+        if fullname == "":
             raise serializers.ValidationError(
                 detail="Full name is required.",
             )
 
-        if len(full_name) < 8:
+        if len(fullname) < 8:
             raise serializers.ValidationError(
                 detail="The full name must be at least 8 characters long.",
             )
 
-        return full_name
+        return fullname
 
     def validate_email(self, email):
         if email == "":
