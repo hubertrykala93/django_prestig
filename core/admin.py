@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .forms import NewsletterForm
-from .models import Newsletter
+from .forms import NewsletterForm, ContactMailForm
+from .models import Newsletter, ContactMail
 from django.contrib.auth.models import Group
 
 admin.site.unregister(Group)
@@ -14,3 +14,13 @@ class AdminNewsletter(admin.ModelAdmin):
     fields = ["email"]
     list_display = ["id", "created_at", "email"]
     form = NewsletterForm
+
+
+@admin.register(ContactMail)
+class AdminContactMail(admin.ModelAdmin):
+    """
+    Admin options and functionalities for ContactMail model.
+    """
+    fields = ["full_name", "email", "subject", "message"]
+    list_display = ["id", "date_sent", "full_name", "email", "subject", "message"]
+    form = ContactMailForm
