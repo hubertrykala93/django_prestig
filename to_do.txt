@@ -1,8 +1,0 @@
-Admin:
-login: admin@gmail.com
-hasło: admin
-
-Hubert:
-
-Szymon:
-1. Stylizacja newsletter mail
