@@ -58,7 +58,7 @@ class ProductCategory(models.Model):
 
 
 class Size(models.Model):
-    size = models.CharField()
+    size = models.CharField(max_length=100)
 
     class Meta:
         verbose_name = "Size"
@@ -69,8 +69,8 @@ class Size(models.Model):
 
 
 class Color(models.Model):
-    color = models.CharField()
-    hex = models.CharField(null=True)
+    color = models.CharField(max_length=100)
+    hex = models.CharField(null=True, max_length=100)
 
     class Meta:
         verbose_name = "Color"

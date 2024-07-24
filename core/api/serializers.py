@@ -31,6 +31,12 @@ class NewsletterCreateSerializer(serializers.ModelSerializer):
             },
         }
 
+    def to_internal_value(self, data):
+        if 'email' in data:
+            data['email'] = data['email'].strip()
+
+        return super().to_internal_value(data=data)
+
     def validate_email(self, email):
         if email == "":
             raise serializers.ValidationError(
@@ -49,6 +55,19 @@ class NewsletterCreateSerializer(serializers.ModelSerializer):
 
         return email
 
+    def run_validation(self, data):
+        try:
+            validated_data = super().run_validation(data=data)
+
+        except serializers.ValidationError as exc:
+            new_errors = {field: value[0] if isinstance(value, list) else value for field, value in exc.detail.items()}
+
+            raise serializers.ValidationError(
+                detail=new_errors,
+            )
+
+        return validated_data
+
 
 class ContactMailCreateSerializer(serializers.ModelSerializer):
     fullname = serializers.CharField(allow_blank=True)
@@ -66,10 +85,25 @@ class ContactMailCreateSerializer(serializers.ModelSerializer):
             },
         }
 
+    def to_internal_value(self, data):
+        if 'fullname' in data:
+            data['fullname'] = data['fullname'].strip().title()
+
+        if 'email' in data:
+            data['email'] = data['email'].strip()
+
+        if 'subject' in data:
+            data['subject'] = data['subject'].strip().title()
+
+        if 'message' in data:
+            data['message'] = data['message'].strip()
+
+        return super().to_internal_value(data=data)
+
     def validate_fullname(self, fullname):
         if fullname == "":
             raise serializers.ValidationError(
-                detail="Full name is required.",
+                detail="Full name is required."
             )
 
         if len(fullname) < 8:
@@ -117,3 +151,16 @@ class ContactMailCreateSerializer(serializers.ModelSerializer):
             )
 
         return message
+
+    def run_validation(self, data):
+        try:
+            validated_data = super().run_validation(data)
+
+        except serializers.ValidationError as exc:
+            new_errors = {field: value[0] if isinstance(value, list) else value for field, value in exc.detail.items()}
+
+            raise serializers.ValidationError(
+                detail=new_errors
+            )
+
+        return validated_data

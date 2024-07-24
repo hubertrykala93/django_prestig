@@ -87,16 +87,14 @@ class NewsletterCreateAPIView(CreateAPIView):
 
             return Response(
                 data={
-                    "message": f"The newsletter {serializer.data['email']} has been created successfully.",
+                    "success": f"The newsletter {serializer.data['email']} has been created successfully.",
                 },
                 status=status.HTTP_201_CREATED,
             )
 
         else:
             return Response(
-                data={
-                    "message": list(serializer.errors.values())[0][0],
-                },
+                data=serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -113,7 +111,7 @@ class ContactMailCreateAPIView(CreateAPIView):
 
             return Response(
                 data={
-                    "message": "The message has been sent successfully.",
+                    "success": "The message has been sent successfully.",
                 },
                 status=status.HTTP_201_CREATED,
             )

@@ -43,7 +43,7 @@ def create_newsletter(request):
                 message.attach_alternative(content=html_message, mimetype="text/html")
                 message.send(fail_silently=False)
 
-                return JsonResponse(data={}, status=response.status_code)
+                return JsonResponse(data=response.json(), status=response.status_code)
 
             except EmailSendError:
                 return JsonResponse(
@@ -54,9 +54,7 @@ def create_newsletter(request):
 
         else:
             return JsonResponse(
-                data={
-                    "email": response.json()["message"],
-                },
+                data=response.json(),
                 status=response.status_code,
             )
 
@@ -103,10 +101,10 @@ def contact_us(request):
 
 def send_contact_mail(request):
     if request.method == "POST":
-        fullname = request.POST.get("fullname").strip()
-        email = request.POST.get("email").strip()
-        subject = request.POST.get("subject").strip()
-        message = request.POST.get("message").strip()
+        fullname = request.POST.get("fullname")
+        email = request.POST.get("email")
+        subject = request.POST.get("subject")
+        message = request.POST.get("message")
 
         response = requests.post(
             url='http://127.0.0.1:8000/api/v1/contact-mails/create',
@@ -117,13 +115,40 @@ def send_contact_mail(request):
                 "message": message,
             }
         )
-        print(response.json())
-        print(response.status_code)
 
-        if response.status_code:
-            return JsonResponse(
-                data={}, status=201
-            )
+        if response.status_code == 201:
+            try:
+                html_message = render_to_string(
+                    template_name="core/contact_mail.html",
+                    context={
+                        "fullname": fullname,
+                        "email": email,
+                        "message": message,
+                    },
+                )
+
+                plain_message = strip_tags(html_message)
+
+                message = EmailMultiAlternatives(
+                    subject=subject,
+                    body=plain_message,
+                    from_email=email,
+                    to=[os.environ.get("EMAIL_HOST_USER")]
+                )
+                message.attach_alternative(content=html_message, mimetype="text/html")
+                message.send()
+
+                return JsonResponse(
+                    data=response.json(),
+                    status=response.status_code,
+                )
+            
+            except EmailSendError:
+                return JsonResponse(
+                    data={},
+                    status=500,
+                    safe=False,
+                )
 
         else:
-            return JsonResponse(data=response.json(), status=400)
+            return JsonResponse(data=response.json(), status=response.status_code)

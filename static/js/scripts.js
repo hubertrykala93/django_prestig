@@ -250,7 +250,7 @@ const sendNewsletterRequest = (formData) => {
  * @returns {Object} Error messages with inpuut names as a key.
  */
 const validateNewsletterForm = (formData) => {
-    const email = formData.get('email')
+    const email = formData.get('email').trim()
     const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     const result = {}
 
@@ -312,6 +312,7 @@ const sendContactRequest = (formData) => {
     }).then((response) => {
          return response.json()
     }).then((response) => {
+    console.log(response)
         if (Object.keys(response).length === 0) {
             $contactForm.reset()
             showAlert('Your message has been successfully sent.', 'success')
@@ -327,10 +328,10 @@ const sendContactRequest = (formData) => {
  * @returns {Object} Error messages with inpuut names as a key.
  */
 const validateContactForm = (formData) => {
-    const fullname = formData.get('fullname')
-    const email = formData.get('email')
-    const subject = formData.get('subject')
-    const message = formData.get('message')
+    const fullname = formData.get('fullname').trim()
+    const email = formData.get('email').trim()
+    const subject = formData.get('subject').trim()
+    const message = formData.get('message').trim()
     const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     const result = {}
 
@@ -374,11 +375,11 @@ const handleContactForm = (e) => {
     const errors = validateContactForm(formData)
     clearFormErrors($form)
 
+    sendContactRequest(formData)
     if (Object.keys(errors).length === 0) {
-        sendContactRequest(formData)
     }
     else {
-        showFormErrors($form, errors)
+//        showFormErrors($form, errors)
     }
 }
 
