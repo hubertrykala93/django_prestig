@@ -49,7 +49,6 @@ def create_newsletter(request):
                 return JsonResponse(
                     data={},
                     status=500,
-                    safe=False,
                 )
 
         else:
@@ -122,6 +121,7 @@ def send_contact_mail(request):
                     template_name="core/contact_mail.html",
                     context={
                         "fullname": fullname,
+                        "subject": subject,
                         "email": email,
                         "message": message,
                     },
@@ -130,9 +130,9 @@ def send_contact_mail(request):
                 plain_message = strip_tags(html_message)
 
                 message = EmailMultiAlternatives(
-                    subject=subject,
+                    subject="Message from the Prestig website.",
                     body=plain_message,
-                    from_email=email,
+                    from_email=os.environ.get("EMAIL_HOST_USER"),
                     to=[os.environ.get("EMAIL_HOST_USER")]
                 )
                 message.attach_alternative(content=html_message, mimetype="text/html")
@@ -142,12 +142,11 @@ def send_contact_mail(request):
                     data=response.json(),
                     status=response.status_code,
                 )
-            
+
             except EmailSendError:
                 return JsonResponse(
                     data={},
                     status=500,
-                    safe=False,
                 )
 
         else:
