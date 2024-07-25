@@ -47,7 +47,7 @@ def create_newsletter(request):
 
             except EmailSendError:
                 return JsonResponse(
-                    data={},
+                    data=response.json(),
                     status=500,
                 )
 
@@ -145,7 +145,9 @@ def send_contact_mail(request):
 
             except EmailSendError:
                 return JsonResponse(
-                    data={},
+                    data={
+                        "error": "Error sending the message, please try again.",
+                    },
                     status=500,
                 )
 
