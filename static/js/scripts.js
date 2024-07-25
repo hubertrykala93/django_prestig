@@ -235,9 +235,15 @@ const sendNewsletterRequest = (formData) => {
     }).then((response) => {
          return response.json()
     }).then((response) => {
-        if (Object.keys(response).length === 0) {
+        clearFormErrors($newsletterForm)
+
+        if (response.hasOwnProperty('success')) {
+            showAlert(response.success, 'success')
             $newsletterForm.reset()
-            showAlert('Your email has been added to our newsletter list.', 'success')
+        }
+        else if (response.hasOwnProperty('error')) {
+            showAlert(response.error, 'error')
+            $newsletterForm.reset()
         }
         else {
             showFormErrors($newsletterForm, response)
@@ -312,10 +318,15 @@ const sendContactRequest = (formData) => {
     }).then((response) => {
          return response.json()
     }).then((response) => {
-    console.log(response)
-        if (Object.keys(response).length === 0) {
+        clearFormErrors($contactForm)
+
+        if (response.hasOwnProperty('success')) {
+            showAlert(response.success, 'success')
             $contactForm.reset()
-            showAlert('Your message has been successfully sent.', 'success')
+        }
+        else if (response.hasOwnProperty('error')) {
+            showAlert(response.error, 'error')
+            $contactForm.reset()
         }
         else {
             showFormErrors($contactForm, response)
