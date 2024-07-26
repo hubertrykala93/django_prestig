@@ -95,7 +95,6 @@ class NewsletterCreateAPIView(CreateAPIView):
         else:
             return Response(
                 data=serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST,
             )
 
 
@@ -119,5 +118,4 @@ class ContactMailCreateAPIView(CreateAPIView):
         else:
             return Response(
                 data=serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST,
             )

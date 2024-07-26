@@ -101,7 +101,6 @@ class ContactMailCreateSerializer(serializers.ModelSerializer):
         return super().to_internal_value(data=data)
 
     def validate_fullname(self, fullname):
-        print(fullname)
         if fullname == "":
             raise serializers.ValidationError(
                 detail="Full name is required."

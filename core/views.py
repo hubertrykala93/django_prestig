@@ -54,7 +54,6 @@ def create_newsletter(request):
         else:
             return JsonResponse(
                 data=response.json(),
-                status=response.status_code,
             )
 
 
