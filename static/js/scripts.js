@@ -1,6 +1,8 @@
 /**
 * HEADER
 */
+
+// MOBILE MENU
 const $mobileNavToggler = document.querySelector('.js-mobile-nav-toggler')
 const $mobileNavTogglerIcon = document.querySelector('.js-mobile-nav-toggler i')
 const $headerNav = document.querySelector('.js-header-nav')
@@ -37,6 +39,81 @@ const mobileMenuToggle = () => {
 
 if ($mobileNavToggler && $headerNav) {
     $mobileNavToggler.addEventListener('click', mobileMenuToggle)
+}
+
+// HEADER BUTTONS
+const $headerButtons = document.querySelector('.js-header-buttons')
+
+/**
+ * Closes chosen header dropdown.
+ * @param {HTMLElement} $dropdown - Particular dropdown to close.
+ */
+const closeDropdown = ($dropdown) => {
+    $dropdown.classList.remove('active')
+}
+
+/**
+ * Closes all open dropdowns.
+ */
+const closeDropdowns = () => {
+    document.querySelectorAll('.js-header-buttons-dropdown').forEach($dropdown => {
+        if ($dropdown.classList.contains('active')) {
+            closeDropdown($dropdown)
+        }
+    })
+}
+
+/**
+ * Removes highlighting of active header buttons.
+ */
+const deemphasizeDropdownButtons = () => {
+    document.querySelectorAll('.js-header-dropdown-button').forEach($btn => {
+        if ($btn.classList.contains('active')) {
+            $btn.classList.remove('active')
+        }
+    })
+}
+
+/**
+ * Handles opening particular header dropdown.
+ * @param {HTMLElement} $btn - Currently clicked dropdown button.
+ */
+const handleHeaderDropdown = ($btn) => {
+    const $dropDown = $btn.nextElementSibling
+    deemphasizeDropdownButtons()
+    
+    if ($dropDown.classList.contains('active')) {
+        $dropDown.classList.remove('active')
+    }
+    else {
+        closeDropdowns()
+        $dropDown.classList.add('active')
+        $btn.classList.add('active')
+    }
+} 
+
+if ($headerButtons) {
+    $headerButtons.addEventListener('click', e => {
+        const $target = e.target.closest('button')
+        if (!$target) {return false}
+
+        if ($target.classList.contains('js-header-dropdown-button')) {
+            handleHeaderDropdown($target)
+        }
+    })
+
+    document.addEventListener('click', e => {
+        $openDropdown = document.querySelector('.js-header-buttons-dropdown.active')
+
+        if ($openDropdown) {
+            const $target = e.target
+            if (!($target.closest('.js-header-buttons-dropdown') || $target.closest('.js-header-dropdown-button'))) {
+                closeDropdown($openDropdown)
+                deemphasizeDropdownButtons()
+            }
+
+        }
+    })
 }
 
 /**

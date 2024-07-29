@@ -27,7 +27,7 @@
         </ul>
       </nav>
 
-      <div class="header__buttons">
+      <div class="header__buttons js-header-buttons">
         <button class="mobile-nav-toggler js-mobile-nav-toggler" aria-controls="main-navigation" aria-expanded="false">
           <span class="visually-hidden">Menu</span>
           <i class="ri-menu-3-line" aria-hidden="true"></i>
@@ -39,28 +39,49 @@
         </button>
 
         <div class="header__buttons__dropdown">
-          <button>
+          <button class="js-header-dropdown-button">
             <span class="visually-hidden">User menu</span>
             <i class="ri-user-3-line" aria-hidden="true"></i>
           </button>
 
-          <div class="header__buttons__dropdown__nav">
-            <ul>
+          <div class="header__buttons__dropdown__content js-header-buttons-dropdown">
+            <ul class="header__buttons__dropdown__content__nav">
               <li>
-                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'login' %}">
+                  <i class="ri-user-follow-line" aria-hidden="true"></i>
+                  Login
+                </a>
               </li>
 
               <li>
-                <a href="{% url 'register' %}">Register</a>
+                <a href="{% url 'register' %}">
+                  <i class="ri-user-shared-2-line" aria-hidden="true"></i>
+                  Register
+                </a>
+              </li>
+
+              <li>
+                <a href="logout">
+                  <i class="ri-logout-circle-r-line" aria-hidden="true"></i>
+                  Logout
+                </a>
               </li>
             </ul>
           </div>
         </div>
 
-        <button>
-          <span class="visually-hidden">Shopping cart</span>
-          <i class="ri-shopping-cart-line" aria-hidden="true"></i>
-        </button>
+        <div class="header__buttons__dropdown">
+          <button class="js-header-dropdown-button">
+            <span class="visually-hidden">Shopping cart</span>
+            <i class="ri-shopping-cart-line" aria-hidden="true"></i>
+          </button>
+
+          <div class="header__buttons__dropdown__content header__buttons__dropdown__content--cart js-header-buttons-dropdown">
+            <div>
+              Your cart is empty
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
