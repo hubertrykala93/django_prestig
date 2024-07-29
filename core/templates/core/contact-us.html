@@ -2,7 +2,22 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block page_css %}
+<!--leaflet-->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+crossorigin=""/>
+{% endblock %}
+
 {% block content %}
+<!-- PAGE TITLE -->
+<section class="pagetitle">
+    <div class="row">
+      <h2 class="pagetitle__heading heading heading--h2">Contact us</h2>
+      <img src="/media/page-title/contact.jpg" alt="page title image" class="pagetitle__image" aria-hidden="true">
+    </div>
+</section>
+
 <!-- CONTACT FORM -->
 <section class="contact-form">
   <div class="container container--narrow">
@@ -51,4 +66,72 @@
     </div>
   </div>
 </section>
+
+<!-- CONTACT INFO -->
+<section class="contact-info">
+  <div class="container container--narrow">
+    <div class="row">
+      <div class="contact-info__content">
+        <h2 class="heading heading--h2">Reach out to us</h2>
+
+        <p class="contact-info__text">
+          We're here to assist you in every way possible. If you have questions, concerns, or feedback, don't hesitate to get in touch with our dedicated team. We strive to provide you with the best service possible.
+        </p>
+
+        <div class="contact-info__blocks">
+          <div class="contact-info__blocks__item">
+            <div class="contact-info__blocks__item__icon-wrapper">
+              <img src="/media/icons/contact1.svg" alt="address icon" aria-hidden="true">
+            </div>
+
+            <div class="contact-info__blocks__item__text">
+              <h4 class="contact-info__blocks__item__text__heading heading heading--h4">Offline store</h4>
+              <p>452 15h Street, Office 741, Ohio,<br> De 47754, USA</p>
+            </div>
+          </div>
+
+          <div class="contact-info__blocks__item">
+            <div class="contact-info__blocks__item__icon-wrapper">
+              <img src="/media/icons/contact2.svg" alt="email icon" aria-hidden="true">
+            </div>
+
+              <div class="contact-info__blocks__item__text">
+                <h4 class="contact-info__blocks__item__text__heading heading heading--h4">Email address</h4>
+                <p>product@sattiyas.com</p>
+              </div>
+          </div>
+
+          <div class="contact-info__blocks__item">
+            <div class="contact-info__blocks__item__icon-wrapper">
+              <img src="/media/icons/contact3.svg" alt="phone icon" aria-hidden="true">
+            </div>
+
+              <div class="contact-info__blocks__item__text">
+                <h4 class="contact-info__blocks__item__text__heading heading heading--h4">Live support</h4>
+                <p>+21 454 451 2009</p>
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-info__map">
+        <div class="contact-info__map__wrapper" id="map"></div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block page_scripts %}
+<!--leaflet-->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script>
+  var map = L.map('map').setView([29.133471, -81.342690], 13);
+
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+</script>
 {% endblock %}

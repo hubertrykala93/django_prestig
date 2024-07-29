@@ -295,6 +295,67 @@ if ($newsletterForm) {
 }
 
 /**
+* ABOUT PAGE
+*/
+
+// VIDEO POPUP
+const $openPopupBtn = document.querySelector('.js-videopopup-btn')
+
+/**
+ * Closes video popup if it's currently open.
+ */
+const closeVideoPopup = (e) => {
+    if (e.target.classList.contains('js-video-popup')) {
+        const $videoPopup = document.querySelector('.video-popup')
+    
+        if ($videoPopup) {
+            $videoPopup.remove()
+        }
+        document.removeEventListener('click', closeVideoPopup)
+    }
+
+}
+
+/**
+ * Generates html of video popup.
+ * @param {string} src - Source of video to show.
+ */
+const openVideoPopup = (src) => {
+    const html = `
+        <div class="video-popup js-video-popup">
+            <div class="video-popup__video-wrapper">
+                <video controls mute autoplay>
+                    <source src="${src}" type="video/mp4" />
+
+                    Download the
+                    <a href="${src}">MP4</a>
+                    video.
+                </video>
+            </div>
+        </div>
+    `
+
+    document.querySelector('body script').insertAdjacentHTML('beforebegin', html)
+    document.addEventListener('click', closeVideoPopup)
+}
+
+/**
+ * Handles opening video popup button trigger.
+ */
+const handleVideoPopup = (e) => {
+    const $btn = e.target.closest('button')
+    const videoSource = $btn.dataset.video
+    
+    if ($btn && videoSource) {
+        openVideoPopup(videoSource)
+    }
+}
+
+if ($openPopupBtn) {
+    $openPopupBtn.addEventListener('click', handleVideoPopup)
+}
+
+/**
 * CONTACT PAGE
 */
 
@@ -386,11 +447,11 @@ const handleContactForm = (e) => {
     const errors = validateContactForm(formData)
     clearFormErrors($form)
 
-    sendContactRequest(formData)
     if (Object.keys(errors).length === 0) {
+        sendContactRequest(formData)
     }
     else {
-//        showFormErrors($form, errors)
+       showFormErrors($form, errors)
     }
 }
 

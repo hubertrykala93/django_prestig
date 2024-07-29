@@ -22,6 +22,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 
+    <!--custom css block on page-->
+    {% block page_css %}{% endblock %}
+
     <!--remixicons-->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet"/>
 
@@ -39,9 +42,11 @@
 
     {% include 'core/footer.html' %}
 
-    {% block page_scripts %}
+    <!--csrf token-->
     <script>const csrfToken = '{{ csrf_token }}'</script>
-    {% endblock %}
+
+    <!--custom js scripts block on page-->
+    {% block page_scripts %}{% endblock %}
 
     <!--swiper js-->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
