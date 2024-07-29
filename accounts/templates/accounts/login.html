@@ -1,7 +1,74 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-{% include 'core/page-title.html' %}
+<section class="user-authentication">
+  <div class="container">
+    <div class="row">
+      <div class="user-authentication__top">
+        <h2 class="heading heading--h2">Sign In</h2>
+
+        <ul class="user-authentication__top__nav">
+          <li>
+            <a href="/">
+              Home
+              <i class="ri-arrow-right-line" aria-hidden="true"></i>
+            </a>
+          </li>
+
+          <li>
+            <span>
+              login
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <form method="post" class="user-authentication__form form form--narrow js-login-form">
+        <h4 class="user-authentication__form__heading heading heading--h4">
+          Log in Your Account
+        </h4>
+
+        <div class="form__row">
+          <div class="form__field js-form-field">
+              <label for="email" class="form__label">email *</label>
+              <div class="form__input-wrap">
+                  <input type="text" id="email" name="email" placeholder="Your email">
+              </div>
+          </div>
+
+          <div class="form__field js-form-field">
+            <label for="password" class="form__label">password *</label>
+            <div class="form__input-wrap">
+                <input type="password" id="password" name="password" placeholder="Type password">
+            </div>
+          </div>
+        </div>
+
+        <div class="form__row user-authentication__form__row_forgot">
+          <div class="form__field js-form-field">
+            <div class="form__checkbox">
+              <input class="form__checkbox__input" type="checkbox" name="remember" id="remember" value="1">
+              <label for="remember"><span>Remember Me</span></label>
+            </div>
+          </div>
+
+          <a href="#" class="user-authentication__form__row_forgot__link">Forgot Your password ?</a>
+        </div>
+
+        <div class="form__row form__row--submit">
+          <div class="form__field form__field--submit">
+              <button class="btn btn--primary btn--wide" type="submit">Log in</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block page_scripts_last %}
+<script src="{% static 'js/user-authentication.js' %}"></script>
 {% endblock %}

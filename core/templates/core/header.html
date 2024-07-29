@@ -38,10 +38,24 @@
           <i class="ri-search-line" aria-hidden="true"></i>
         </button>
 
-        <button>
-          <span class="visually-hidden">User menu</span>
-          <i class="ri-user-3-line" aria-hidden="true"></i>
-        </button>
+        <div class="header__buttons__dropdown">
+          <button>
+            <span class="visually-hidden">User menu</span>
+            <i class="ri-user-3-line" aria-hidden="true"></i>
+          </button>
+
+          <div class="header__buttons__dropdown__nav">
+            <ul>
+              <li>
+                <a href="{% url 'login' %}">Login</a>
+              </li>
+
+              <li>
+                <a href="{% url 'register' %}">Register</a>
+              </li>
+            </ul>
+          </div>
+        </div>
 
         <button>
           <span class="visually-hidden">Shopping cart</span>
