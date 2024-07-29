@@ -3,14 +3,8 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<!-- PAGE TITLE -->
-<section class="pagetitle">
-  <div class="row">
-    <h2 class="pagetitle__heading heading heading--h2">About us</h2>
-    <img src="/media/page-title/about.jpg" alt="page title image" class="pagetitle__image" aria-hidden="true">
-  </div>
-</section>
 
+{% include 'core/page-title.html' %}
 <!-- ABOUT SIDE IMAGE -->
 <section class="about-image">
   <div class="container container--narrow">

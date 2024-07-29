@@ -17,6 +17,17 @@ def index(request):
         })
 
 
+def about(request):
+    return render(
+        request=request,
+        template_name="core/about.html",
+        context={
+            "title": "About",
+            "img": "/media/page-title/about.jpg",
+        }
+    )
+
+
 def create_newsletter(request):
     if request.method == "POST":
         email = request.POST.get("email").strip()
@@ -27,7 +38,7 @@ def create_newsletter(request):
         if response.status_code == 201:
             try:
                 html_message = render_to_string(
-                    template_name="core/newsletter_mail.html",
+                    template_name="core/newsletter-mail.html",
                     context={
                         "email": email,
                     }
@@ -93,6 +104,7 @@ def contact_us(request):
         template_name="core/contact-us.html",
         context={
             "title": "Contact Us",
+            "img": "/media/page-title/contact.jpg",
         }
     )
 
@@ -117,7 +129,7 @@ def send_contact_mail(request):
         if response.status_code == 201:
             try:
                 html_message = render_to_string(
-                    template_name="core/contact_mail.html",
+                    template_name="core/contact-mail.html",
                     context={
                         "fullname": fullname,
                         "subject": subject,
@@ -152,3 +164,13 @@ def send_contact_mail(request):
 
         else:
             return JsonResponse(data=response.json(), status=response.status_code)
+
+
+def privacy_policy(request):
+    return render(
+        request=request,
+        template_name="core/privacy-policy.html",
+        context={
+            "title": "Privacy Policy",
+        }
+    )

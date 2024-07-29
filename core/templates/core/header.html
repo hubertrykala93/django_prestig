@@ -6,23 +6,23 @@
       <nav class="header__nav js-header-nav" aria-label="Main" id="main-navigation">
         <ul role="list">
           <li>
-            <a class="active" href="/">Home</a>
+            <a class="{% if request.resolver_match.url_name == 'index' %}active{% endif %}" href="/">Home</a>
           </li>
 
           <li>
-            <a href="{% url 'shop' %}">Shop</a>
+            <a class="{% if request.resolver_match.url_name == 'shop' %}active{% endif %}" href="{% url 'shop' %}">Shop</a>
           </li>
 
           <li>
-            <a href="{% url 'product' %}">Product</a>
+            <a class="{% if request.resolver_match.url_name == 'product' %}active{% endif %}" href="{% url 'product' %}">Product</a>
           </li>
 
           <li>
-            <a href="{% url 'blog' %}">Blog</a>
+            <a class="{% if request.resolver_match.url_name == 'blog' %}active{% endif %}" href="{% url 'blog' %}">Blog</a>
           </li>
 
           <li>
-            <a href="{% url 'contact-us' %}">Contact</a>
+            <a class="{% if request.resolver_match.url_name == 'contact-us' %}active{% endif %}" href="{% url 'contact-us' %}">Contact</a>
           </li>
         </ul>
       </nav>
