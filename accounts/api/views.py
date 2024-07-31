@@ -1,16 +1,19 @@
 from rest_framework.response import Response
 from accounts.models import User
 from rest_framework import status
-from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, RetrieveDestroyAPIView, GenericAPIView
-from .serializers import UserRegisterSerializer, UserSerializer
-from rest_framework.exceptions import NotFound
-import datetime
-from django.http import Http404
-from rest_framework.exceptions import ValidationError
-from rest_framework.authtoken.models import Token
-from django.contrib.auth import login, authenticate
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import CreateAPIView
+from .serializers import UserRegisterSerializer
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
+from django.utils.html import strip_tags
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from .tokens import token_generator
+from django.shortcuts import redirect, reverse
+from django.contrib import messages
+import os
+from core.api.exceptions import EmailSendError
 
 
 class UserRegisterAPIView(CreateAPIView):
@@ -29,227 +32,79 @@ class UserRegisterAPIView(CreateAPIView):
 
         if serializer.is_valid():
             self.perform_create(serializer=serializer)
-            headers = self.get_success_headers(data=serializer.data)
+            user = User.objects.get(email=serializer.validated_data.get("email"))
 
-            return Response(
-                data={
-                    "success": f"The account '{serializer.data.get('username')}' has been created. "
-                               f"Check your email to activate it.",
-                    "headers": headers,
-                },
-                status=status.HTTP_201_CREATED,
-            )
+            try:
+                html_message = render_to_string(
+                    template_name="accounts/account-activation-email.html",
+                    context={
+                        "user": user,
+                        "domain": get_current_site(request=request),
+                        "uid": urlsafe_base64_encode(s=force_bytes(s=user.pk)),
+                        "token": token_generator.make_token(user=user)
+                    }
+                )
+
+                plain_message = strip_tags(html_message)
+
+                message = EmailMessage(
+                    subject="Account activation request.",
+                    body=plain_message,
+                    from_email=os.environ.get("EMAIL_HOST_USER"),
+                    to=[user.email],
+                )
+
+                # message.attach(content=html_message, mimetype="text/html")
+                message.content_subtype = "html"
+                message.send()
+
+                return Response(
+                    data={
+                        "success": f"The account '{serializer.data.get('username')}' has been created. "
+                                   f"Check your email to activate it.",
+                    },
+                    status=status.HTTP_201_CREATED,
+                )
+
+            except EmailSendError:
+                return Response(
+                    data={
+                        "error": "The message could not be sent.",
+                    },
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
 
         else:
             return Response(
                 data=serializer.errors,
             )
 
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #
-    #     if serializer.is_valid():
-    #         self.perform_create(serializer=serializer)
-    #         headers = self.get_success_headers(data=serializer.data)
-    #
-    #         return Response(
-    #             data={
-    #                 "success": f"The account '{serializer.data.get('username')}' has been created. "
-    #                            f"Check your email to activate it.",
-    #                 "headers": headers,
-    #             },
-    #             status=status.HTTP_201_CREATED,
-    #         )
-    #
-    #     else:
-    #         return Response(
-    #             data=serializer.errors,
-    #         )
 
-    def get_success_headers(self, data):
-        try:
-            return {
-                "token": Token.objects.get(user=User.objects.get(email=data["email"])).key,
-            }
-        except (TypeError, KeyError):
-            return {}
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(s=urlsafe_base64_decode(s=uidb64))
+        user = User.objects.get(pk=uid)
 
+    except:
+        return redirect(to=reverse(viewname="register"))
 
-class UserLoginAPIView(GenericAPIView):
-    def get_serializer_class(self):
-        return UserRegisterSerializer
+    if user and token_generator.check_token(user=user, token=token):
+        user.is_verified = True
+        user.save()
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-
-        context.update(
-            {
-                "email": self.request.data.get("email")
-            },
+        messages.success(
+            request=request,
+            message="Your account has been activated, you can now log in.",
         )
 
-        return context
+        return redirect(to=reverse(viewname="login"))
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+    else:
+        user.delete()
 
-        if serializer.is_valid():
-            user = authenticate(request=request, email=serializer.validated_data.get("email"),
-                                password=serializer.validated_data.get("password"))
-
-            if user is not None:
-                login(request=request, user=user)
-                token, created = Token.objects.get_or_create(user=user)
-
-                return Response(
-                    data={
-                        "message": "You have been successfully logged in.",
-                        "data": {
-                            "username": user.username,
-                            "email": user.email,
-                        },
-                        "token": token.key,
-                    }
-                )
-
-            else:
-                return Response(
-                    data={
-                        "message": "User authentication error, please enter the correct details.",
-                    },
-                    status=status.HTTP_401_UNAUTHORIZED,
-                )
-        else:
-            return Response(
-                data=serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-
-class UserLogoutAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, *args, **kwargs):
-        try:
-            token = Token.objects.get(user=request.user)
-
-        except Token.DoesNotExist:
-            return Response(
-                data={
-                    "message": "Token does not exists.",
-                },
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
-
-        token.delete()
-
-        return Response(
-            data={
-                "message": "You have been successfully logged out.",
-            },
-            status=status.HTTP_200_OK,
+        messages.info(
+            request=request,
+            message="Your activation link has expired. Please create your account again."
         )
 
-
-class UsersAPIView(ListAPIView):
-    def get_queryset(self):
-        return User.objects.all()
-
-    def get_serializer_class(self):
-        return UserSerializer
-
-
-class UserRetrieveAPIView(RetrieveAPIView):
-    def get_queryset(self):
-        return User.objects.all()
-
-    def get_serializer_class(self):
-        return UserSerializer
-
-    def get_object(self):
-        if self.kwargs.get("pk"):
-            if self.get_queryset().filter(id=self.kwargs.get("pk")).exists():
-                obj = self.get_queryset().filter(id=self.kwargs.get("pk")).first()
-
-            else:
-                raise NotFound(
-                    detail={
-                        "message": f"The user with ID '{self.kwargs.get('pk')}' does not exist.",
-                    }
-                )
-
-        elif self.kwargs.get("username"):
-            if self.get_queryset().filter(username=self.kwargs.get("username")).exists():
-                obj = self.get_queryset().filter(username=self.kwargs.get("username")).first()
-
-            else:
-                raise NotFound(
-                    detail={
-                        "message": f"The user with the username '{self.kwargs.get('username')}' does not exist.",
-                    },
-                )
-
-        else:
-            return Response(
-                data={
-                    "message": "The user does not exist."
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        return obj
-
-
-class UserDeleteAPIView(RetrieveDestroyAPIView):
-    def get_queryset(self):
-        return User.objects.all()
-
-    def get_serializer_class(self):
-        return UserSerializer
-
-    def delete(self, request, *args, **kwargs):
-        instance = self.get_object()
-        id, date_joined, username, email = instance.id, instance.date_joined, instance.username, instance.email
-
-        try:
-            self.perform_destroy(instance=instance)
-
-            return Response(
-                data={
-                    "message": f"The account '{username}' with ID '{id}' has been successfully deleted.",
-                    "data": {
-                        "id": id,
-                        "date_joined": date_joined.strftime("%Y-%m-%d %H:%M:%S"),
-                        "username": username,
-                        "email": email,
-                    },
-                    "deleted_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "deleted_by": self.request.user.username,
-                },
-                status=status.HTTP_200_OK,
-            )
-
-        except Exception:
-            return Response(
-                data={
-                    "message": "An error occurred while deleting the object, please try again.",
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-    def handle_exception(self, exc):
-        if isinstance(exc, Http404):
-            return Response(
-                data={
-                    "message": "Account not found.",
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        elif isinstance(exc, ValidationError):
-            return Response(
-                data=exc.detail,
-                status=exc.status_code,
-            )
-
-        return super().handle_exception(exc)
+        return redirect(to=reverse(viewname="register"))

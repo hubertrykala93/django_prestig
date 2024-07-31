@@ -149,3 +149,5 @@ REST_FRAMEWORK = {
     #     "rest_framework.renderers.JSONOpenAPIRenderer",
     # ],
 }
+
+PASSWORD_RESET_TIMEOUT = int(os.environ.get("PASSWORD_RESET_TIMEOUT"))

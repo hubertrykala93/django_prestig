@@ -1,11 +1,6 @@
 from django.shortcuts import render
 import requests
 from django.http import JsonResponse
-from django.template.loader import render_to_string
-from django.core.mail import EmailMultiAlternatives
-from django.utils.html import strip_tags
-import os
-from .exceptions import EmailSendError
 
 
 def index(request):
@@ -36,36 +31,10 @@ def create_newsletter(request):
         })
 
         if response.status_code == 201:
-            try:
-                html_message = render_to_string(
-                    template_name="core/newsletter-mail.html",
-                    context={
-                        "email": email,
-                    }
-                )
-                plain_message = strip_tags(html_message)
-
-                message = EmailMultiAlternatives(
-                    subject="Thank you for subscribing to our newsletter.",
-                    body=plain_message,
-                    from_email=os.environ.get("EMAIL_FROM"),
-                    to=[email],
-                )
-                message.attach_alternative(content=html_message, mimetype="text/html")
-                message.send(fail_silently=False)
-
-                return JsonResponse(data=response.json(), status=response.status_code)
-
-            except EmailSendError:
-                return JsonResponse(
-                    data=response.json(),
-                    status=500,
-                )
+            return JsonResponse(data=response.json())
 
         else:
-            return JsonResponse(
-                data=response.json(),
-            )
+            return JsonResponse(data=response.json())
 
 
 def shop(request):
@@ -127,43 +96,10 @@ def send_contact_mail(request):
         )
 
         if response.status_code == 201:
-            try:
-                html_message = render_to_string(
-                    template_name="core/contact-mail.html",
-                    context={
-                        "fullname": fullname,
-                        "subject": subject,
-                        "email": email,
-                        "message": message,
-                    },
-                )
-
-                plain_message = strip_tags(html_message)
-
-                message = EmailMultiAlternatives(
-                    subject="Message from the Prestig website.",
-                    body=plain_message,
-                    from_email=os.environ.get("EMAIL_HOST_USER"),
-                    to=[os.environ.get("EMAIL_HOST_USER")]
-                )
-                message.attach_alternative(content=html_message, mimetype="text/html")
-                message.send()
-
-                return JsonResponse(
-                    data=response.json(),
-                    status=response.status_code,
-                )
-
-            except EmailSendError:
-                return JsonResponse(
-                    data={
-                        "error": "Error sending the message, please try again.",
-                    },
-                    status=500,
-                )
+            return JsonResponse(data=response.json())
 
         else:
-            return JsonResponse(data=response.json(), status=response.status_code)
+            return JsonResponse(data=response.json())
 
 
 def privacy_policy(request):

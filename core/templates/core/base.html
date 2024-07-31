@@ -37,8 +37,11 @@
 </head>
 <body>
     {% include 'core/header.html' %}
-    {% block content %}
-    {% endblock %}
+
+    <main>
+    {% block messages %}{% endblock %}
+    {% block content %}{% endblock %}
+    </main>
 
     {% include 'core/footer.html' %}
 
