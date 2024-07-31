@@ -4,6 +4,7 @@ from django.utils.timezone import now
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from rest_framework.authtoken.models import Token
+from uuid import uuid4
 
 
 class CustomUserManager(UserManager):
@@ -42,6 +43,7 @@ class CustomUserManager(UserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    uuid = models.UUIDField(default=uuid4)
     date_joined = models.DateTimeField(default=now)
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=200, unique=True)

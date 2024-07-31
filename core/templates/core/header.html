@@ -46,6 +46,7 @@
 
           <div class="header__buttons__dropdown__content js-header-buttons-dropdown">
             <ul class="header__buttons__dropdown__content__nav">
+              {% if not request.user.is_authenticated %}
               <li>
                 <a href="{% url 'login' %}">
                   <i class="ri-user-follow-line" aria-hidden="true"></i>
@@ -60,12 +61,20 @@
                 </a>
               </li>
 
+              {% else %}
+              <li>
+                <a href="#">
+                  <i class="ri-logout-circle-r-line" aria-hidden="true"></i>
+                  Settings
+                </a>
+              </li>
               <li>
                 <a href="logout">
                   <i class="ri-logout-circle-r-line" aria-hidden="true"></i>
                   Logout
                 </a>
               </li>
+              {% endif %}
             </ul>
           </div>
         </div>

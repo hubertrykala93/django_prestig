@@ -4,8 +4,6 @@ from rest_framework import status
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, RetrieveDestroyAPIView, GenericAPIView
 from .serializers import UserRegisterSerializer, UserSerializer
 from rest_framework.exceptions import NotFound
-from rest_framework.filters import OrderingFilter, SearchFilter
-from django_filters.rest_framework import DjangoFilterBackend
 import datetime
 from django.http import Http404
 from rest_framework.exceptions import ValidationError
@@ -19,17 +17,25 @@ class UserRegisterAPIView(CreateAPIView):
     def get_serializer_class(self):
         return UserRegisterSerializer
 
-    def create(self, request, *args, **kwargs):
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+
+        context["password"] = self.request.data.get("password")
+
+        return context
+
+    def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
             self.perform_create(serializer=serializer)
+            headers = self.get_success_headers(data=serializer.data)
 
             return Response(
                 data={
-                    "message": f"The user '{serializer.data['username']}' has been registered successfully.",
-                    "data": serializer.data,
-                    "token": Token.objects.get(user=User.objects.get(email=serializer.validated_data.get("email"))).key,
+                    "success": f"The account '{serializer.data.get('username')}' has been created. "
+                               f"Check your email to activate it.",
+                    "headers": headers,
                 },
                 status=status.HTTP_201_CREATED,
             )
@@ -37,8 +43,36 @@ class UserRegisterAPIView(CreateAPIView):
         else:
             return Response(
                 data=serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST,
             )
+
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #
+    #     if serializer.is_valid():
+    #         self.perform_create(serializer=serializer)
+    #         headers = self.get_success_headers(data=serializer.data)
+    #
+    #         return Response(
+    #             data={
+    #                 "success": f"The account '{serializer.data.get('username')}' has been created. "
+    #                            f"Check your email to activate it.",
+    #                 "headers": headers,
+    #             },
+    #             status=status.HTTP_201_CREATED,
+    #         )
+    #
+    #     else:
+    #         return Response(
+    #             data=serializer.errors,
+    #         )
+
+    def get_success_headers(self, data):
+        try:
+            return {
+                "token": Token.objects.get(user=User.objects.get(email=data["email"])).key,
+            }
+        except (TypeError, KeyError):
+            return {}
 
 
 class UserLoginAPIView(GenericAPIView):

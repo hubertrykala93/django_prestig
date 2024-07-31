@@ -6,7 +6,7 @@ const $registerForm = document.querySelector('.js-register-form')
  * @param {Object} formData - Register formdata object.
  */
 const sendRegisterRequest = (formData) => {
-    const url = 'register'
+    const url = 'create-account'
 
     fetch(url, {
         method:'POST',
@@ -18,6 +18,7 @@ const sendRegisterRequest = (formData) => {
          return response.json()
     }).then((response) => {
         clearFormErrors($registerForm)
+        console.log(response)
 
         if (response.hasOwnProperty('success')) {
             showAlert(response.success, 'success')
