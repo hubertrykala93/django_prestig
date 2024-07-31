@@ -8,11 +8,6 @@ urlpatterns = [
         name="api-endpoints",
     ),
     path(
-        route="api/v1/newsletters",
-        view=views.NewslettersAPIView.as_view(),
-        name="api-v1-newsletters",
-    ),
-    path(
         route="api/v1/newsletters/create",
         view=views.NewsletterCreateAPIView.as_view(),
         name="api-v1-newsletters-create",

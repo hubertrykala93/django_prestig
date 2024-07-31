@@ -14,6 +14,7 @@ from django.shortcuts import redirect, reverse
 from django.contrib import messages
 import os
 from core.api.exceptions import EmailSendError
+from rest_framework.views import APIView
 
 
 class UserRegisterAPIView(CreateAPIView):
@@ -108,3 +109,8 @@ def activate(request, uidb64, token):
         )
 
         return redirect(to=reverse(viewname="register"))
+
+
+class LoginAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        pass

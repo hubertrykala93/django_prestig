@@ -3,17 +3,6 @@ from core.models import Newsletter, ContactMail
 import re
 
 
-class NewsletterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Newsletter
-        fields = "__all__"
-        extra_kwargs = {
-            "created_at": {
-                "format": "%Y-%m-%d %H:%M:%S",
-            }
-        }
-
-
 class NewsletterCreateSerializer(serializers.ModelSerializer):
     email = serializers.CharField(allow_blank=True)
 

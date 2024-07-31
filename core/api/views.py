@@ -1,6 +1,6 @@
 from rest_framework.generics import ListAPIView, CreateAPIView
 from core.models import Newsletter
-from .serializers import NewsletterSerializer, NewsletterCreateSerializer, ContactMailCreateSerializer
+from .serializers import NewsletterCreateSerializer, ContactMailCreateSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -23,11 +23,6 @@ def api_endpoints(request):
         ],
         "Newsletters": [
             {
-                "Method": "GET",
-                "URL": "api/v1/newsletters",
-                "Description": "Retrieve all newsletters.",
-            },
-            {
                 "Method": "POST",
                 "URL": "api/v1/newsletters/create",
                 "Description": "Create a new newsletter.",
@@ -37,47 +32,19 @@ def api_endpoints(request):
             {
                 "Method": "POST",
                 "URL": "api/v1/accounts/account-register",
-                "Description": "User registration",
+                "Description": "User Registration",
             },
             {
                 "Method": "POST",
                 "URL": "api/v1/accounts/account-login",
-                "Description": "User login",
+                "Description": "User Login",
             },
-            {
-                "Method": "POST",
-                "URL": "api/v1/accounts/account-logout",
-                "Description": "User logout",
-            },
-            {
-                "Method": "GET",
-                "URL": "api/v1/accounts",
-                "Description": "Retrieve all accounts."
-            },
-            {
-                "Method": "GET",
-                "URL": "api/v1/accounts/<int:pk>",
-                "Description": "Retrieve account with a specific ID.",
-            },
-            {
-                "Method": "GET",
-                "URL": "api/v1/accounts/<str:username>",
-                "Description": "Retrieve account with a specific username.",
-            }
         ],
     }
     return Response(
         data=response,
         status=status.HTTP_200_OK,
     )
-
-
-class NewslettersAPIView(ListAPIView):
-    def get_queryset(self):
-        return Newsletter.objects.all()
-
-    def get_serializer_class(self):
-        return NewsletterSerializer
 
 
 class NewsletterCreateAPIView(CreateAPIView):
