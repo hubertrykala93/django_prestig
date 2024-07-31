@@ -60,7 +60,8 @@ def authenticate(request):
             json={
                 "email": email,
                 "password": password,
-            })
+            },
+        )
 
         if response.status_code == 201:
             return JsonResponse(

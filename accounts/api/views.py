@@ -10,13 +10,14 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .tokens import token_generator
-from django.shortcuts import redirect, reverse
+from django.shortcuts import redirect
 from django.contrib import messages
 import os
 from core.api.exceptions import EmailSendError
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import login, authenticate, update_session_auth_hash
 
 
 class UserRegisterAPIView(CreateAPIView):
@@ -136,26 +137,30 @@ class UserLoginAPIView(APIView):
         })
 
         if serializer.is_valid():
-            headers = self.get_success_headers(user=User.objects.get(email=serializer.validated_data.get("email")))
+            username = User.objects.get(email=serializer.validated_data.get("email")).username
+            user = authenticate(request=request, username=username, password=serializer.validated_data.get("password"))
+            
+            if user:
+                login(request=request, user=user)
 
-            return Response(
-                data={
-                    "success": f"Welcome '{serializer.data.get('email')}'. You have successfully logged in.",
-                },
-                headers=headers,
-                status=status.HTTP_200_OK,
-            )
+                token, created = Token.objects.get_or_create(user=user)
+                headers = self.get_success_headers(token=token)
+
+                return Response(
+                    data={
+                        "success": f"Welcome '{serializer.data.get('email')}'. You have successfully logged in.",
+                    },
+                    headers=headers,
+                    status=status.HTTP_200_OK,
+                )
+
 
         else:
             return Response(
                 data=serializer.errors,
             )
 
-    def get_success_headers(self, user):
-        try:
-            return {
-                "Authorization": f"Token {Token.objects.get(user=user).key}",
-            }
-
-        except ObjectDoesNotExist:
-            return {}
+    def get_success_headers(self, token):
+        return {
+            "Authorization": f"Token {token.key}"
+        }

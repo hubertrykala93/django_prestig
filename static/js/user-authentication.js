@@ -18,7 +18,6 @@ const sendRegisterRequest = (formData) => {
          return response.json()
     }).then((response) => {
         clearFormErrors($registerForm)
-        console.log(response)
 
         if (response.hasOwnProperty('success')) {
             showAlert(response.success, 'success')

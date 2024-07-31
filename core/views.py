@@ -4,6 +4,7 @@ from django.http import JsonResponse
 
 
 def index(request):
+    print(f"Is authenticated? -> {request.user.is_authenticated}")
     return render(
         request=request,
         template_name='core/index.html',
