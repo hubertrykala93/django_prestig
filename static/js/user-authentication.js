@@ -50,10 +50,10 @@ const validateRegisterForm = (formData) => {
     const result = {}
 
     if (username === '') {
-        result.username = 'User name is required.'
+        result.username = 'Username is required.'
     }
     else if (username.length < 8) {
-        result.username = 'The user name must be at least 8 characters long.'
+        result.username = 'The username should consist of at least 8 characters.'
     }
 
     if (email === '') {
@@ -71,11 +71,11 @@ const validateRegisterForm = (formData) => {
     }
 
     if (repassword != '' && password !== repassword) {
-        result.repassword = 'The re password field does not match the previously entered password.'
+        result.repassword = 'The confirm password does not match the password.'
     }
 
     if (policy != '1') {
-      result.policy = 'Privacy policy is required.'
+      result.policy = 'The privacy policy must be accepted.'
     }
 
     return result
@@ -113,7 +113,7 @@ const $loginForm = document.querySelector('.js-login-form')
  * @param {Object} formData - Login formdata object.
  */
 const sendLoginRequest = (formData) => {
-    const url = 'login'
+    const url = 'authenticate'
 
     fetch(url, {
         method:'POST',

@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from accounts.models import User
 import re
+from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -24,6 +26,15 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             "repassword",
             "policy",
         ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.context.get("view").__class__.__name__ == "UserLoginAPIView":
+            fields = ["username", "repassword", "policy"]
+
+            for field in fields:
+                self.fields.pop(field)
 
     def validate_username(self, username):
         if username == "":
@@ -54,29 +65,61 @@ class UserRegisterSerializer(serializers.ModelSerializer):
                 detail="The e-mail address format is invalid.",
             )
 
-        if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError(
-                detail=f"The user with the e-mail address {email} already exists.",
-            )
+        if self.context.get("view").__class__.__name__ == "UserRegisterAPIView":
+            if User.objects.filter(email=email).exists():
+                raise serializers.ValidationError(
+                    detail=f"The user with the e-mail address {email} already exists.",
+                )
+
+        if self.context.get("view").__class__.__name__ == "UserLoginAPIView":
+            if not User.objects.filter(email=email).exists():
+                raise serializers.ValidationError(
+                    detail=f"No user found with the provided e-mail address. Did you enter it correctly?",
+                )
+
+            else:
+                if User.objects.filter(email=email).exists():
+                    user = User.objects.get(email=email)
+
+                    if not user.is_verified:
+                        raise serializers.ValidationError(
+                            detail="You cannot log in because your account has not been verified yet.",
+                        )
 
         return email
 
     def validate_password(self, password):
-        if password == "":
-            raise serializers.ValidationError(
-                detail="Password is required",
-            )
+        if self.context.get("view").__class__.__name__ == "UserRegisterAPIView":
+            if password == "":
+                raise serializers.ValidationError(
+                    detail="Password is required",
+                )
 
-        if len(password) < 8:
-            raise serializers.ValidationError(
-                detail="The password should consist of at least 8 characters.",
-            )
+            if len(password) < 8:
+                raise serializers.ValidationError(
+                    detail="The password should consist of at least 8 characters.",
+                )
 
-        if not re.match(pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", string=password):
-            raise serializers.ValidationError(
-                detail="The password should contain at least one uppercase letter, one lowercase letter, one number, "
-                       "and one special character."
-            )
+            if not re.match(pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", string=password):
+                raise serializers.ValidationError(
+                    detail="The password should contain at least one uppercase letter, one lowercase letter, one number, "
+                           "and one special character."
+                )
+
+        if self.context.get("view").__class__.__name__ == "UserLoginAPIView":
+            if User.objects.filter(email=self.context.get("request").data.get("email")).exists():
+                user = User.objects.get(email=self.context.get("request").data.get("email"))
+
+                if user.is_verified:
+                    if password == "":
+                        raise serializers.ValidationError(
+                            detail="Password is required.",
+                        )
+                    else:
+                        if not user.check_password(raw_password=password):
+                            raise serializers.ValidationError(
+                                detail=f"You entered an incorrect password for the user '{self.context.get('request').data.get('email')}'."
+                            )
 
         return password
 

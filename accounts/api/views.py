@@ -15,6 +15,8 @@ from django.contrib import messages
 import os
 from core.api.exceptions import EmailSendError
 from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class UserRegisterAPIView(CreateAPIView):
@@ -87,30 +89,73 @@ def activate(request, uidb64, token):
         user = User.objects.get(pk=uid)
 
     except:
-        return redirect(to=reverse(viewname="register"))
-
-    if user and token_generator.check_token(user=user, token=token):
-        user.is_verified = True
-        user.save()
-
-        messages.success(
-            request=request,
-            message="Your account has been activated, you can now log in.",
-        )
-
-        return redirect(to=reverse(viewname="login"))
-
-    else:
-        user.delete()
-
         messages.info(
             request=request,
             message="Your activation link has expired. Please create your account again."
         )
+        return redirect(to="register")
 
-        return redirect(to=reverse(viewname="register"))
+    if user:
+        if not user.is_verified:
+            if user and token_generator.check_token(user=user, token=token):
+
+                user.is_verified = True
+                user.save()
+
+                messages.success(
+                    request=request,
+                    message="Your account has been activated, you can now log in.",
+                )
+
+                return redirect(to="login")
+
+            else:
+                user.delete()
+
+                messages.info(
+                    request=request,
+                    message="Your activation link has expired. Please create your account again."
+                )
+
+            return redirect(to="register")
+
+        else:
+            messages.info(
+                request=request,
+                message="Your account is active, you can log in."
+            )
+
+            return redirect(to="login")
 
 
-class LoginAPIView(APIView):
+class UserLoginAPIView(APIView):
     def post(self, request, *args, **kwargs):
-        pass
+        serializer = UserRegisterSerializer(data=request.data, context={
+            "request": request,
+            "view": self,
+        })
+
+        if serializer.is_valid():
+            headers = self.get_success_headers(user=User.objects.get(email=serializer.validated_data.get("email")))
+
+            return Response(
+                data={
+                    "success": f"Welcome '{serializer.data.get('email')}'. You have successfully logged in.",
+                },
+                headers=headers,
+                status=status.HTTP_200_OK,
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+            )
+
+    def get_success_headers(self, user):
+        try:
+            return {
+                "Authorization": f"Token {Token.objects.get(user=user).key}",
+            }
+
+        except ObjectDoesNotExist:
+            return {}
