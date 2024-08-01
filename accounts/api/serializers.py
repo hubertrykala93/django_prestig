@@ -71,21 +71,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
                     detail=f"The user with the e-mail address {email} already exists.",
                 )
 
-        if self.context.get("view").__class__.__name__ == "UserLoginAPIView":
-            if not User.objects.filter(email=email).exists():
-                raise serializers.ValidationError(
-                    detail=f"No user found with the provided e-mail address. Did you enter it correctly?",
-                )
-
-            else:
-                if User.objects.filter(email=email).exists():
-                    user = User.objects.get(email=email)
-
-                    if not user.is_verified:
-                        raise serializers.ValidationError(
-                            detail="You cannot log in because your account has not been verified yet.",
-                        )
-
         return email
 
     def validate_password(self, password):
@@ -105,21 +90,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
                     detail="The password should contain at least one uppercase letter, one lowercase letter, one number, "
                            "and one special character."
                 )
-
-        if self.context.get("view").__class__.__name__ == "UserLoginAPIView":
-            if User.objects.filter(email=self.context.get("request").data.get("email")).exists():
-                user = User.objects.get(email=self.context.get("request").data.get("email"))
-
-                if user.is_verified:
-                    if password == "":
-                        raise serializers.ValidationError(
-                            detail="Password is required.",
-                        )
-                    else:
-                        if not user.check_password(raw_password=password):
-                            raise serializers.ValidationError(
-                                detail=f"You entered an incorrect password for the user '{self.context.get('request').data.get('email')}'."
-                            )
 
         return password
 
@@ -170,6 +140,70 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 
 class UserLoginSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(allow_blank=True)
+    password = serializers.CharField(allow_blank=True, write_only=True, style={
+        "input_type": "password",
+    })
+
     class Meta:
         model = User
-        fields = "__all__"
+        fields = [
+            "id",
+            "email",
+            "password",
+        ]
+
+    def validate_email(self, email):
+        if email == "":
+            raise serializers.ValidationError(
+                detail="E-mail is required.",
+            )
+
+        if not re.match(pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", string=email):
+            raise serializers.ValidationError(
+                detail="The e-mail address format is invalid.",
+            )
+
+        if not User.objects.filter(email=email).exists():
+            raise serializers.ValidationError(
+                detail=f"No user found with the provided e-mail address. Did you enter it correctly?",
+            )
+
+        else:
+            if User.objects.filter(email=email).exists():
+                user = User.objects.get(email=email)
+
+                if not user.is_verified:
+                    raise serializers.ValidationError(
+                        detail="You cannot log in because your account has not been verified yet.",
+                    )
+
+        return email
+
+    def validate_password(self, password):
+        if User.objects.filter(email=self.context.get("request").data.get("email")).exists():
+            user = User.objects.get(email=self.context.get("request").data.get("email"))
+
+            if user.is_verified:
+                if password == "":
+                    raise serializers.ValidationError(
+                        detail="Password is required.",
+                    )
+                else:
+                    if not user.check_password(raw_password=password):
+                        raise serializers.ValidationError(
+                            detail=f"You entered an incorrect password for the user '{self.context.get('request').data.get('email')}'."
+                        )
+
+        return password
+
+    def run_validation(self, data):
+        try:
+            validated_data = super().run_validation(data=data)
+
+        except serializers.ValidationError as exc:
+            new_errors = {field: value[0] if isinstance(value, list) else value for field, value in exc.detail.items()}
+
+            raise serializers.ValidationError(detail=new_errors)
+
+        return validated_data

@@ -6,7 +6,7 @@ const $registerForm = document.querySelector('.js-register-form')
  * @param {Object} formData - Register formdata object.
  */
 const sendRegisterRequest = (formData) => {
-    const url = 'create-account'
+    const url = 'api/v1/accounts/account-register'
 
     fetch(url, {
         method:'POST',
@@ -112,7 +112,7 @@ const $loginForm = document.querySelector('.js-login-form')
  * @param {Object} formData - Login formdata object.
  */
 const sendLoginRequest = (formData) => {
-    const url = 'authenticate'
+    const url = 'api/v1/accounts/account-login'
 
     fetch(url, {
         method:'POST',
@@ -124,6 +124,7 @@ const sendLoginRequest = (formData) => {
          return response.json()
     }).then((response) => {
         clearFormErrors($loginForm)
+        console.log(response)
 
         if (response.hasOwnProperty('success')) {
           window.location.href = '/'

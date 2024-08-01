@@ -20,12 +20,6 @@ class NewsletterCreateSerializer(serializers.ModelSerializer):
             },
         }
 
-    def to_internal_value(self, data):
-        if 'email' in data:
-            data['email'] = data['email'].strip()
-
-        return super().to_internal_value(data=data)
-
     def validate_email(self, email):
         if email == "":
             raise serializers.ValidationError(
@@ -73,21 +67,6 @@ class ContactMailCreateSerializer(serializers.ModelSerializer):
                 "read_only": True,
             },
         }
-
-    def to_internal_value(self, data):
-        if 'fullname' in data:
-            data['fullname'] = data['fullname'].strip().title()
-
-        if 'email' in data:
-            data['email'] = data['email'].strip()
-
-        if 'subject' in data:
-            data['subject'] = data['subject'].strip().title()
-
-        if 'message' in data:
-            data['message'] = data['message'].strip()
-
-        return super().to_internal_value(data=data)
 
     def validate_fullname(self, fullname):
         if fullname == "":

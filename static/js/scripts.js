@@ -301,7 +301,7 @@ const $newsletterForm = document.querySelector('.js-newsletter-form')
  * @param {Object} formData - Newsletter form data object.
  */
 const sendNewsletterRequest = (formData) => {
-    const url = 'create-newsletter'
+    const url = 'api/v1/newsletters/create'
 
     fetch(url, {
         method:'POST',
@@ -445,7 +445,7 @@ const $contactForm = document.querySelector('.js-contact-form')
  * @param {Object} formData - Contact form data object.
  */
 const sendContactRequest = (formData) => {
-    const url = 'send-contact-mail'
+    const url = 'api/v1/contact-mails/create'
 
     fetch(url, {
         method:'POST',

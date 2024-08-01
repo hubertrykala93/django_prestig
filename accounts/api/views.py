@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from accounts.models import User
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
-from .serializers import UserRegisterSerializer
+from .serializers import UserRegisterSerializer, UserLoginSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.utils.html import strip_tags
@@ -16,8 +16,7 @@ import os
 from core.api.exceptions import EmailSendError
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth import login, authenticate, update_session_auth_hash
+from django.contrib.auth import login, authenticate
 
 
 class UserRegisterAPIView(CreateAPIView):
@@ -131,17 +130,22 @@ def activate(request, uidb64, token):
 
 class UserLoginAPIView(APIView):
     def post(self, request, *args, **kwargs):
-        serializer = UserRegisterSerializer(data=request.data, context={
+        serializer = UserLoginSerializer(data=request.data, context={
             "request": request,
-            "view": self,
         })
 
         if serializer.is_valid():
-            username = User.objects.get(email=serializer.validated_data.get("email")).username
-            user = authenticate(request=request, username=username, password=serializer.validated_data.get("password"))
+            user = authenticate(
+                request=request,
+                username=User.objects.get(email=serializer.validated_data.get('email')).username,
+                password=serializer.validated_data.get("password"),
+            )
 
             if user:
-                login(request=request, user=user)
+                login(
+                    request=request,
+                    user=user,
+                )
 
                 token, created = Token.objects.get_or_create(user=user)
                 headers = self.get_success_headers(token=token)
@@ -152,6 +156,14 @@ class UserLoginAPIView(APIView):
                     },
                     headers=headers,
                     status=status.HTTP_200_OK,
+                )
+
+            else:
+                return Response(
+                    data={
+                        "error": "Incorrect credentials, please enter the correct information to log in.",
+                    },
+                    status=status.HTTP_401_UNAUTHORIZED,
                 )
 
 
