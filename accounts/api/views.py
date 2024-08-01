@@ -17,6 +17,7 @@ from core.api.exceptions import EmailSendError
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import login, authenticate
+from rest_framework.permissions import IsAuthenticated
 
 
 class UserRegisterAPIView(CreateAPIView):
@@ -142,17 +143,15 @@ class UserLoginAPIView(APIView):
             )
 
             if user:
-                login(
-                    request=request,
-                    user=user,
-                )
-
                 token, created = Token.objects.get_or_create(user=user)
                 headers = self.get_success_headers(token=token)
+
+                response = Response()
 
                 return Response(
                     data={
                         "success": f"Welcome '{serializer.data.get('email')}'. You have successfully logged in.",
+                        "token": token.key,
                     },
                     headers=headers,
                     status=status.HTTP_200_OK,

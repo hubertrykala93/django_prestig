@@ -13,6 +13,8 @@ urlpatterns = [
         name="api-v1-accounts-account-login",
     ),
     path(
-        route="activate/<uidb64>/<token>", view=views.activate, name="activate",
-    )
+        route="activate/<uidb64>/<token>",
+        view=views.activate,
+        name="activate",
+    ),
 ]

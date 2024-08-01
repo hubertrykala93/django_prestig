@@ -3,6 +3,8 @@ from django.contrib.auth import logout
 
 
 def index(request):
+    print(request.user.is_authenticated)
+
     return render(
         request=request,
         template_name='core/index.html',
