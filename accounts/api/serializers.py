@@ -167,3 +167,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(detail=new_errors)
 
         return validated_data
+
+
+class UserLoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = "__all__"
