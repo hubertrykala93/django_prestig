@@ -28,18 +28,18 @@
       </nav>
 
       <div class="header__buttons js-header-buttons">
-        <button class="mobile-nav-toggler js-mobile-nav-toggler" aria-controls="main-navigation" aria-expanded="false">
+        <button class="header__buttons__button mobile-nav-toggler js-mobile-nav-toggler" aria-controls="main-navigation" aria-expanded="false">
           <span class="visually-hidden">Menu</span>
           <i class="ri-menu-3-line" aria-hidden="true"></i>
         </button>
 
-        <button>
+        <button class="header__buttons__button">
           <span class="visually-hidden">Search products</span>
           <i class="ri-search-line" aria-hidden="true"></i>
         </button>
 
         <div class="header__buttons__dropdown">
-          <button class="js-header-dropdown-button">
+          <button class="header__buttons__button js-header-dropdown-button">
             <span class="visually-hidden">User menu</span>
             <i class="ri-user-3-line" aria-hidden="true"></i>
           </button>
@@ -69,10 +69,13 @@
                 </a>
               </li>
               <li>
-                <a href="logout">
-                  <i class="ri-logout-circle-r-line" aria-hidden="true"></i>
-                  Logout
-                </a>
+                <form method="post" class="js-logout-form">
+                  <input type="hidden" name="authtoken" value="8dus8auds8auds80fjanmdjksnmajds9a">
+                  <button>
+                    <i class="ri-logout-circle-r-line" aria-hidden="true"></i>
+                    Logout
+                  </button>
+                </form>
               </li>
               {% endif %}
             </ul>
@@ -80,7 +83,7 @@
         </div>
 
         <div class="header__buttons__dropdown">
-          <button class="js-header-dropdown-button">
+          <button class="header__buttons__button js-header-dropdown-button">
             <span class="visually-hidden">Shopping cart</span>
             <i class="ri-shopping-cart-line" aria-hidden="true"></i>
           </button>

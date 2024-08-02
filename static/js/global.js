@@ -59,7 +59,7 @@ const showAlert = (message, type) => {
     removeAlert()
 }
 
-// FORM
+// FORMS
 
 /**
  * Clear error messages from given form.
@@ -89,4 +89,20 @@ const showFormErrors = ($form, errors) => {
         $input.closest('.js-form-field').append($error)
     }
     }
+}
+
+// CLOSE MESSAGE BAR
+const $messageBar = document.querySelector('.js-message-bar')
+
+/**
+ * Removes message bar from DOM.
+ */
+const closeMessageBar = (e) => {
+    $messageBar.remove()
+}
+
+if ($messageBar) {
+    const $closeMessageBar = $messageBar.querySelector('.js-message-bar-close')
+
+    $closeMessageBar.addEventListener('click', closeMessageBar)
 }

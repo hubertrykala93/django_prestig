@@ -127,7 +127,8 @@ const sendLoginRequest = (formData) => {
         console.log(response)
 
         if (response.hasOwnProperty('success')) {
-          window.location.href = '/'
+            document.cookie = 'authtoken=' + response.token
+            // window.location.href = '/'
         }
         else if (response.hasOwnProperty('error')) {
             showAlert(response.error, 'error')
@@ -189,5 +190,52 @@ if ($loginForm) {
     $loginForm.addEventListener('submit', (e) => {
         e.preventDefault()
         handleLoginForm(e)
+    })
+}
+
+// LOGOUT FORM
+const $logoutForm = document.querySelector('.js-logout-form')
+
+/**
+ * Sends logout post data and handles messages.
+ * @param {Object} formData - Logout formdata object.
+ */
+const sendLogoutRequest = (formData) => {
+    const url = 'api/v1/accounts/account-logout'
+
+    fetch(url, {
+        method:'POST',
+        headers:{
+         'X-CSRFToken':csrfToken,
+        },
+        body: formData
+    }).then((response) => {
+         return response.json()
+    }).then((response) => {
+        console.log(response)
+
+        if (response.hasOwnProperty('success')) {
+            document.cookie = 'authtoken=' + '=; Max-Age=-99999999;'
+            window.location.href = '/'
+        }
+        else if (response.hasOwnProperty('error')) {
+            showAlert(response.error, 'error')
+        }
+    })
+}
+
+/**
+ * Handles logout form actions.
+ */
+const handleLogoutForm = (e) => {
+    const $form = e.target
+    const formData = new FormData($form)
+    sendLogoutRequest(formData)
+}
+
+if ($logoutForm) {
+    $logoutForm.addEventListener('submit', (e) => {
+        e.preventDefault()
+        handleLogoutForm(e)
     })
 }

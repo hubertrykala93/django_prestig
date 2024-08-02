@@ -13,6 +13,8 @@
   --clr-gray-400: #5E5E5E;
   --clr-body-text: var(--clr-gray-400);
   --clr-success-bg: rgb(172 255 177);
+  --clr-info-bg: rgb(172, 237, 255);
+  --clr-error-bg: rgb(255, 172, 185);
   --clr-error: rgb(181, 23, 23);
 
   --ff-body: "Red Hat Display", sans-serif;
@@ -221,6 +223,43 @@ body {
 
 .alert--success {
   background-color: var(--clr-success-bg);
+}
+
+/* MESSAGE BAR */
+.message-bar {
+  position: relative;
+  padding: 1rem 1.4rem;
+  text-align: center;
+}
+
+.message-bar--info {
+  background-color: var(--clr-info-bg);
+}
+
+.message-bar--error {
+  background-color: var(--clr-error-bg);
+}
+
+.message-bar--success {
+  background-color: var(--clr-success-bg);
+}
+
+.message-bar__close {
+  position: absolute;
+  top: .5rem;
+  right: .5rem;
+  font-size: 1rem;
+  transition: color .3s;
+}
+
+.message-bar__close:hover,
+.message-bar__close:focus-visible {
+  color: var(--clr-accent-400);
+}
+
+.message-bar p {
+  color: var(--clr-black);
+  font-weight: 500;
 }
 
 /* FORM */
@@ -696,16 +735,16 @@ body {
   align-items: center;
 }
 
-.header__buttons button {
+.header__buttons__button {
   margin-left: .5rem;
   color: white;
   font-size: 1.1rem;
   transition: color .3s;
 }
 
-.header__buttons button:hover,
-.header__buttons button:focus-visible,
-.header__buttons button.active {
+.header__buttons__button:hover,
+.header__buttons__button:focus-visible,
+.header__buttons__button.active {
   color: var(--clr-accent-400);
 }
 
@@ -748,12 +787,22 @@ body {
   row-gap: .3rem;
 }
 
-.header__buttons__dropdown__content__nav li a {
+.header__buttons__dropdown__content__nav li > a,
+.header__buttons__dropdown__content__nav li > form button {
   display: inline-flex;
   align-items: center;
+  color: var(--clr-accent-400);
 }
 
-.header__buttons__dropdown__content__nav li a i {
+.header__buttons__dropdown__content__nav li > a:hover,
+.header__buttons__dropdown__content__nav li > a:focus-visible,
+.header__buttons__dropdown__content__nav li > form button:hover,
+.header__buttons__dropdown__content__nav li > form button:focus-visible {
+  color: var(--clr-black);
+}
+
+.header__buttons__dropdown__content__nav li > a i,
+.header__buttons__dropdown__content__nav li > form button i {
   margin-right: .3em;
 }
 
@@ -1643,7 +1692,7 @@ body {
   /**
   * HEADER
   */
-  .header__buttons button {
+  .header__buttons__button {
     margin-left: 1.25rem;
   }
 
