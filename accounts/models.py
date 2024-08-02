@@ -1,9 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.utils.timezone import now
-from django.dispatch import receiver
-from django.db.models.signals import post_save
-from rest_framework.authtoken.models import Token
 from uuid import uuid4
 
 
@@ -64,9 +61,3 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.username}"
-
-
-@receiver(signal=post_save, sender=User)
-def create_token(sender, instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)

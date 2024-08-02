@@ -1,0 +1,11 @@
+{% for message in messages %}
+<div class="message-bar message-bar--{{ message.tags }} js-message-bar">
+    <button class="message-bar__close js-message-bar-close">
+        <i class="ri-close-line" aria-hidden="true"></i>
+        <span class="visually-hidden">Close message bar</span>
+    </button>
+    <p>
+            {{ message }}
+    </p>
+</div>
+{% endfor %}

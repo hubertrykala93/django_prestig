@@ -225,6 +225,10 @@ body {
   background-color: var(--clr-success-bg);
 }
 
+.alert--error {
+  background-color: var(--clr-error-bg);
+}
+
 /* MESSAGE BAR */
 .message-bar {
   position: relative;

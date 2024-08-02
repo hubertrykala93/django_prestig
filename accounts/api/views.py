@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from .serializers import UserRegisterSerializer, UserLoginSerializer
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
@@ -13,11 +13,10 @@ from .tokens import token_generator
 from django.shortcuts import redirect
 from django.contrib import messages
 import os
-from core.api.exceptions import EmailSendError
 from rest_framework.views import APIView
-from rest_framework.authtoken.models import Token
-from django.contrib.auth import login, authenticate
-from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import authenticate
+from django.contrib.auth import login, logout
+from django.views.decorators.csrf import csrf_exempt
 
 
 class UserRegisterAPIView(CreateAPIView):
@@ -51,15 +50,14 @@ class UserRegisterAPIView(CreateAPIView):
 
                 plain_message = strip_tags(html_message)
 
-                message = EmailMessage(
+                message = EmailMultiAlternatives(
                     subject="Account activation request.",
                     body=plain_message,
                     from_email=os.environ.get("EMAIL_HOST_USER"),
                     to=[user.email],
                 )
 
-                # message.attach(content=html_message, mimetype="text/html")
-                message.content_subtype = "html"
+                message.attach_alternative(content=html_message, mimetype="text/html")
                 message.send()
 
                 return Response(
@@ -70,7 +68,7 @@ class UserRegisterAPIView(CreateAPIView):
                     status=status.HTTP_201_CREATED,
                 )
 
-            except EmailSendError:
+            except Exception as e:
                 return Response(
                     data={
                         "error": "The message could not be sent.",
@@ -135,6 +133,16 @@ class UserLoginAPIView(APIView):
             "request": request,
         })
 
+        if User.objects.filter(email=request.data.get("email")).exists():
+            user = User.objects.get(email=request.data.get("email"))
+
+            if not user.is_verified:
+                return Response(
+                    data={
+                        "error": "You cannot log in because your account has not been verified yet.",
+                    }
+                )
+
         if serializer.is_valid():
             user = authenticate(
                 request=request,
@@ -143,17 +151,12 @@ class UserLoginAPIView(APIView):
             )
 
             if user:
-                token, created = Token.objects.get_or_create(user=user)
-                headers = self.get_success_headers(token=token)
-
-                response = Response()
+                login(request=request, user=user)
 
                 return Response(
                     data={
                         "success": f"Welcome '{serializer.data.get('email')}'. You have successfully logged in.",
-                        "token": token.key,
                     },
-                    headers=headers,
                     status=status.HTTP_200_OK,
                 )
 
@@ -171,7 +174,8 @@ class UserLoginAPIView(APIView):
                 data=serializer.errors,
             )
 
-    def get_success_headers(self, token):
-        return {
-            "Authorization": f"Token {token.key}"
-        }
+
+def log_out(request):
+    logout(request=request)
+
+    return redirect(to="login")

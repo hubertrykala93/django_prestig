@@ -128,7 +128,7 @@ const sendLoginRequest = (formData) => {
 
         if (response.hasOwnProperty('success')) {
             document.cookie = 'authtoken=' + response.token
-            // window.location.href = '/'
+             window.location.href = '/'
         }
         else if (response.hasOwnProperty('error')) {
             showAlert(response.error, 'error')
@@ -215,7 +215,7 @@ const sendLogoutRequest = (formData) => {
         console.log(response)
 
         if (response.hasOwnProperty('success')) {
-            document.cookie = 'authtoken=' + '=; Max-Age=-99999999;'
+//            document.cookie = 'authtoken=' + '=; Max-Age=-99999999;'
             window.location.href = '/'
         }
         else if (response.hasOwnProperty('error')) {

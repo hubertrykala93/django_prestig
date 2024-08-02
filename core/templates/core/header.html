@@ -69,13 +69,10 @@
                 </a>
               </li>
               <li>
-                <form method="post" class="js-logout-form">
-                  <input type="hidden" name="authtoken" value="8dus8auds8auds80fjanmdjksnmajds9a">
-                  <button>
-                    <i class="ri-logout-circle-r-line" aria-hidden="true"></i>
-                    Logout
-                  </button>
-                </form>
+                <a href="{% url 'logout' %}">
+                  <i class="ri-logout-circle-r-line" aria-hidden="true"></i>
+                  Logout
+                </a>
               </li>
               {% endif %}
             </ul>

@@ -144,6 +144,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
     password = serializers.CharField(allow_blank=True, write_only=True, style={
         "input_type": "password",
     })
+    remember_me = serializers.BooleanField(allow_null=True, write_only=True)
 
     class Meta:
         model = User
@@ -169,18 +170,15 @@ class UserLoginSerializer(serializers.ModelSerializer):
                 detail=f"No user found with the provided e-mail address. Did you enter it correctly?",
             )
 
-        else:
-            if User.objects.filter(email=email).exists():
-                user = User.objects.get(email=email)
-
-                if not user.is_verified:
-                    raise serializers.ValidationError(
-                        detail="You cannot log in because your account has not been verified yet.",
-                    )
-
         return email
 
     def validate_password(self, password):
+        if password == "":
+            if self.context.get("request").data.get("email") == "":
+                raise serializers.ValidationError(
+                    detail="Password is required.",
+                )
+
         if User.objects.filter(email=self.context.get("request").data.get("email")).exists():
             user = User.objects.get(email=self.context.get("request").data.get("email"))
 

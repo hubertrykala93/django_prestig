@@ -9,12 +9,17 @@ urlpatterns = [
     ),
     path(
         route="api/v1/accounts/account-login",
-        view=views.UserLoginAPIView().as_view(),
+        view=views.UserLoginAPIView.as_view(),
         name="api-v1-accounts-account-login",
     ),
     path(
         route="activate/<uidb64>/<token>",
         view=views.activate,
         name="activate",
+    ),
+    path(
+        route="logout",
+        view=views.log_out,
+        name="logout",
     ),
 ]

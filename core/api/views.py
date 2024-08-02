@@ -8,7 +8,6 @@ from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from django.utils.html import strip_tags
 import os
-from .exceptions import EmailSendError
 
 
 @api_view(http_method_names=["GET"])
@@ -83,7 +82,7 @@ class NewsletterCreateAPIView(CreateAPIView):
                     status=status.HTTP_201_CREATED,
                 )
 
-            except EmailSendError:
+            except Exception as e:
                 return Response(
                     data={
                         "error": "The message could not be sent.",
@@ -137,7 +136,7 @@ class ContactMailCreateAPIView(CreateAPIView):
                     status=status.HTTP_201_CREATED,
                 )
 
-            except EmailSendError:
+            except Exception as e:
                 return Response(
                     data={
                         "error": "The message could not be sent.",
