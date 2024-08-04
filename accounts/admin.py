@@ -1,7 +1,9 @@
 from django.contrib import admin
-from .models import User
+from .models import User, Profile
 from .forms import UserForm
 from django.contrib.sessions.models import Session
+
+admin.site.register(Profile)
 
 
 @admin.register(User)

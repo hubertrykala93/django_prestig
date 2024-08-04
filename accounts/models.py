@@ -79,8 +79,8 @@ class Profile(models.Model):
         )
     )
     date_of_birth = models.DateTimeField(null=True)
-    profile_picture = models.ImageField(default="profile_images/default_profile_image.png", upload_to="profile_images",
-                                        null=True)
+    image = models.ImageField(default="profile_images/default_profile_image.png", upload_to="profile_images",
+                              null=True)
     country = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
@@ -96,7 +96,7 @@ class Profile(models.Model):
         return self.user.username
 
     def save(self, *args, **kwargs):
-        image = Image.open(fp=self.profile_picture.path)
+        image = Image.open(fp=self.image.path)
 
         if image.mode == "RGBA":
             image.convert(mode="RGB")
