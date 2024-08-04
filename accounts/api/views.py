@@ -180,12 +180,7 @@ class UserLoginAPIView(APIView):
 
 
 class UserLogoutAPIView(APIView):
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         logout(request=request)
 
-        return Response(
-            data={
-                "success": "You have been successfully logged out. Come back to us soon!",
-            },
-            status=status.HTTP_200_OK,
-        )
+        return redirect(to="index")

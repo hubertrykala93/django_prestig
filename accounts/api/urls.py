@@ -18,7 +18,7 @@ urlpatterns = [
         name="activate",
     ),
     path(
-        route="logout",
+        route="log-out",
         view=views.UserLogoutAPIView.as_view(),
         name="logout",
     ),
