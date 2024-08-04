@@ -1,49 +1,11 @@
-from rest_framework.generics import ListAPIView, CreateAPIView
-from core.models import Newsletter
+from rest_framework.generics import CreateAPIView
 from .serializers import NewsletterCreateSerializer, ContactMailCreateSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import api_view
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from django.utils.html import strip_tags
 import os
-
-
-@api_view(http_method_names=["GET"])
-def api_endpoints(request):
-    response = {
-        "General": [
-            {
-                "Method": "GET",
-                "URL": "api/v1",
-                "Description": "Endpoints",
-            },
-        ],
-        "Newsletters": [
-            {
-                "Method": "POST",
-                "URL": "api/v1/newsletters/create",
-                "Description": "Create a new newsletter.",
-            },
-        ],
-        "Accounts": [
-            {
-                "Method": "POST",
-                "URL": "api/v1/accounts/account-register",
-                "Description": "User Registration",
-            },
-            {
-                "Method": "POST",
-                "URL": "api/v1/accounts/account-login",
-                "Description": "User Login",
-            },
-        ],
-    }
-    return Response(
-        data=response,
-        status=status.HTTP_200_OK,
-    )
 
 
 class NewsletterCreateAPIView(CreateAPIView):
@@ -77,7 +39,7 @@ class NewsletterCreateAPIView(CreateAPIView):
 
                 return Response(
                     data={
-                        "success": f"The newsletter {serializer.data['email']} has been created successfully.",
+                        "success": f"The newsletter '{serializer.data['email']}' has been created successfully.",
                     },
                     status=status.HTTP_201_CREATED,
                 )

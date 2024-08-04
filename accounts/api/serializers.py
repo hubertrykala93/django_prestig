@@ -47,7 +47,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
         if User.objects.filter(username=username).exists():
             raise serializers.ValidationError(
-                detail=f"The {username} already exists.",
+                detail=f"The '{username}' already exists.",
             )
 
         return username
@@ -66,7 +66,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         if self.context.get("view").__class__.__name__ == "UserRegisterAPIView":
             if User.objects.filter(email=email).exists():
                 raise serializers.ValidationError(
-                    detail=f"The user with the e-mail address {email} already exists.",
+                    detail=f"The user with the e-mail address '{email}' already exists.",
                 )
 
         return email

@@ -33,7 +33,7 @@ class NewsletterCreateSerializer(serializers.ModelSerializer):
 
         if Newsletter.objects.filter(email=email).exists():
             raise serializers.ValidationError(
-                detail=f"The newsletter {email} already exists.",
+                detail=f"The newsletter '{email}' already exists.",
             )
 
         return email
