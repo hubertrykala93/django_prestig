@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 from accounts.models import User
+from django.utils.text import slugify
 
 
 class ArticleCategory(models.Model):
@@ -14,6 +15,12 @@ class ArticleCategory(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+
+        return super(ArticleCategory, self).save(*args, **kwargs)
+
 
 class ArticleTag(models.Model):
     name = models.CharField(max_length=100)
@@ -26,14 +33,20 @@ class ArticleTag(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+
+        return super(ArticleTag, self).save(*args, **kwargs)
+
 
 class Article(models.Model):
     created_at = models.DateTimeField(default=now)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=500)
     description = models.TextField(max_length=100000)
-    article_category = models.ForeignKey(to=ArticleCategory, on_delete=models.CASCADE)
+    article_category = models.ForeignKey(to=ArticleCategory, on_delete=models.SET_NULL, null=True)
     article_tag = models.ManyToManyField(to=ArticleTag)
 
     class Meta:
@@ -42,6 +55,12 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+
+        return super(Article, self).save(*args, **kwargs)
 
 
 class ArticleComment(models.Model):
