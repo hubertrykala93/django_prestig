@@ -15,8 +15,6 @@ from django.contrib import messages
 import os
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
-from django.contrib.auth import login, logout
-from django.views.decorators.csrf import csrf_exempt
 
 
 class UserRegisterAPIView(CreateAPIView):
@@ -151,7 +149,8 @@ class UserLoginAPIView(APIView):
             )
 
             if user:
-                login(request=request, user=user)
+                if "remember" in request.data:
+                    request.session.set_expiry(value=365 * 24 * 60 * 60)
 
                 return Response(
                     data={
@@ -174,8 +173,36 @@ class UserLoginAPIView(APIView):
                 data=serializer.errors,
             )
 
-
-def log_out(request):
-    logout(request=request)
-
-    return redirect(to="login")
+# class UserLogoutAPIView(APIView):
+#     permission_classes = [IsAuthenticated]
+#
+#     def post(self, request, *args, **kwargs):
+#         print(f"Logout requested by {request.user}")
+#         print(f"Cookies -> {request.COOKIES}")
+#         print(request.headers)
+#         try:
+#             print("Try to catching token.")
+#             print(f"User -> {request.user}")
+#             token = Token.objects.get(user=request.user)
+#             token.delete()
+#
+#             print("Token deleted.")
+#
+#         except Token.DoesNotExist:
+#             print("Token does not exists.")
+#             pass
+#
+#         logout(request=request)
+#         print("User logged out.")
+#
+#         response = Response(
+#             data={
+#                 "success": "You have been successfully logged out. Come back to us soon!",
+#             },
+#             status=status.HTTP_200_OK,
+#         )
+#
+#         response.delete_cookie(key="authtoken")
+#         print("Cookie deleted.")
+#
+#         return response

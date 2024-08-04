@@ -1,11 +1,11 @@
 from django.shortcuts import render
 
 
-def shop(request):
+def blog(request):
     return render(
         request=request,
-        template_name="core/shop.html",
+        template_name="core/blog.html",
         context={
-            "title": "Shop",
+            "title": "Blog",
         }
     )

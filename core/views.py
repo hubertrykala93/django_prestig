@@ -1,10 +1,10 @@
 from django.shortcuts import render
-from django.contrib.auth import logout
 
 
 def index(request):
-    print(request.user.is_authenticated)
-
+    print(request.user)
+    print(request.COOKIES)
+    print(request.session.items())
     return render(
         request=request,
         template_name='core/index.html',
@@ -14,7 +14,6 @@ def index(request):
 
 
 def about(request):
-    logout(request=request)
     return render(
         request=request,
         template_name="core/about.html",
@@ -25,32 +24,12 @@ def about(request):
     )
 
 
-def shop(request):
-    return render(
-        request=request,
-        template_name="core/shop.html",
-        context={
-            "title": "Shop",
-        }
-    )
-
-
 def product(request):
     return render(
         request=request,
         template_name="core/product.html",
         context={
             "title": "Product",
-        }
-    )
-
-
-def blog(request):
-    return render(
-        request=request,
-        template_name="core/blog.html",
-        context={
-            "title": "Blog",
         }
     )
 

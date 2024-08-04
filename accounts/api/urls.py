@@ -17,9 +17,4 @@ urlpatterns = [
         view=views.activate,
         name="activate",
     ),
-    path(
-        route="logout",
-        view=views.log_out,
-        name="logout",
-    ),
 ]

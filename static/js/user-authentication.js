@@ -124,10 +124,8 @@ const sendLoginRequest = (formData) => {
          return response.json()
     }).then((response) => {
         clearFormErrors($loginForm)
-        console.log(response)
 
         if (response.hasOwnProperty('success')) {
-            document.cookie = 'authtoken=' + response.token
              window.location.href = '/'
         }
         else if (response.hasOwnProperty('error')) {
@@ -193,6 +191,7 @@ if ($loginForm) {
     })
 }
 
+
 // LOGOUT FORM
 const $logoutForm = document.querySelector('.js-logout-form')
 
@@ -201,21 +200,18 @@ const $logoutForm = document.querySelector('.js-logout-form')
  * @param {Object} formData - Logout formdata object.
  */
 const sendLogoutRequest = (formData) => {
-    const url = 'api/v1/accounts/account-logout'
+    const url = 'logout'
 
     fetch(url, {
         method:'POST',
         headers:{
          'X-CSRFToken':csrfToken,
         },
-        body: formData
+        body: formData,
     }).then((response) => {
          return response.json()
     }).then((response) => {
-        console.log(response)
-
         if (response.hasOwnProperty('success')) {
-//            document.cookie = 'authtoken=' + '=; Max-Age=-99999999;'
             window.location.href = '/'
         }
         else if (response.hasOwnProperty('error')) {

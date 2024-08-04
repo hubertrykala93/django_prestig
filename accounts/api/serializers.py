@@ -1,8 +1,6 @@
 from rest_framework import serializers
 from accounts.models import User
 import re
-from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -144,7 +142,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
     password = serializers.CharField(allow_blank=True, write_only=True, style={
         "input_type": "password",
     })
-    remember_me = serializers.BooleanField(allow_null=True, write_only=True)
+    remember = serializers.BooleanField(allow_null=True, write_only=True, required=False)
 
     class Meta:
         model = User
@@ -152,6 +150,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
             "id",
             "email",
             "password",
+            "remember",
         ]
 
     def validate_email(self, email):
