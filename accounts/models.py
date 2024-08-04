@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.utils.timezone import now
 from uuid import uuid4
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from PIL import Image
 
 
 class CustomUserManager(UserManager):
@@ -61,3 +64,51 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.username}"
+
+
+class Profile(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    firstname = models.CharField(max_length=100)
+    lastname = models.CharField(max_length=100)
+    short_description = models.CharField(max_length=500)
+    gender = models.CharField(
+        choices=(
+            ("Male", "Male"),
+            ("Female", "Female"),
+            ("Undefined", "Undefined"),
+        )
+    )
+    date_of_birth = models.DateTimeField(null=True)
+    profile_picture = models.ImageField(default="profile_images/default_profile_image.png", upload_to="profile_images",
+                                        null=True)
+    country = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    address_line = models.CharField(max_length=200)  # including street, house number, apartment number
+    postal_code = models.CharField(max_length=100)
+    website = models.URLField(null=True)
+
+    class Meta:
+        verbose_name = "Profile"
+        verbose_name_plural = "Profiles"
+
+    def __str__(self):
+        return self.user.username
+
+    def save(self, *args, **kwargs):
+        image = Image.open(fp=self.profile_picture.path)
+
+        if image.mode == "RGBA":
+            image.convert(mode="RGB")
+
+        if image.width > 300 or image.height > 300:
+            image.thumbnail(size=(300, 300))
+            image.save(fp=self.image.path)
+
+        return super(Profile, self).save(*args, **kwargs)
+
+
+@receiver(signal=post_save, sender=User)
+def create_profile(sender, instance=None, created=None, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)

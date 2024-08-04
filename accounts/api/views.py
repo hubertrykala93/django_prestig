@@ -15,8 +15,6 @@ from django.contrib import messages
 import os
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
-from rest_framework.authtoken.models import Token
-from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import logout, login
 
 
