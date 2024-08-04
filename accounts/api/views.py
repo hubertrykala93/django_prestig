@@ -15,6 +15,12 @@ from django.contrib import messages
 import os
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
+from rest_framework.decorators import api_view
+
+
+@api_view(http_method_names=["POST"])
+def register(request):
+    pass
 
 
 class UserRegisterAPIView(CreateAPIView):
