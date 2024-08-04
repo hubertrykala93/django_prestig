@@ -27,7 +27,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "rest_framework.authtoken",
     "django_filters",
     "core",
     "accounts",
@@ -40,7 +39,6 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    # "accounts.api.middleware.TokenAuthMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -143,12 +141,6 @@ REST_FRAMEWORK = {
     "PAGE SIZE": 10,
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
-    ],
-    # "DEFAULT_AUTHENTICATION_CLASSES": [
-    #     "rest_framework.authentication.TokenAuthentication",
-    # ],
-    "DEFAULT_RENDERER_CLASSES": [
-        "rest_framework.renderers.JSONOpenAPIRenderer",
     ],
 }
 

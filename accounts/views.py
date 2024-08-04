@@ -21,3 +21,13 @@ def login(request):
             "img": "",
         }
     )
+
+
+def account_settings(request):
+    return render(
+        request=request,
+        template_name="accounts/account-settings.html",
+        context={
+            "title": "Account Settings",
+        }
+    )

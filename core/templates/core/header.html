@@ -63,13 +63,13 @@
 
               {% else %}
               <li>
-                <a href="#">
+                <a href="{% url 'account-settings' %}">
                   <i class="ri-logout-circle-r-line" aria-hidden="true"></i>
                   Settings
                 </a>
               </li>
               <li>
-                <a href="#">
+                <a href="{% url 'logout' %}">
                   <i class="ri-logout-circle-r-line" aria-hidden="true"></i>
                   Logout
                 </a>

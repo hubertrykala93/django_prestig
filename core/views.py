@@ -2,9 +2,6 @@ from django.shortcuts import render
 
 
 def index(request):
-    print(request.user)
-    print(request.COOKIES)
-    print(request.session.items())
     return render(
         request=request,
         template_name='core/index.html',

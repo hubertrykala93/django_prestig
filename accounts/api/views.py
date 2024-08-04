@@ -15,12 +15,9 @@ from django.contrib import messages
 import os
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
-from rest_framework.decorators import api_view
-
-
-@api_view(http_method_names=["POST"])
-def register(request):
-    pass
+from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import logout, login
 
 
 class UserRegisterAPIView(CreateAPIView):
@@ -158,6 +155,8 @@ class UserLoginAPIView(APIView):
                 if "remember" in request.data:
                     request.session.set_expiry(value=365 * 24 * 60 * 60)
 
+                login(request=request, user=user)
+
                 return Response(
                     data={
                         "success": f"Welcome '{serializer.data.get('email')}'. You have successfully logged in.",
@@ -179,36 +178,14 @@ class UserLoginAPIView(APIView):
                 data=serializer.errors,
             )
 
-# class UserLogoutAPIView(APIView):
-#     permission_classes = [IsAuthenticated]
-#
-#     def post(self, request, *args, **kwargs):
-#         print(f"Logout requested by {request.user}")
-#         print(f"Cookies -> {request.COOKIES}")
-#         print(request.headers)
-#         try:
-#             print("Try to catching token.")
-#             print(f"User -> {request.user}")
-#             token = Token.objects.get(user=request.user)
-#             token.delete()
-#
-#             print("Token deleted.")
-#
-#         except Token.DoesNotExist:
-#             print("Token does not exists.")
-#             pass
-#
-#         logout(request=request)
-#         print("User logged out.")
-#
-#         response = Response(
-#             data={
-#                 "success": "You have been successfully logged out. Come back to us soon!",
-#             },
-#             status=status.HTTP_200_OK,
-#         )
-#
-#         response.delete_cookie(key="authtoken")
-#         print("Cookie deleted.")
-#
-#         return response
+
+class UserLogoutAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        logout(request=request)
+
+        return Response(
+            data={
+                "success": "You have been successfully logged out. Come back to us soon!",
+            },
+            status=status.HTTP_200_OK,
+        )

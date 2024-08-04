@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from accounts.models import User
 import re
+from rest_framework.authtoken.models import Token
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -123,6 +124,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
         user.save()
 
+        token = Token.objects.create(user=user)
+        token.save()
+
         return user
 
     def run_validation(self, data):
@@ -172,6 +176,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
         return email
 
     def validate_password(self, password):
+        from rest_framework import status
         if password == "":
             if self.context.get("request").data.get("email") == "":
                 raise serializers.ValidationError(
