@@ -3,4 +3,118 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
+<section class="blog">
+  <div class="container container--narrow">
+    <div class="row">
+      <div class="blog__content">
+        <div class="blog__cards">
+          {% for i in '123456'|make_list %} 
+            <div class="blog-card">
+              <a href="#" class="blog-card__image">
+                <img src="https://www.lookingglassoptical.com/wp-content/uploads/2018/06/script-sunglasses.gif" alt="Article thumbnail">
+              </a>
+
+              <div class="blog-card__date">JANUARY 13, 2023</div>
+
+              <h4 class="blog-card__heading heading heading--h4">
+                <a href="#">
+                  Mastering the art of wardrobe manage essentials
+                </a>
+              </h4>
+
+              <p class="blog-card__intro">
+                Discover the key to simplifying your style with a capsule wardrobe. Learn how to curate a collection of versatile pieces that will elevate your fashion game...
+              </p>
+
+              <a href="#" class="blog-card__more-btn">
+                <span>Read more</span>
+                <i class="ri-arrow-right-up-line" aria-hidden="true"></i>
+              </a>
+            </div>
+          {% endfor %} 
+        </div>
+
+        <ul class="pagination">
+          <li>
+            <a class="active" href="#">01</a>
+          </li>
+          <li>
+            <a href="#">02</a>
+          </li>
+          <li>
+            <a href="#">03</a>
+          </li>
+          <li>
+            <a href="#">
+              <span class="visually-hidden">Last page</span>
+              <i class="ri-arrow-right-line" aria-hidden="true"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <aside class="blog__aside">
+        <h5 class="blog__aside__heading heading heading--h5">Blog Search</h5>
+
+        <form class="form blog__aside__search">
+          <input type="text" name="keyword" class="blog__aside__search__input" placeholder="Search...">
+          <button class="blog__aside__search__button">
+            <span class="visually-hidden">Search articles</span>
+            <i class="ri-search-line" aria-hidden="true"></i>
+          </button>
+        </form>
+
+        <h5 class="blog__aside__heading heading heading--h5">Categories</h5>
+
+        <ul class="blog__aside__categories">
+          {% for i in '123456'|make_list %}
+            <li>
+              <a href="#">
+                Category {{i}} <span>(2)</span>
+              </a>
+            </li>
+          {% endfor %} 
+        </ul>
+
+        <div class="blog__aside__divider"></div>
+
+        <h5 class="blog__aside__heading heading heading--h5">Latest articles</h5>
+
+        <ul class="blog__aside__latest">
+          {% for i in '123'|make_list %}
+            <li class="blog__aside__latest__item">
+              <a href="#" class="blog__aside__latest__item__image">
+                <img src="https://www.lookingglassoptical.com/wp-content/uploads/2018/06/script-sunglasses.gif" alt="Article thumnbail">
+              </a>
+
+              <div class="blog__aside__latest__item__content">
+                <h5 class="blog__aside__latest__item__content__heading heading heading--h5">
+                  <a href="#">
+                    Redefining style with eco-friendly choices
+                  </a>
+                </h5>
+
+                <p>20 Dec 2023</p>
+              </div>
+            </li>
+          {% endfor %} 
+        </ul>
+
+        <div class="blog__aside__divider"></div>
+
+        <h5 class="blog__aside__heading heading heading--h5">Tags</h5>
+
+        <ul class="blog__aside__tags">
+          {% for i in '1234567'|make_list %}
+            <li>
+              <a href="#">
+                Tag {{i}}
+              </a>
+            </li>
+          {% endfor %} 
+        </ul>
+      </aside>
+    </div>
+  </div>
+</section>
 {% endblock %}
