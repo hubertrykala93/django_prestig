@@ -1656,6 +1656,214 @@ body {
   color: var(--clr-accent-400);
 }
 
+/* ARTICLE */
+.article__top-info {
+  display: flex;
+  align-items: center;
+}
+
+.article__top-info::before {
+  content: "";
+  margin: 0 0.9375rem;
+  width: 0.0625rem;
+  height: 0.75rem;
+  background-color: var(--clr-gray-400);
+  opacity: .2;
+}
+
+.article__top-info__date {
+  order: -1;
+  text-transform: uppercase;
+}
+
+.article__top-info__author a {
+  color: var(--clr-gray-400);
+}
+
+.article__top-info__author a:hover,
+.article__top-info__author a:focus-visible {
+  color: var(--clr-accent-400);
+}
+
+.article__heading {
+  margin: 0.5625rem 0 2.25rem;
+}
+
+.article__image {
+  width: 100%;
+}
+
+.article__content {
+  margin: 2.5rem 0;
+}
+
+.article__footer__tags {
+  display: inline-flex;
+}
+
+.article__footer__tags > span {
+  margin-right: .2em;
+  font-weight: 500;
+  color: var(--clr-black);
+}
+
+.article__footer__tags__list {
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.article__footer__tags__list a {
+  color: var(--clr-gray-400);
+}
+
+.article__footer__tags__list > li {
+  margin-right: .2em;
+}
+
+.article__footer__tags__list a:hover,
+.article__footer__tags__list a:focus-visible {
+  color: var(--clr-accent-400);
+}
+
+.article__footer__share {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.article__footer__share > span {
+  margin-right: .2em;
+}
+
+.article__footer__share__icons {
+  display: grid;
+  grid-auto-flow: column;
+  column-gap: 0.6875rem;
+}
+
+.article__footer__share__icons li a {
+  color: var(--clr-gray-400);
+}
+
+.article__footer__share__icons li a:hover,
+.article__footer__share__icons li a:focus-visible {
+  color: var(--clr-accent-400);
+}
+
+.article__bio {
+  margin: var(--block-space-400) 0;
+  padding: 3.125rem 0;
+  border-top: 0.0625rem solid rgba(94, 94, 94, 0.20);
+  border-bottom: 0.0625rem solid rgba(94, 94, 94, 0.20);
+}
+
+.article__bio__image {
+  margin-bottom: 1.4rem;
+}
+
+.article__bio__image img {
+  width: 6.25rem;
+  height: 6.25rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.article__bio__content__text {
+  margin: 0.5625rem 0 1.0625rem;
+}
+
+.article__bio__content__social-list {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: start;
+  column-gap: 0.5rem;
+}
+
+.article__bio__content__social-list li a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1875rem;
+  height: 2.1875rem;
+  border: 0.0625rem solid var(--clr-black);
+  border-radius: 50%;
+  color: var(--clr-black);
+  transition: color .3s, border-color .3s;
+}
+
+.article__bio__content__social-list li a:hover,
+.article__bio__content__social-list li a:focus-visible {
+  color: var(--clr-accent-400);
+  border-color: var(--clr-accent-400);
+}
+
+.article__comment-form__text {
+  margin: 0.625rem 0 2.25rem;
+}
+
+.article__comments {
+  margin-top: var(--block-space-400);
+}
+
+.article__comments__counter {
+  margin-bottom: 2rem;
+  color: var(--clr-black);
+  font-weight: 500;
+}
+
+.article__comments__wrapper {
+  display: grid;
+  row-gap: 1.625rem;
+}
+
+.article__comment {
+  position: relative;
+  padding: var(--column-gap);
+  border: 0.0625rem solid var(--clr-gray-300)
+}
+
+.article__comment__info {
+  display: flex;
+  align-items: center;
+}
+
+.article__comment__info__avatar {
+  margin-right: 1rem;
+}
+
+.article__comment__info__avatar img {
+  width: 3.4375rem;
+  max-width: unset;
+  height: 3.4375rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.article__comment__info__content__date {
+  margin-top: .1em;
+  font-size: var(--fs-300);
+  text-transform: uppercase;
+}
+
+.article__comment__content {
+  margin-top: 1rem;
+  color: var(--clr-black);
+}
+
+.article__comment__delete {
+  position: absolute;
+  right: var(--column-gap);
+  top: var(--column-gap);
+  color: var(--clr-error);
+  z-index: 2;
+  transition: color .3s;
+}
+
+.article__comment__delete:hover,
+.article__comment__delete:focus-visible {
+  color: var(--clr-accent-400);
+}
+
 
 /**
 * FOOTER
@@ -2197,6 +2405,37 @@ body {
 
   .blog > .container > .row {
     grid-template-columns: auto 19.5rem;
+  }
+
+  /* ARTICLE */
+  .article__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .article__footer__share {
+    margin-top: 0;
+  }
+
+  .article__bio {
+    display: flex;
+    align-items: center;
+  }
+
+  .article__bio__image {
+    margin-bottom: 0;
+    margin-right: 3.125rem;
+  }
+
+  .article__bio__image img {
+    width: 9.375rem;
+    max-width: unset;
+    height: 9.375rem;
+  }
+
+  .article__comments__wrapper {
+    row-gap: 2.5rem;
   }
 
   /**

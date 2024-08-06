@@ -6,7 +6,236 @@
 <section class="blog">
   <div class="container container--narrow">
     <div class="row">
-      
+      <div class="blog__content">
+        <article class="article">
+          <div class="article__top-info">
+            <span class="article__top-info__date">JANUARY 13, 2023</span>
+            <span class="article__top-info__author">
+              By <a href="#">Jhon Bentham</a>
+            </span>
+          </div>
+
+          <h2 class="article__heading heading heading--h2">Mastering the art of wardrobe manage essentials</h2>
+
+          <img src="https://industrym.com/wp-content/uploads/2019/10/shutterstock_270601706.jpg" alt="Article main image" class="article__image">
+
+          <div class="article__content">
+            <p>In a world where our closets can overflow with clothes, finding a sense of style and simplicity can be a daunting task. That's where the concept of a capsule wardrobe comes to the rescue. This blog will guide you through the art of curating your own capsule wardrobe and mastering the essentials for a more effortless and sustainable approach to fashion.</p>
+          </div>
+
+          <div class="article__footer">
+            <div class="article__footer__tags">
+              <span>Tags:</span>
+              <ul class="article__footer__tags__list">
+                {% for i in '1234'|make_list %}
+                  <li>
+                    <a href="#">
+                      Tag {{i}}, 
+                    </a>
+                  </li>
+                {% endfor %} 
+              </ul>
+            </div>
+
+            <div class="article__footer__share">
+              <span>Share:</span> 
+              <ul class="article__footer__share__icons">
+                <li>
+                  <a href="#">
+                    <span class="visually-hidden">Linkedin link</span>
+                    <i class="ri-linkedin-fill" aria-hidden="true"></i>
+                  </a>
+                </li>
+
+                <li>
+                  <a href="#">
+                    <span class="visually-hidden">Twitter link</span>
+                    <i class="ri-twitter-fill" aria-hidden="true"></i>
+                  </a>
+                </li>
+
+                <li>
+                  <a href="#">
+                    <span class="visually-hidden">Facebook link</span>
+                    <i class="ri-facebook-fill" aria-hidden="true"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="article__bio">
+            <div class="article__bio__image">
+              <img src="https://facemusic.live/img/FACE-1300-3.jpg" alt="Article author image">
+            </div>
+
+            <div class="article__bio__content">
+              <h5 class="heading heading--h5">Jhon Bentham</h5>
+              <p class="article__bio__content__text">Hi, my name is Anthony kuber. I am artist and fashion designer. I love to travel and writing blogging.</p>
+
+              <ul class="article__bio__content__social-list">
+                <li>
+                  <a href="#">
+                    <span class="visually-hidden">Linkedin link</span>
+                    <i class="ri-linkedin-fill" aria-hidden="true"></i>
+                  </a>
+                </li>
+
+                <li>
+                  <a href="#">
+                    <span class="visually-hidden">Twitter link</span>
+                    <i class="ri-twitter-fill" aria-hidden="true"></i>
+                  </a>
+                </li>
+
+                <li>
+                  <a href="#">
+                    <span class="visually-hidden">Youtube link</span>
+                    <i class="ri-youtube-fill" aria-hidden="true"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <form class="article__comment-form form">
+            <h3 class="heading heading--h3">Write your opinion</h3>
+            <p class="article__comment-form__text">Your email address will not be published. Required fields are marked *</p>
+
+            <div class="form__row">
+              <div class="form__field js-form-field">
+                  <div class="form__input-wrap">
+                      <textarea type="text" id="comment" name="comment" placeholder="Write your comment *"></textarea>
+                  </div>
+              </div>
+            </div>
+
+            <div class="form__row">
+              <div class="form__field js-form-field">
+                  <div class="form__input-wrap">
+                      <input type="text" id="name" name="name" placeholder="Your name *">
+                  </div>
+              </div>
+    
+              <div class="form__field js-form-field">
+                <div class="form__input-wrap">
+                    <input type="text" id="email" name="email" placeholder="Your email *">
+                </div>
+              </div>
+            </div>
+
+            <div class="form__row">
+              <div class="form__field js-form-field">
+                <div class="form__checkbox">
+                  <input class="form__checkbox__input" type="checkbox" name="save" id="save" value="1">
+                  <label for="save"><span>Save my name, email, and website in this browser for the next time I comment.</span></label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form__row form__row--submit">
+              <div class="form__field form__field--submit">
+                  <button class="btn btn--primary" type="submit">Post comment</button>
+              </div>
+            </div>
+          </form>
+
+          <div class="article__comments">
+            <div class="article__comments__counter heading heading--h5">
+              <span>4</span>
+              comments on this article
+            </div>
+
+            <div class="article__comments__wrapper">
+              {% for i in '1234'|make_list %}
+                <div class="article__comment">
+                  <div class="article__comment__info">
+                    <div class="article__comment__info__avatar">
+                      <img src="https://img.grouponcdn.com/deal/3v1gUUNnostJNgxagsiDPqEk1Jnb/3v-960x576/v1/t440x300.jpg" alt="Comment's author avatar">
+                    </div>
+
+                    <div class="article__comment__info__content">
+                      <h6 class="heading heading--h6">Name and Surname</h6>
+                      <p class="article__comment__info__content__date">18 2024 November</p>
+                    </div>
+                  </div>
+
+                  <div class="article__comment__content">
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                  </div>
+
+                  <button class="article__comment__delete">
+                    <span class="visually-hidden">Delete comment</span>
+                    <i class="ri-delete-bin-line" aria-hidden="true"></i>
+                  </button>
+                </div>
+              {% endfor %} 
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <aside class="blog__aside">
+        <h5 class="blog__aside__heading heading heading--h5">Blog Search</h5>
+
+        <form class="form blog__aside__search">
+          <input type="text" name="keyword" class="blog__aside__search__input" placeholder="Search...">
+          <button class="blog__aside__search__button">
+            <span class="visually-hidden">Search articles</span>
+            <i class="ri-search-line" aria-hidden="true"></i>
+          </button>
+        </form>
+
+        <h5 class="blog__aside__heading heading heading--h5">Categories</h5>
+
+        <ul class="blog__aside__categories">
+          {% for i in '123456'|make_list %}
+            <li>
+              <a href="#">
+                Category {{i}} <span>(2)</span>
+              </a>
+            </li>
+          {% endfor %} 
+        </ul>
+
+        <div class="blog__aside__divider"></div>
+
+        <h5 class="blog__aside__heading heading heading--h5">Latest articles</h5>
+
+        <ul class="blog__aside__latest">
+          {% for i in '123'|make_list %}
+            <li class="blog__aside__latest__item">
+              <a href="#" class="blog__aside__latest__item__image">
+                <img src="https://www.lookingglassoptical.com/wp-content/uploads/2018/06/script-sunglasses.gif" alt="Article thumnbail">
+              </a>
+
+              <div class="blog__aside__latest__item__content">
+                <h5 class="blog__aside__latest__item__content__heading heading heading--h5">
+                  <a href="#">
+                    Redefining style with eco-friendly choices
+                  </a>
+                </h5>
+
+                <p>20 Dec 2023</p>
+              </div>
+            </li>
+          {% endfor %} 
+        </ul>
+
+        <div class="blog__aside__divider"></div>
+
+        <h5 class="blog__aside__heading heading heading--h5">Tags</h5>
+
+        <ul class="blog__aside__tags">
+          {% for i in '1234567'|make_list %}
+            <li>
+              <a href="#">
+                Tag {{i}}
+              </a>
+            </li>
+          {% endfor %} 
+        </ul>
+      </aside>
     </div>
   </div>
 </section>
