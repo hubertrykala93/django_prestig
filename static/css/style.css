@@ -122,42 +122,54 @@ body {
   white-space: nowrap;
 }
 
-.heading {
-  font-family: var(--ff-heading);
+.heading,
+.article__content h1, 
+.article__content h2, 
+.article__content h3, 
+.article__content h4, 
+.article__content h5, 
+.article__content h6 { 
+font-family: var(--ff-heading);
   color: var(--clr-black);
 }
 
-.heading--h1 {
+.heading--h1,
+.article__content h1 {
   font-size: var(--fs-900);
   line-height: 1.2;
   font-weight: 700;
 }
 
-.heading--h2 {
+.heading--h2,
+.article__content h2 {
   font-size: var(--fs-800);
   line-height: 1.4;
   font-weight: 700;
 }
 
-.heading--h3 {
+.heading--h3,
+.article__content h3 {
   font-size: var(--fs-700);
   line-height: 1.35;
   font-weight: 600;
 }
 
-.heading--h4 {
+.heading--h4,
+.article__content h4 {
   font-size: var(--fs-600);
   line-height: 1.4;
   font-weight: 600;
 }
 
-.heading--h5 {
+.heading--h5,
+.article__content h5 {
   font-size: var(--fs-500);
   line-height: 1.6;
   font-weight: 600;
 }
 
-.heading--h6 {
+.heading--h6,
+.article__content h6 {
   font-size: var(--fs-400);
   line-height: 1.25;
   font-weight: 500;
@@ -1697,6 +1709,25 @@ body {
   margin: 2.5rem 0;
 }
 
+.article__content h1,
+.article__content h2,
+.article__content h3,
+.article__content h4,
+.article__content h5,
+.article__content h6 {
+  margin-bottom: .5em;
+}
+
+.article__content ul {
+  padding-left: 1.8em;
+  list-style: disc;
+}
+
+.article__content p:not(:last-child),
+.article__content ul {
+  margin-bottom: 1.6em;
+}
+
 .article__footer__tags {
   display: inline-flex;
 }
@@ -1850,17 +1881,20 @@ body {
   color: var(--clr-black);
 }
 
-.article__comment__delete {
+.article__comment__delete-form {
   position: absolute;
   right: var(--column-gap);
   top: var(--column-gap);
-  color: var(--clr-error);
   z-index: 2;
+}
+
+.article__comment__delete-form__button {
+  color: var(--clr-error);
   transition: color .3s;
 }
 
-.article__comment__delete:hover,
-.article__comment__delete:focus-visible {
+.article__comment__delete-form__button:hover,
+.article__comment__delete-form__button:focus-visible {
   color: var(--clr-accent-400);
 }
 

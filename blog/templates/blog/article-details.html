@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -20,7 +21,25 @@
           <img src="https://industrym.com/wp-content/uploads/2019/10/shutterstock_270601706.jpg" alt="Article main image" class="article__image">
 
           <div class="article__content">
-            <p>In a world where our closets can overflow with clothes, finding a sense of style and simplicity can be a daunting task. That's where the concept of a capsule wardrobe comes to the rescue. This blog will guide you through the art of curating your own capsule wardrobe and mastering the essentials for a more effortless and sustainable approach to fashion.</p>
+            <!-- ========== TEMPORARY ========== -->
+             <h4>Introduction</h4>
+             <p>In a world where our closets can overflow with clothes, finding a sense of style and simplicity can be a daunting task. That's where the concept of a capsule wardrobe comes to the rescue. This blog will guide you through the art of curating your own capsule wardrobe and mastering the essentials for a more effortless and sustainable approach to fashion.</p>
+             <h4>Chapter 1: What Is a Capsule Wardrobe?</h4>
+             <ul>
+              <li>Define the concept of a capsule wardrobe.</li>
+              <li>Understand the benefits of having a capsule wardrobe, including saving time and money.</li>
+              <li>Explore the history and origin of the term.</li>
+             </ul>
+             <h4>Chapter 2: Building Your Capsule Wardrobe</h4>
+             <ul>
+              <li>Define the concept of a capsule wardrobe.</li>
+              <li>Understand the benefits of having a capsule wardrobe, including saving time and money.</li>
+              <li>Explore the history and origin of the term.</li>
+             </ul>
+             <h4>Conclusion:</h4>
+             <p>Mastering the art of wardrobe essentials through a capsule wardrobe is not only a game-changer for your style but also a mindful approach to fashion. It's about curating a collection that truly reflects your personality and values while simplifying your daily decisions.</p>
+             <p>Join us on this journey of style and simplicity as we explore the world of capsule wardrobes. Your wardrobe will thank you, and you'll discover that less truly can be more when it comes to fashion.</p>
+             <!-- ========== TEMPORARY ========== -->
           </div>
 
           <div class="article__footer">
@@ -140,7 +159,7 @@
             </div>
           </form>
 
-          <div class="article__comments">
+          <div class="article__comments js-article-comments">
             <div class="article__comments__counter heading heading--h5">
               <span>4</span>
               comments on this article
@@ -148,7 +167,7 @@
 
             <div class="article__comments__wrapper">
               {% for i in '1234'|make_list %}
-                <div class="article__comment">
+                <div class="article__comment js-article-comment" data-id="3">
                   <div class="article__comment__info">
                     <div class="article__comment__info__avatar">
                       <img src="https://img.grouponcdn.com/deal/3v1gUUNnostJNgxagsiDPqEk1Jnb/3v-960x576/v1/t440x300.jpg" alt="Comment's author avatar">
@@ -164,10 +183,14 @@
                     Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
                   </div>
 
-                  <button class="article__comment__delete">
-                    <span class="visually-hidden">Delete comment</span>
-                    <i class="ri-delete-bin-line" aria-hidden="true"></i>
-                  </button>
+                  <form class="article__comment__delete-form js-delete-article-comment-form">
+                    <input type="hidden" name="commentid" value="3">
+
+                    <button type="submit" class="article__comment__delete-form__button">
+                      <span class="visually-hidden">Delete comment</span>
+                      <i class="ri-delete-bin-line" aria-hidden="true"></i>
+                    </button>
+                  </form>
                 </div>
               {% endfor %} 
             </div>
@@ -239,4 +262,8 @@
     </div>
   </div>
 </section>
+{% endblock %}
+
+{% block page_scripts_last %}
+<script src="{% static 'js/blog.js' %}"></script>
 {% endblock %}
