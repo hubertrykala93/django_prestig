@@ -832,22 +832,19 @@ font-family: var(--ff-heading);
   row-gap: .3rem;
 }
 
-.header__buttons__dropdown__content__nav li > a,
-.header__buttons__dropdown__content__nav li > form button {
+.header__buttons__dropdown__content__nav li > a {
   display: inline-flex;
   align-items: center;
+  width: max-content;
   color: var(--clr-accent-400);
 }
 
 .header__buttons__dropdown__content__nav li > a:hover,
-.header__buttons__dropdown__content__nav li > a:focus-visible,
-.header__buttons__dropdown__content__nav li > form button:hover,
-.header__buttons__dropdown__content__nav li > form button:focus-visible {
+.header__buttons__dropdown__content__nav li > a:focus-visible {
   color: var(--clr-black);
 }
 
-.header__buttons__dropdown__content__nav li > a i,
-.header__buttons__dropdown__content__nav li > form button i {
+.header__buttons__dropdown__content__nav li > a i {
   margin-right: .3em;
 }
 
@@ -1461,6 +1458,52 @@ font-family: var(--ff-heading);
 .user-authentication__form__row_forgot__link:focus-visible {
   color: var(--clr-accent-400);
 }
+
+/**
+* MY ACCOUNT PAGES
+*/
+
+.account {
+  padding: var(--block-space-500) 0 var(--block-space-800);
+}
+
+.account > .container > .row {
+  display: grid;
+  gap: var(--column-gap) var(--block-space-400);
+}
+
+.account__aside__nav {
+  margin-top: .5rem;
+  display: grid;
+  row-gap: .3rem;
+}
+
+.account__aside__nav li a {
+  display: inline-flex;
+  align-items: center;
+  color: var(--clr-black);
+}
+
+.account__aside__nav li a i {
+  margin-right: .3em;
+  font-size: 1.4rem;
+}
+
+.account__aside__nav li a:hover,
+.account__aside__nav li a:focus-visible,
+.account__aside__nav li a.active {
+  color: var(--clr-accent-400);
+}
+
+.account__aside__nav li a.active {
+  font-weight: 500;
+}
+
+.account__content__heading {
+  margin-bottom: .8em;
+}
+
+/* ACCOUNT SETTINGS */
 
 /**
 * BLOG
@@ -2559,6 +2602,14 @@ font-family: var(--ff-heading);
   .why-us__blocks-row {
     grid-template-columns: repeat(3, 1fr);
     gap: 4.5rem;
+  }
+
+  /**
+  * MY ACCOUNT PAGES
+  */
+
+  .account > .container > .row {
+    grid-template-columns: 15rem auto;
   }
 
   /**

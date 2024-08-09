@@ -89,7 +89,7 @@ const handleRegisterForm = (e) => {
     const errors = validateRegisterForm(formData)
     clearFormErrors($form)
 
-    if (true) { // Object.keys(errors).length === 0
+    if (Object.keys(errors).length === 0) { 
         sendRegisterRequest(formData)
     }
     else {
@@ -176,7 +176,7 @@ const handleLoginForm = (e) => {
     const errors = validateLoginForm(formData)
     clearFormErrors($form)
 
-    if (true) { // Object.keys(errors).length === 0
+    if (Object.keys(errors).length === 0) {
         sendLoginRequest(formData)
     }
     else {
@@ -190,3 +190,9 @@ if ($loginForm) {
         handleLoginForm(e)
     })
 }
+
+/**
+* MY ACCOUNT
+*/
+
+// ACCOUNT SETTINGS
