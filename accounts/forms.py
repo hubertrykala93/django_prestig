@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import User, Profile
 
 
 class UserForm(forms.ModelForm):
@@ -13,4 +13,37 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
+        fields = "__all__"
+
+
+class ProfileForm(forms.ModelForm):
+    firstname = forms.CharField(help_text="Provide the first name.", label="First Name", required=False)
+    lastname = forms.CharField(help_text="Provide the last name", label="Last Name", required=False)
+    bio = forms.CharField(help_text="Provide a short bio.", label="Bio", required=False)
+    gender = forms.ChoiceField(help_text="Select your gender.", label="Gender", choices=(
+        ("Male", "Male"),
+        ("Female", "Female"),
+        ("Not Set", "Not Set"),
+    ), widget=forms.RadioSelect, required=False)
+    date_of_birth = forms.DateTimeField(help_text="Provide your date of birth", label="Date of Birth", required=False)
+    profile_picture = forms.ImageField(help_text="Upload your profile picture.", label="Profile Picture", required=False)
+    facebook_username = forms.CharField(help_text="Provide your Facebook username.", label="Facebook Username", required=False)
+    instagram_username = forms.CharField(help_text="Provide your Instagram username.", label="Instagram Username", required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+
+        self.fields["user"].help_text = "Select a user."
+        self.fields["user"].label = "User"
+
+        self.fields["wishlist"].help_text = "Add products to favourites."
+        self.fields["wishlist"].label = "Wishlist"
+        self.fields["wishlist"].required = False
+
+        self.fields["delivery_details"].help_text = "Choose delivery options."
+        self.fields["delivery_details"].label = "Delivery Details"
+        self.fields["delivery_details"].required = False
+
+    class Meta:
+        model = Profile
         fields = "__all__"

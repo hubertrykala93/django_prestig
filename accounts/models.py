@@ -5,6 +5,7 @@ from uuid import uuid4
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from PIL import Image
+from shop.models import Product, DeliveryDetails
 
 
 class CustomUserManager(UserManager):
@@ -68,25 +69,31 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Profile(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+
+    # Basic Info
     firstname = models.CharField(max_length=100)
     lastname = models.CharField(max_length=100)
-    short_description = models.CharField(max_length=500)
+    bio = models.CharField(max_length=500)
     gender = models.CharField(
         choices=(
             ("Male", "Male"),
             ("Female", "Female"),
-            ("Undefined", "Undefined"),
-        )
+            ("Not Set", "Not Set"),
+        ),
     )
-    date_of_birth = models.DateTimeField(null=True)
-    image = models.ImageField(default="profile_images/default_profile_image.png", upload_to="profile_images",
+    date_of_birth = models.DateField(null=True)
+    profile_picture = models.ImageField(default="profile_images/default_profile_image.png", upload_to="profile_images",
                               null=True)
-    country = models.CharField(max_length=100)
-    state = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-    address_line = models.CharField(max_length=200)  # including street, house number, apartment number
-    postal_code = models.CharField(max_length=100)
-    website = models.URLField(null=True)
+
+    # Social Media
+    facebook_username = models.CharField(max_length=100, null=True)
+    instagram_username = models.CharField(max_length=100, null=True)
+
+    # Order Information
+    wishlist = models.ManyToManyField(to=Product)
+
+    # Delivery Details
+    delivery_details = models.ForeignKey(to=DeliveryDetails, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         verbose_name = "Profile"
@@ -96,14 +103,14 @@ class Profile(models.Model):
         return self.user.username
 
     def save(self, *args, **kwargs):
-        image = Image.open(fp=self.image.path)
+        image = Image.open(fp=self.profile_picture.path)
 
         if image.mode == "RGBA":
             image.convert(mode="RGB")
 
         if image.width > 300 or image.height > 300:
             image.thumbnail(size=(300, 300))
-            image.save(fp=self.image.path)
+            image.save(fp=self.profile_picture.path)
 
         return super(Profile, self).save(*args, **kwargs)
 

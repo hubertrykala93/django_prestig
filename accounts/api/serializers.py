@@ -3,6 +3,12 @@ from accounts.models import User
 import re
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = "__all__"
+
+
 class UserRegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(allow_blank=True)
     email = serializers.CharField(allow_blank=True)

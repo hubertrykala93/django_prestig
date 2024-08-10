@@ -10,35 +10,35 @@
       {% include 'accounts/account-aside.html' %}
 
       <div class="account__content">
-        <h3 class="account__content__heading heading heading--h3">Account settings</h3>
+        <h3 class="account__content__heading heading heading--h3">Account Settings</h3>
 
         <form method="post" class="form js-account-settings-form">
           <div class="form__row">
             <div class="form__field js-form-field">
                 <label for="username" class="form__label">username *</label>
                 <div class="form__input-wrap">
-                    <input type="text" id="username" name="username" value="" placeholder="Your username">
+                    <input type="text" id="username" name="username" value="{{ account.username }}" placeholder="Your Username">
                 </div>
             </div>
 
             <div class="form__field js-form-field">
               <label for="email" class="form__label">email *</label>
               <div class="form__input-wrap">
-                  <input type="text" id="email" name="email" value="" placeholder="Your email">
+                  <input type="text" id="email" name="email" value="{{ account.email }}" placeholder="Your E-mail Address">
               </div>
             </div>
           </div>
 
           <div class="form__row">
             <div class="form__field js-form-field">
-              <label for="password" class="form__label">password *</label>
+              <label for="password" class="form__label">password</label>
               <div class="form__input-wrap">
-                  <input type="password" id="password" name="password" value="" placeholder="Type password (leave blank if don't want to change)">
+                  <input type="password" id="password" name="password" value="" placeholder="Type Password (leave blank if don't want to change)">
               </div>
             </div>
 
             <div class="form__field js-form-field">
-              <label for="repassword" class="form__label">Confirm Password *</label>
+              <label for="repassword" class="form__label">Confirm Password</label>
               <div class="form__input-wrap">
                   <input type="password" id="repassword" name="repassword" value="" placeholder="Confirm Password (leave blank if don't want to change)">
               </div>

@@ -6,7 +6,7 @@ from django.utils.text import slugify
 
 class ArticleCategory(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
 
     class Meta:
         verbose_name = "Article Category"
@@ -24,7 +24,7 @@ class ArticleCategory(models.Model):
 
 class ArticleTag(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
 
     class Meta:
         verbose_name = "Article Tag"
@@ -44,7 +44,7 @@ class Article(models.Model):
     created_at = models.DateTimeField(default=now)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=500)
+    slug = models.SlugField(max_length=500, unique=True)
     description = models.TextField(max_length=100000)
     article_category = models.ForeignKey(to=ArticleCategory, on_delete=models.SET_NULL, null=True)
     article_tag = models.ManyToManyField(to=ArticleTag)

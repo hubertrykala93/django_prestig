@@ -3,6 +3,11 @@ from . import views
 
 urlpatterns = [
     path(
+        route="api/v1/accounts/account-details/<int:pk>",
+        view=views.UserDetailsAPIView.as_view(),
+        name="api-v1-accounts-account-details",
+    ),
+    path(
         route="api/v1/accounts/account-register",
         view=views.UserRegisterAPIView.as_view(),
         name="api-v1-accounts-account-register",

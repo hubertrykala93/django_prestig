@@ -311,6 +311,11 @@ font-family: var(--ff-heading);
   height: 2rem;
 }
 
+input::placeholder,
+textarea::placeholder{
+    text-transform: capitalize;
+}
+
 .form input, 
 .form textarea {
   width: 100%;
@@ -405,6 +410,82 @@ font-family: var(--ff-heading);
 .form__checkbox__input:checked + label::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpolyline points='1 6.5 4 9.5 11 2.5' fill='none' stroke='%23FFFFFF' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/svg%3E");
   background-size: .7em;
+}
+
+/* upload file drag & drop & image preview */
+.form__upload {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+  background-color: var(--clr-gray-100);
+  border: 2px dashed var(--clr-accent-400);
+  border-radius: var(--br-400);
+  position: relative;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.form__upload:hover {
+  background-color: var(--clr-primary-light-alt);
+}
+
+.form__upload:focus,
+.form__upload:focus-within {
+  border-color: var(--clr-secondary);
+}
+
+.form__upload__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.6rem;
+}
+
+.form__upload__text i {
+  margin-bottom: 1rem;
+  font-size: 3rem;
+  line-height: 1;
+  color: var(--clr-primary);
+}
+
+.form__upload__file-name {
+  margin-top: 1rem;
+  color: var(--clr-primary);
+}
+
+.form__upload__input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.form__upload-container__image-preview {
+  margin-top: 1.4rem;
+}
+
+.form__upload-container__image-preview span{
+  display: block;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  font-size: var(--fs-body-500);
+  color: var(--clr-secondary);
+}
+
+.form__upload-container__image-preview__image {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 /* TESTIMONIALS */
@@ -2064,6 +2145,25 @@ font-family: var(--ff-heading);
   :root {
     --container-side-space: 2em;
   }
+
+  /**
+  * COMPONENTS
+  */
+
+  /* FORM */
+
+  /* upload file drag & drop & image preview */
+
+  .form__upload-container {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: var(--column-gap);
+  }
+
+  .form__upload-container__image-preview {
+    margin-top: 0;
+  }
+
 
   /**
   * HOME PAGE

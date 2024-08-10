@@ -3,6 +3,25 @@ from uuid import uuid4
 from django.utils.timezone import now
 
 
+class DeliveryDetails(models.Model):
+    uuid = models.UUIDField(default=uuid4)
+    phone_number = models.IntegerField(null=True)
+    country = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    street = models.CharField(max_length=200)
+    house_number = models.CharField(max_length=200)  # Include the house number if the delivery is to a residential home
+    apartment_number = models.CharField()  # Include the apartment number if the delivery is to a building with multiple units
+    postal_code = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Delivery Detail"
+        verbose_name_plural = "Delivery Details"
+
+    def __str__(self):
+        return str(self.uuid)
+
+
 class Brand(models.Model):
     name = models.CharField(max_length=1000, unique=True)
     description = models.CharField(max_length=10000)

@@ -195,4 +195,52 @@ if ($loginForm) {
 * MY ACCOUNT
 */
 
+// UPLOAD IMAGE
+const $uploadInputs = document.querySelectorAll('.js-form-upload-input')
+
+/**
+ * Updates label of file uploader.
+ * @param {HTMLElement} $input - Input which belongs to particular file uploader.
+ * @param {string} content - Text to show in label.
+*/
+const updateFileLabel = ($input, content) => {
+  const $uploadedFileLabel = $input.closest('.js-form-upload-container').querySelector('.js-form-upload-filelabel')
+  $uploadedFileLabel.textContent = content
+}
+
+/**
+ * Updates source of preview image.
+ * @param {HTMLElement} $input - Input which belongs to particular file uploader.
+ * @param {object} file - Image file which to show in preview.
+ */
+const updateImagePreview = ($input, file) => {
+  const $previewImage = $input.closest('.js-form-upload-container').querySelector('.js-form-upload-preview-image')
+
+  $previewImage.src = URL.createObjectURL(file)
+}
+
+/**
+ * Checks if file from given event is of the correct type and handles label contents to show.
+ * @param {object} e - Event object of file input.
+ */
+const validateImage = (e) => {
+  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+  const $input = e.target
+  const file = $input.files[0]
+  if (allowedTypes.indexOf(file.type) > -1) {
+    updateFileLabel($input, $input.value.split("\\").pop())
+    updateImagePreview($input, file)
+  }else {
+    updateFileLabel($input, 'Not supported image type');
+  }
+}
+
+if ($uploadInputs) {
+  $uploadInputs.forEach($input => {
+    $input.addEventListener('change', function (e) {
+      validateImage(e)
+    })
+  })
+}
+
 // ACCOUNT SETTINGS

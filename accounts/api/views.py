@@ -1,8 +1,8 @@
 from rest_framework.response import Response
 from accounts.models import User
 from rest_framework import status
-from rest_framework.generics import CreateAPIView
-from .serializers import UserRegisterSerializer, UserLoginSerializer
+from rest_framework.generics import CreateAPIView, RetrieveAPIView
+from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.utils.html import strip_tags
@@ -16,6 +16,45 @@ import os
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout, login
+
+
+class UserDetailsAPIView(RetrieveAPIView):
+    serializer_class = UserSerializer
+    lookup_field = "pk"
+    queryset = User.objects.all()
+
+
+# class UserDetailsAPIView(RetrieveAPIView):
+#     def get_serializer_class(self):
+#         return UserSerializer
+#
+#     def get(self, request, *args, **kwargs):
+#         try:
+#             user = User.objects.get(id=self.kwargs.get("pk"))
+#
+#         except User.DoesNotExist:
+#             return Response(
+#                 data={
+#                     "error": f"User with ID {self.kwargs.get('pk')} does not exist."
+#                 },
+#                 status=status.HTTP_404_NOT_FOUND,
+#             )
+#
+#         serializer = self.get_serializer(data=user)
+#
+#         if serializer.is_valid():
+#             return Response(
+#                 data={
+#                     "data": serializer.data,
+#                 },
+#                 status=status.HTTP_200_OK,
+#             )
+#
+#         else:
+#             return Response(
+#                 data=serializer.errors,
+#                 status=status.HTTP_400_BAD_REQUEST,
+#             )
 
 
 class UserRegisterAPIView(CreateAPIView):

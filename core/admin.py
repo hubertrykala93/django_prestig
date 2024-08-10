@@ -11,9 +11,15 @@ class AdminNewsletter(admin.ModelAdmin):
     """
     Admin options and functionalities for Newsletter model.
     """
-    fields = ["email"]
     list_display = ["id", "created_at", "email"]
     form = NewsletterForm
+    fieldsets = (
+        (
+            "Subscriber", {
+                "fields": ["email"],
+            },
+        ),
+    )
 
 
 @admin.register(ContactMail)
@@ -21,6 +27,23 @@ class AdminContactMail(admin.ModelAdmin):
     """
     Admin options and functionalities for ContactMail model.
     """
-    fields = ["fullname", "email", "subject", "message"]
     list_display = ["id", "date_sent", "fullname", "email", "subject", "message"]
     form = ContactMailForm
+    fieldsets = (
+        (
+            "Contact Information", {
+                "fields": [
+                    "fullname",
+                    "email",
+                ],
+            },
+        ),
+        (
+            "Message Content", {
+                "fields": [
+                    "subject",
+                    "message",
+                ]
+            }
+        )
+    )

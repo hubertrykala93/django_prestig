@@ -1,6 +1,11 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import user_passes_test, login_required
+from accounts.models import Profile, User
+import requests
+from datetime import date
 
 
+@user_passes_test(test_func=lambda u: not u.is_authenticated, login_url="index")
 def register(request):
     return render(
         request=request,
@@ -12,6 +17,7 @@ def register(request):
     )
 
 
+@user_passes_test(test_func=lambda u: not u.is_authenticated, login_url="index")
 def login(request):
     return render(
         request=request,
@@ -23,11 +29,85 @@ def login(request):
     )
 
 
+@login_required(login_url="login")
+def my_account(request):
+    response = requests.get(url=f"http://127.0.0.1:8000/api/v1/accounts/account-details/{request.user.id}")
+
+    return render(
+        request=request,
+        template_name="accounts/my-account.html",
+        context={
+            "title": "My Account",
+            "account": response.json(),
+        }
+    )
+
+
+@login_required(login_url="login")
 def account_settings(request):
+    response = requests.get(url=f"http://127.0.0.1:8000/api/v1/accounts/account-details/{request.user.id}")
+
     return render(
         request=request,
         template_name="accounts/account-settings.html",
         context={
             "title": "Account Settings",
+            "account": response.json(),
+        }
+    )
+
+
+@login_required(login_url="login")
+def profile_settings(request):
+    return render(
+        request=request,
+        template_name="accounts/profile-settings.html",
+        context={
+            "title": "Profile Settings",
+            "max": date.today().strftime("%Y-%m-%d"),
+        }
+    )
+
+
+@login_required(login_url="login")
+def delivery_details(request):
+    return render(
+        request=request,
+        template_name="accounts/delivery-details.html",
+        context={
+            "title": "Delivery Details",
+        }
+    )
+
+
+@login_required(login_url="login")
+def purchased_products(request):
+    return render(
+        request=request,
+        template_name="accounts/purchased-products.html",
+        context={
+            "title": "Purchased Products",
+        }
+    )
+
+
+@login_required(login_url="login")
+def product_returns(request):
+    return render(
+        request=request,
+        template_name="accounts/product-returns.html",
+        context={
+            "title": "Product Returns",
+        }
+    )
+
+
+@login_required(login_url="login")
+def product_reviews(request):
+    return render(
+        request=request,
+        template_name="accounts/product-reviews.html",
+        context={
+            "title": "Product Reviews",
         }
     )

@@ -2,44 +2,44 @@
   <h5 class="heading heading--h5">Menu</h5>
   <ul class="account__aside__nav">
     <li>
-      <a href="#" class="active">
+      <a href="{% url 'account-settings' %}" class="{% if request.resolver_match.url_name == 'account-settings' %}active{% endif %}">
         <i class="ri-settings-5-line" aria-hidden="true"></i>
-        Account settings
+        Account Settings
       </a>
     </li>
 
     <li>
-      <a href="#">
+      <a href="{% url 'profile-settings' %}" class="{% if request.resolver_match.url_name == 'profile-settings' %}active{% endif %}">
         <i class="ri-file-user-line" aria-hidden="true"></i>
-        Profile settings
+        Profile Settings
       </a>
     </li>
 
     <li>
-      <a href="#">
+      <a href="{% url 'delivery-details' %}" class="{% if request.resolver_match.url_name == 'delivery-details' %}active{% endif %}">
         <i class="ri-truck-line" aria-hidden="true"></i>
-        Delivery details
+        Delivery Details
       </a>
     </li>
 
     <li>
-      <a href="#">
+      <a href="{% url 'purchased-products' %}" class="{% if request.resolver_match.url_name == 'purchased-products' %}active{% endif %}">
         <i class="ri-shopping-cart-2-line" aria-hidden="true"></i>
-        Purchased products
+        Purchased Products
       </a>
     </li>
 
     <li>
-      <a href="#">
+      <a href="{% url 'product-returns' %}" class="{% if request.resolver_match.url_name == 'product-returns' %}active{% endif %}">
         <i class="ri-arrow-turn-forward-line" aria-hidden="true"></i>
-        Product returns
+        Product Returns
       </a>
     </li>
 
     <li>
-      <a href="#">
+      <a href="{% url 'product-reviews' %}" class="{% if request.resolver_match.url_name == 'product-reviews' %}active{% endif %}">
         <i class="ri-questionnaire-line" aria-hidden="true"></i>
-        Product reviews
+        Product Reviews
       </a>
     </li>
   </ul>

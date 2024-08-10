@@ -8,7 +8,8 @@ from .models import (
     Color,
     Size,
     Stock,
-    ProductGallery
+    ProductGallery,
+    DeliveryDetails,
 )
 from .forms import (
     BrandForm,
@@ -19,8 +20,41 @@ from .forms import (
     SizeForm,
     ProductGalleryForm,
     StockForm,
-    ProductForm
+    ProductForm,
+    DeliveryDetailsForm,
 )
+
+
+@admin.register(DeliveryDetails)
+class AdminDeliveryDetails(admin.ModelAdmin):
+    """
+    Admin options and functionalities for DeliveryDetails model.
+    """
+    list_display = ["id", "uuid", "phone_number", "country", "state", "city", "street", "house_number",
+                    "apartment_number", "postal_code"]
+    form = DeliveryDetailsForm
+    fieldsets = (
+        (
+            "Contact Information", {
+                "fields": [
+                    "phone_number",
+                ],
+            },
+        ),
+        (
+            "Shipping Address", {
+                "fields": [
+                    "country",
+                    "state",
+                    "city",
+                    "street",
+                    "house_number",
+                    "apartment_number",
+                    "postal_code",
+                ],
+            },
+        ),
+    )
 
 
 @admin.register(Brand)
@@ -28,11 +62,27 @@ class AdminBrand(admin.ModelAdmin):
     """
     Admin options and functionalities for Brand model.
     """
-    fields = ["name", "slug", "description", "logo"]
     list_display = ["id", "name", "slug", "description", "logo"]
     list_editable = ["slug"]
     prepopulated_fields = {"slug": ["name"]}
     form = BrandForm
+    fieldsets = (
+        (
+            "Basic Information", {
+                "fields": [
+                    "name",
+                    "description",
+                ],
+            },
+        ),
+        (
+            "Uploading", {
+                "fields": [
+                    "logo",
+                ],
+            },
+        ),
+    )
 
 
 @admin.register(ProductTags)

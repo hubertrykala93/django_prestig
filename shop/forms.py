@@ -8,13 +8,33 @@ from .models import (
     Color,
     ProductGallery,
     Stock,
-    Product
+    Product,
+    DeliveryDetails,
 )
+
+
+class DeliveryDetailsForm(forms.ModelForm):
+    phone_number = forms.IntegerField(help_text="Provide your phone number.", label="Phone Number")
+    country = forms.CharField(help_text="Provide the country.", label="Country")
+    state = forms.CharField(help_text="Provide the state.", label="State")
+    city = forms.CharField(help_text="Provide the city.", label="City")
+    street = forms.CharField(help_text="Provide the street.", label="Street")
+    house_number = forms.CharField(help_text="Provide the house number.", label="House Number")
+    apartment_number = forms.CharField(help_text="Provide the apartment number.", label="Apartment Number",
+                                       required=False)
+    postal_code = forms.CharField(help_text="Provide the postal code.", label="Postal Code")
+
+    def __init__(self, *args, **kwargs):
+        super(DeliveryDetailsForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = DeliveryDetails
+        fields = "__all__"
 
 
 class BrandForm(forms.ModelForm):
     name = forms.CharField(help_text="Provide the brand name.", label="Brand Name")
-    slug = forms.SlugField(help_text="It will be created automatically.")
+    slug = forms.SlugField(required=False)
     description = forms.CharField(max_length=10000, help_text="Provide a brief description of the brand.",
                                   label="Brand Description")
     logo = forms.ImageField(help_text="Upload the brand logo.", label="Brand Logo")

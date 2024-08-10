@@ -1,22 +1,92 @@
 from django.contrib import admin
 from .models import User, Profile
-from .forms import UserForm
+from .forms import UserForm, ProfileForm
 from django.contrib.sessions.models import Session
-
-admin.site.register(Profile)
 
 
 @admin.register(User)
 class AdminUser(admin.ModelAdmin):
     """
-    Admin options and functionalities for Brand model.
+    Admin options and functionalities for User model.
     """
-    fields = ["username", "email", "password", "is_verified", "is_active", "is_staff", "is_superuser"]
     list_display = ["id", "username", "email", "is_verified", "is_active", "is_staff", "is_superuser",
                     "date_joined",
                     "last_login"]
     list_editable = ["username", "email", "is_verified"]
     form = UserForm
+    fieldsets = (
+        (
+            "Basic Informations", {
+                "fields": [
+                    "username",
+                    "email",
+                    "password",
+                ],
+            },
+        ),
+        (
+            "Permissions", {
+                "fields": [
+                    "is_verified",
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                ],
+            },
+        ),
+    )
+
+
+@admin.register(Profile)
+class AdminProfile(admin.ModelAdmin):
+    """
+    Admin options and functionalities for Profile model.
+    """
+    list_display = ["id", "user", "firstname", "lastname", "bio", "gender", "date_of_birth", "profile_picture", "facebook_username",
+                    "instagram_username", "delivery_details"]
+    form = ProfileForm
+    fieldsets = (
+        (
+            "Basic Informations", {
+                "fields": [
+                    "user",
+                    "firstname",
+                    "lastname",
+                    "bio",
+                    "date_of_birth",
+                ],
+            },
+        ),
+        (
+            "Uploading", {
+                "fields": [
+                    "profile_picture",
+                ],
+            },
+        ),
+        (
+            "Social Media", {
+                "fields": [
+                    "facebook_username",
+                    "instagram_username",
+                ],
+            },
+        ),
+        (
+            "Favorite Products", {
+                "fields": [
+                    "wishlist",
+                ],
+            },
+        ),
+        (
+            "Delivery Informations", {
+                "fields": [
+                    "delivery_details",
+                ],
+            },
+        ),
+    )
 
 
 @admin.register(Session)
