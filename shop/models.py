@@ -1,6 +1,7 @@
 from django.db import models
 from uuid import uuid4
 from django.utils.timezone import now
+from django.utils.text import slugify
 
 
 class DeliveryDetails(models.Model):
@@ -35,6 +36,12 @@ class Brand(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+
+        return super(Brand, self).save(*args, **kwargs)
+
 
 class ProductTags(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -47,6 +54,12 @@ class ProductTags(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+
+        return super(ProductTags, self).save(*args, **kwargs)
+
 
 class ProductSubCategory(models.Model):
     name = models.CharField(max_length=200)
@@ -54,11 +67,17 @@ class ProductSubCategory(models.Model):
     image = models.ImageField(upload_to='shop/subcategories')
 
     class Meta:
-        verbose_name = "Product Subcategory"
-        verbose_name_plural = "Product Subcategories"
+        verbose_name = "Product SubCategory"
+        verbose_name_plural = "Product SubCategories"
 
     def __str__(self):
         return f"{self.name}"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+
+        return super(ProductSubCategory, self).save(*args, **kwargs)
 
 
 class ProductCategory(models.Model):
@@ -74,6 +93,12 @@ class ProductCategory(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+
+        return super(ProductCategory, self).save(*args, **kwargs)
 
 
 class Size(models.Model):
@@ -149,3 +174,9 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+
+        return super(Product, self).save(*args, **kwargs)

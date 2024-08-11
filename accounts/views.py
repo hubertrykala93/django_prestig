@@ -31,21 +31,20 @@ def login(request):
 
 @login_required(login_url="login")
 def my_account(request):
-    response = requests.get(url=f"http://127.0.0.1:8000/api/v1/accounts/account-details/{request.user.id}")
-
     return render(
         request=request,
         template_name="accounts/my-account.html",
         context={
             "title": "My Account",
-            "account": response.json(),
         }
     )
 
 
 @login_required(login_url="login")
 def account_settings(request):
-    response = requests.get(url=f"http://127.0.0.1:8000/api/v1/accounts/account-details/{request.user.id}")
+    response = requests.get(
+        url=f"{'https' if request.is_secure() else 'http'}://{request.get_host()}/api/v1/accounts/account-details/{request.user.id}"
+    )
 
     return render(
         request=request,
@@ -59,8 +58,8 @@ def account_settings(request):
 
 @login_required(login_url="login")
 def profile_settings(request):
-    response = requests.get(url=f"http://127.0.0.1:8000/api/v1/profiles/profile-details/{request.user.id}")
-    print(response.json())
+    response = requests.get(
+        url=f"{'https' if request.is_secure() else 'http'}://{request.get_host()}/api/v1/profiles/profile-details/{request.user.id}")
 
     return render(
         request=request,
