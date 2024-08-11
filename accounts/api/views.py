@@ -1,8 +1,8 @@
 from rest_framework.response import Response
-from accounts.models import User
+from accounts.models import User, Profile
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, RetrieveAPIView
-from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer
+from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, ProfileSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.utils.html import strip_tags
@@ -22,6 +22,12 @@ class UserDetailsAPIView(RetrieveAPIView):
     serializer_class = UserSerializer
     lookup_field = "pk"
     queryset = User.objects.all()
+
+
+class ProfileDetailsAPIView(RetrieveAPIView):
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
+    lookup_field = "user_id"
 
 
 # class UserDetailsAPIView(RetrieveAPIView):

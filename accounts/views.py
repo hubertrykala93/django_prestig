@@ -59,12 +59,16 @@ def account_settings(request):
 
 @login_required(login_url="login")
 def profile_settings(request):
+    response = requests.get(url=f"http://127.0.0.1:8000/api/v1/profiles/profile-details/{request.user.id}")
+    print(response.json())
+
     return render(
         request=request,
         template_name="accounts/profile-settings.html",
         context={
             "title": "Profile Settings",
             "max": date.today().strftime("%Y-%m-%d"),
+            "profile": response.json(),
         }
     )
 

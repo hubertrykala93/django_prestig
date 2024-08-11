@@ -17,14 +17,14 @@
             <div class="form__field js-form-field">
                 <label for="firstname" class="form__label">first name *</label>
                 <div class="form__input-wrap">
-                    <input type="text" id="firstname" name="firstname" value="" placeholder="Your firstname">
+                    <input type="text" id="firstname" name="firstname" value="{% if profile.firstname %}{{ profile.firstname }}{% endif %}" placeholder="Your firstname">
                 </div>
             </div>
 
             <div class="form__field js-form-field">
               <label for="lastname" class="form__label">last name *</label>
               <div class="form__input-wrap">
-                  <input type="text" id="lastname" name="lastname" value="" placeholder="Your last name">
+                  <input type="text" id="lastname" name="lastname" value="{% if profile.lastname %}{{ profile.lastname }}{% endif %}" placeholder="Your last name">
               </div>
             </div>
           </div>
@@ -33,7 +33,7 @@
             <div class="form__field js-form-field">
               <label for="dateofbirth" class="form__label">date of birth</label>
               <div class="form__input-wrap">
-                  <input type="date" id="dateofbirth" name="dateofbirth" value="" max="{{ max }}">
+                  <input type="date" id="dateofbirth" name="dateofbirth" value="{% if profile.date_of_birth %}{{ date_of_birth }}{% endif %}" max="{{ max }}">
               </div>
             </div>
           </div>
@@ -92,14 +92,14 @@
             <div class="form__field js-form-field">
                 <label for="facebook" class="form__label">facebook username</label>
                 <div class="form__input-wrap">
-                    <input type="text" id="facebook" name="facebook" value="" placeholder="Your facebook username">
+                    <input type="text" id="facebook" name="facebook" value="{% if profile.facebook_username %}{{ facebook_username }}{% endif %}" placeholder="Your facebook username">
                 </div>
             </div>
 
             <div class="form__field js-form-field">
               <label for="instagram" class="form__label">instagram username</label>
               <div class="form__input-wrap">
-                  <input type="text" id="instagram" name="instagram" value="" placeholder="Your instagram username">
+                  <input type="text" id="instagram" name="instagram" value="{% if profile.instagram_username %}{{ instagram_username }}{% endif %}" placeholder="Your instagram username">
               </div>
             </div>
           </div>

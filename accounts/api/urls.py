@@ -8,6 +8,11 @@ urlpatterns = [
         name="api-v1-accounts-account-details",
     ),
     path(
+        route="api/v1/profiles/profile-details/<int:user_id>",
+        view=views.ProfileDetailsAPIView.as_view(),
+        name="api-v1-profiles-profile-details",
+    ),
+    path(
         route="api/v1/accounts/account-register",
         view=views.UserRegisterAPIView.as_view(),
         name="api-v1-accounts-account-register",
