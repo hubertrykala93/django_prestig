@@ -27,7 +27,7 @@ class UserDetailsAPIView(RetrieveAPIView):
 class ProfileDetailsAPIView(RetrieveAPIView):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
-    lookup_field = "user_id"
+    lookup_field = "pk"
 
 
 # class UserDetailsAPIView(RetrieveAPIView):

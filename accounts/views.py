@@ -59,7 +59,7 @@ def account_settings(request):
 @login_required(login_url="login")
 def profile_settings(request):
     response = requests.get(
-        url=f"{'https' if request.is_secure() else 'http'}://{request.get_host()}/api/v1/profiles/profile-details/{request.user.id}")
+        url=f"{'https' if request.is_secure() else 'http'}://{request.get_host()}/api/v1/profiles/profile-details/{Profile.objects.get(user_id=request.user.id).id}")
 
     return render(
         request=request,
@@ -68,6 +68,7 @@ def profile_settings(request):
             "title": "Profile Settings",
             "max": date.today().strftime("%Y-%m-%d"),
             "profile": response.json(),
+            "genders": [choice[0] for choice in Profile._meta.get_field("gender").choices],
         }
     )
 

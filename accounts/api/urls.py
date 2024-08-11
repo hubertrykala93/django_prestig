@@ -8,7 +8,7 @@ urlpatterns = [
         name="api-v1-accounts-account-details",
     ),
     path(
-        route="api/v1/profiles/profile-details/<int:user_id>",
+        route="api/v1/profiles/profile-details/<int:pk>",
         view=views.ProfileDetailsAPIView.as_view(),
         name="api-v1-profiles-profile-details",
     ),
