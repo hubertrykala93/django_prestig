@@ -64,7 +64,7 @@
             <div class="form__field js-form-field">
               <label for="bio" class="form__label">bio</label>
               <div class="form__input-wrap">
-                <textarea name="bio" id="bio" placeholder="Few words about you"></textarea>
+                <textarea name="bio" id="bio" placeholder="Write a few words about yourself">{% if profile.bio %}{{ profile.bio }}{% endif %}</textarea>
               </div>
             </div>
           </div>

@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test, login_required
 from accounts.models import Profile, User
+from shop.models import DeliveryDetails
+from shop.api.serializers import DeliveryDetailsSerializer
+from .api.serializers import UserSerializer, ProfileSerializer
 import requests
 from datetime import date
 
@@ -42,24 +45,23 @@ def my_account(request):
 
 @login_required(login_url="login")
 def account_settings(request):
-    response = requests.get(
-        url=f"{'https' if request.is_secure() else 'http'}://{request.get_host()}/api/v1/accounts/account-details/{request.user.id}"
-    )
+    user = User.objects.get(id=request.user.id)
+    serializer = UserSerializer(instance=user)
 
     return render(
         request=request,
         template_name="accounts/account-settings.html",
         context={
             "title": "Account Settings",
-            "account": response.json(),
+            "account": serializer.data,
         }
     )
 
 
 @login_required(login_url="login")
 def profile_settings(request):
-    response = requests.get(
-        url=f"{'https' if request.is_secure() else 'http'}://{request.get_host()}/api/v1/profiles/profile-details/{Profile.objects.get(user_id=request.user.id).id}")
+    profile = Profile.objects.get(user_id=request.user.id)
+    serializer = ProfileSerializer(instance=profile)
 
     return render(
         request=request,
@@ -67,7 +69,7 @@ def profile_settings(request):
         context={
             "title": "Profile Settings",
             "max": date.today().strftime("%Y-%m-%d"),
-            "profile": response.json(),
+            "profile": serializer.data,
             "genders": [choice[0] for choice in Profile._meta.get_field("gender").choices],
         }
     )
@@ -75,11 +77,15 @@ def profile_settings(request):
 
 @login_required(login_url="login")
 def delivery_details(request):
+    delivery_details = DeliveryDetails.objects.get(id=Profile.objects.get(user_id=request.user.id).delivery_details_id)
+    serializer = DeliveryDetailsSerializer(instance=delivery_details)
+
     return render(
         request=request,
         template_name="accounts/delivery-details.html",
         context={
             "title": "Delivery Details",
+            "delivery_details": serializer.data,
         }
     )
 
