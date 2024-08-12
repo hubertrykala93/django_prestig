@@ -4,4 +4,113 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
+<section class="my-account">
+  <div class="container container--narrow">
+    <div class="row">
+      <div class="my-account__col">
+        <h4 class="my-account__col__heading heading heading--h4">My account</h4>
+
+        <img src="/media/profile_images/default_profile_image.png" class="my-account__avatar" alt="user avatar">
+        <h5 class="my-account__username__heading heading heading--h5">user name</h5>
+        <p class="my-account__email">szymon.levy123@gmail.com</p>
+        <a href="{% url 'account-settings' %}" class="btn btn--primary">Edit account info</a>
+      </div>
+      
+      <div class="my-account__col">
+        <h4 class="my-account__col__heading heading heading--h4">Profile info</h4>
+
+        <ul class="my-account__details">
+          <li>
+            <h6 class="my-account__details__heading heading heading--h6">First name</h6>
+            <p>przykładowe imię</p>
+          </li>
+
+          <li>
+            <h6 class="my-account__details__heading heading heading--h6">Last name</h6>
+            <p>przykładowe nazwisko</p>
+          </li>
+
+          <li>
+            <h6 class="my-account__details__heading heading heading--h6">Date of birth</h6>
+            <p>-</p>
+          </li>
+
+          <li>
+            <h6 class="my-account__details__heading heading heading--h6">Bio</h6>
+            <p>-</p>
+          </li>
+
+          <li>
+            <h6 class="my-account__details__heading heading heading--h6">Gender</h6>
+            <p>-</p>
+          </li>
+
+          <li>
+            <h6 class="my-account__details__heading heading heading--h6">Facebook</h6>
+            <p>-
+              <!-- jeśli jest to <a href="https://www.facebook.com/username">Link to profile</a> -->
+            </p>
+          </li>
+
+          <li>
+            <h6 class="my-account__details__heading heading heading--h6">Instagram</h6>
+            <p>-
+              <!-- jeśli jest to <a href="https://www.instagram.com/username">Link to profile</a> -->
+            </p>
+          </li>
+        </ul>
+
+        <a href="{% url 'profile-settings' %}" class="btn btn--primary">Edit profile info</a>
+      </div>
+      
+      <div class="my-account__col">
+        <h4 class="my-account__col__heading heading heading--h4">Delivery details</h4>
+
+        <ul class="my-account__details">
+          <li>
+            <h6 class="my-account__details__heading heading heading--h6">Phone number</h6>
+            <p>-</p>
+          </li>
+          
+          <li>
+            <h6 class="my-account__details__heading heading heading--h6">Country</h6>
+            <p>-</p>
+          </li>
+
+          <li>
+            <h6 class="my-account__details__heading heading heading--h6">State</h6>
+            <p>-</p>
+          </li>
+
+          <li>
+            <h6 class="my-account__details__heading heading heading--h6">City</h6>
+            <p>-</p>
+          </li>
+
+          <li>
+            <h6 class="my-account__details__heading heading heading--h6">Street</h6>
+            <p>-</p>
+          </li>
+
+          <li>
+            <h6 class="my-account__details__heading heading heading--h6">House number</h6>
+            <p>-</p>
+          </li>
+
+          <li>
+            <h6 class="my-account__details__heading heading heading--h6">Apartament number</h6>
+            <p>-</p>
+          </li>
+
+          <li>
+            <h6 class="my-account__details__heading heading heading--h6">Postal code</h6>
+            <p>-</p>
+          </li>
+        </ul>
+
+        <a href="{% url 'delivery-details' %}" class="btn btn--primary">Edit delivery details</a>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock %}

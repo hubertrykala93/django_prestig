@@ -1584,7 +1584,47 @@ textarea::placeholder{
   margin-bottom: .8em;
 }
 
-/* ACCOUNT SETTINGS */
+/* MY ACCOUNT */
+.my-account {
+  padding: var(--block-space-500) 0 var(--block-space-800);
+}
+
+.my-account > .container > .row {
+  display: grid;
+  gap: var(--column-gap);
+}
+
+.my-account__col {
+  padding: var(--column-gap);
+  background-color: var(--clr-gray-100);
+  border: 1px solid var(--clr-gray-200);
+}
+
+.my-account__col__heading {
+  margin-bottom: .8em;
+}
+
+.my-account__avatar {
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.my-account__username__heading {
+  margin-top: .8em;
+}
+
+.my-account__email {
+  margin-bottom: 1rem;
+}
+
+.my-account__details {
+  margin-bottom: 1rem;
+  display: grid;
+  row-gap: .8rem;
+}
+
 
 /**
 * BLOG
@@ -2710,6 +2750,11 @@ textarea::placeholder{
 
   .account > .container > .row {
     grid-template-columns: 15rem auto;
+  }
+
+  /* MY ACCOUNT */
+  .my-account > .container > .row {
+    grid-template-columns: 18rem 1fr 1fr;
   }
 
   /**
