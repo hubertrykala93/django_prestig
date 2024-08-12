@@ -25,6 +25,14 @@ class ProfileSerializer(serializers.ModelSerializer):
             "user",
         ]
 
+    def validate_firstname(self, firstname):
+        if len(firstname) < 10000:
+            raise serializers.ValidationError(
+                detail="Error",
+            )
+
+        return firstname
+
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(allow_blank=True)

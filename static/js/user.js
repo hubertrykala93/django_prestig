@@ -366,7 +366,7 @@ const $profileSettingsForm = document.querySelector('.js-profile-settings-form')
  * @param {Object} formData - Profile settings formdata object.
  */
 const sendProfileSettingsRequest = (formData) => {
-    const url = 'profile-settings'
+    const url = '/api/v1/profiles/update-profile'
 
     fetch(url, {
         method:'POST',
@@ -378,6 +378,7 @@ const sendProfileSettingsRequest = (formData) => {
          return response.json()
     }).then((response) => {
         clearFormErrors($accountSettingsForm)
+        console.log(response)
 
         if (response.hasOwnProperty('success')) {
             showAlert(response.success, 'success')

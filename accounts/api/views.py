@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from accounts.models import User, Profile
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, RetrieveAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView
 from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, ProfileSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
@@ -182,3 +182,33 @@ class UserLogoutAPIView(APIView):
         logout(request=request)
 
         return redirect(to="index")
+
+
+class ProfileUpdateAPIView(UpdateAPIView):
+    def get_object(self):
+        return Profile.objects.get(user_id=self.request.user.id)
+
+    def get_queryset(self):
+        return Profile.objects.all()
+
+    def get_serializer_class(self):
+        return ProfileSerializer
+
+    def post(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance=instance, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            self.perform_update(serializer=serializer)
+
+            return Response(
+                data={
+                    "success": "The profile has been successfully updated.",
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+            )
