@@ -26,6 +26,11 @@ class NewsletterCreateSerializer(serializers.ModelSerializer):
                 detail="E-mail Address is required.",
             )
 
+        if len(email) > 255:
+            raise serializers.ValidationError(
+                detail="The e-mail address cannot be longer than 255 characters.",
+            )
+
         if not re.match(pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", string=email):
             raise serializers.ValidationError(
                 detail="The e-mail address format is invalid.",
@@ -79,12 +84,22 @@ class ContactMailCreateSerializer(serializers.ModelSerializer):
                 detail="The full name must be at least 8 characters long.",
             )
 
+        if len(fullname) > 50:
+            raise serializers.ValidationError(
+                detail="The full name cannot be longer than 50 characters."
+            )
+
         return fullname
 
     def validate_email(self, email):
         if email == "":
             raise serializers.ValidationError(
                 detail="E-mail address is required.",
+            )
+
+        if len(email) > 255:
+            raise serializers.ValidationError(
+                detail="The e-mail address cannot be longer than 255 characters.",
             )
 
         if not re.match(pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", string=email):
@@ -105,6 +120,11 @@ class ContactMailCreateSerializer(serializers.ModelSerializer):
                 detail="The subject must be at least 8 characters long.",
             )
 
+        if len(subject) > 100:
+            raise serializers.ValidationError(
+                detail="The subject cannot be longer than 100 characters.",
+            )
+
         return subject
 
     def validate_message(self, message):
@@ -116,6 +136,11 @@ class ContactMailCreateSerializer(serializers.ModelSerializer):
         if len(message) < 20:
             raise serializers.ValidationError(
                 detail="The message must be at least 20 characters long.",
+            )
+
+        if len(message) > 1000:
+            raise serializers.ValidationError(
+                detail="The message cannot be longer than 1000 characters."
             )
 
         return message

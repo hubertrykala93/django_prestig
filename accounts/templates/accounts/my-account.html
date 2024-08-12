@@ -8,54 +8,54 @@
   <div class="container container--narrow">
     <div class="row">
       <div class="my-account__col">
-        <h4 class="my-account__col__heading heading heading--h4">My account</h4>
+        <h4 class="my-account__col__heading heading heading--h4">My Account</h4>
 
         <img src="/media/profile_images/default_profile_image.png" class="my-account__avatar" alt="user avatar">
-        <h5 class="my-account__username__heading heading heading--h5">user name</h5>
-        <p class="my-account__email">szymon.levy123@gmail.com</p>
-        <a href="{% url 'account-settings' %}" class="btn btn--primary">Edit account info</a>
+        <h5 class="my-account__username__heading heading heading--h5">{{ data.user.username }}</h5>
+        <p class="my-account__email">{{ data.user.email }}</p>
+        <a href="{% url 'account-settings' %}" class="btn btn--primary">Edit Account Info</a>
       </div>
       
       <div class="my-account__col">
-        <h4 class="my-account__col__heading heading heading--h4">Profile info</h4>
+        <h4 class="my-account__col__heading heading heading--h4">Profile Info</h4>
 
         <ul class="my-account__details">
           <li>
-            <h6 class="my-account__details__heading heading heading--h6">First name</h6>
-            <p>przykładowe imię</p>
+            <h6 class="my-account__details__heading heading heading--h6">First Name</h6>
+            <p>{% if data.profile.firstname %}{{ data.profile.firstname }}{% else %}-{% endif %}</p>
           </li>
 
           <li>
-            <h6 class="my-account__details__heading heading heading--h6">Last name</h6>
-            <p>przykładowe nazwisko</p>
+            <h6 class="my-account__details__heading heading heading--h6">Last Name</h6>
+            <p>{% if data.profile.lastname %}{{ data.profile.lastname }}{% else %}-{% endif %}</p>
           </li>
 
           <li>
-            <h6 class="my-account__details__heading heading heading--h6">Date of birth</h6>
-            <p>-</p>
+            <h6 class="my-account__details__heading heading heading--h6">Date of Birth</h6>
+            <p>{% if data.profile.date_of_birth %}{{ data.profile.date_of_birth }}{% else %}-{% endif %}</p>
           </li>
 
           <li>
             <h6 class="my-account__details__heading heading heading--h6">Bio</h6>
-            <p>-</p>
+            <p>{% if data.profile.bio %}{{ data.profile.bio }}{% else %}-{% endif %}</p>
           </li>
 
           <li>
             <h6 class="my-account__details__heading heading heading--h6">Gender</h6>
-            <p>-</p>
+            <p>{% if data.profile.gender %}{% if data.profile.gender == 'Not Set' %}-{% else %}{{ data.profile.gender }}{% endif %}{% endif %}</p>
           </li>
 
           <li>
             <h6 class="my-account__details__heading heading heading--h6">Facebook</h6>
-            <p>-
-              <!-- jeśli jest to <a href="https://www.facebook.com/username">Link to profile</a> -->
+            <p>
+              {% if data.profile.facebook_username %}<a href="https://www.facebook.com/{{ data.profile.facebook_username }}" target="_blank">Link to Profile</a>{% else %}-{% endif %}
             </p>
           </li>
 
           <li>
             <h6 class="my-account__details__heading heading heading--h6">Instagram</h6>
-            <p>-
-              <!-- jeśli jest to <a href="https://www.instagram.com/username">Link to profile</a> -->
+            <p>
+              {% if data.profile.instagram_username %}<a href="https://www.instagram.com/{{ data.profile.instagram_username }}" target="_blank">Link to Profile</a>{% else %}-{% endif %}
             </p>
           </li>
         </ul>
@@ -64,47 +64,47 @@
       </div>
       
       <div class="my-account__col">
-        <h4 class="my-account__col__heading heading heading--h4">Delivery details</h4>
+        <h4 class="my-account__col__heading heading heading--h4">Delivery Details</h4>
 
         <ul class="my-account__details">
           <li>
-            <h6 class="my-account__details__heading heading heading--h6">Phone number</h6>
-            <p>-</p>
+            <h6 class="my-account__details__heading heading heading--h6">Phone Number</h6>
+            <p>{% if data.delivery_details.phone_number %}{{ data.delivery_details.phone_number }}{% else %}-{% endif %}</p>
           </li>
           
           <li>
             <h6 class="my-account__details__heading heading heading--h6">Country</h6>
-            <p>-</p>
+            <p>{% if data.delivery_details.country %}{{ data.delivery_details.country }}{% else %}-{% endif %}</p>
           </li>
 
           <li>
             <h6 class="my-account__details__heading heading heading--h6">State</h6>
-            <p>-</p>
+            <p>{% if data.delivery_details.state %}{{ data.delivery_details.state }}{% else %}-{% endif %}</p>
           </li>
 
           <li>
             <h6 class="my-account__details__heading heading heading--h6">City</h6>
-            <p>-</p>
+            <p>{% if data.delivery_details.city %}{{ data.delivery_details.city }}{% else %}-{% endif %}</p>
           </li>
 
           <li>
             <h6 class="my-account__details__heading heading heading--h6">Street</h6>
-            <p>-</p>
+            <p>{% if data.delivery_details.street %}{{ data.delivery_details.street }}{% else %}-{% endif %}</p>
           </li>
 
           <li>
-            <h6 class="my-account__details__heading heading heading--h6">House number</h6>
-            <p>-</p>
+            <h6 class="my-account__details__heading heading heading--h6">House Number</h6>
+            <p>{% if data.delivery_details.house_number %}{{ data.delivery_details.house_number }}{% else %}-{% endif %}</p>
           </li>
 
           <li>
-            <h6 class="my-account__details__heading heading heading--h6">Apartament number</h6>
-            <p>-</p>
+            <h6 class="my-account__details__heading heading heading--h6">Apartament Number</h6>
+            <p>{% if data.delivery_details.apartment_number %}{{ data.delivery_details.apartment_number }}{% else %}-{% endif %}</p>
           </li>
 
           <li>
-            <h6 class="my-account__details__heading heading heading--h6">Postal code</h6>
-            <p>-</p>
+            <h6 class="my-account__details__heading heading heading--h6">Postal Code</h6>
+            <p>{% if data.delivery_details.postal_code %}{{ data.delivery_details.postal_code }}{% else %}-{% endif %}</p>
           </li>
         </ul>
 

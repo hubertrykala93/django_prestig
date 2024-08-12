@@ -34,11 +34,19 @@ def login(request):
 
 @login_required(login_url="login")
 def my_account(request):
+    data = {
+        "user": UserSerializer(instance=User.objects.get(id=request.user.id)).data,
+        "profile": ProfileSerializer(instance=Profile.objects.get(user_id=request.user.id)).data,
+        "delivery_details": DeliveryDetailsSerializer(instance=DeliveryDetails.objects.get(
+            id=Profile.objects.get(user_id=request.user.id).delivery_details_id)).data,
+    }
+
     return render(
         request=request,
         template_name="accounts/my-account.html",
         context={
             "title": "My Account",
+            "data": data,
         }
     )
 

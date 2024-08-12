@@ -68,6 +68,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
                 detail="The username should consist of at least 8 characters.",
             )
 
+        if len(username) > 35:
+            raise serializers.ValidationError(
+                detail="The username cannot be longer than 35 characters.",
+            )
+
         if User.objects.filter(username=username).exists():
             raise serializers.ValidationError(
                 detail=f"The '{username}' already exists.",
@@ -79,6 +84,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         if email == "":
             raise serializers.ValidationError(
                 detail="E-mail address is required.",
+            )
+
+        if len(email) > 255:
+            raise serializers.ValidationError(
+                detail="The e-mail address cannot be longer than 255 characters.",
             )
 
         if not re.match(pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", string=email):
@@ -106,6 +116,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
                     detail="The password should consist of at least 8 characters.",
                 )
 
+            if len(password) > 255:
+                raise serializers.ValidationError(
+                    detail="The password cannot be longer than 255 characters.",
+                )
+
             if not re.match(pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", string=password):
                 raise serializers.ValidationError(
                     detail="The password should contain at least one uppercase letter, one lowercase letter, one number, "
@@ -118,6 +133,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         if repassword == "":
             raise serializers.ValidationError(
                 detail="Confirm password is required.",
+            )
+
+        if len(repassword) > 255:
+            raise serializers.ValidationError(
+                detail="The confirm password cannot be longer than 255 characters.",
             )
 
         if repassword != self.context.get("password"):
