@@ -68,6 +68,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Profile(models.Model):
+    GENDER_CHOICES = (
+        ("Male", "Male"),
+        ("Female", "Female"),
+        ("Not Set", "Not Set"),
+    )
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
 
     # Basic Info
@@ -75,15 +80,11 @@ class Profile(models.Model):
     lastname = models.CharField(max_length=100)
     bio = models.CharField(max_length=500)
     gender = models.CharField(
-        choices=(
-            ("Male", "Male"),
-            ("Female", "Female"),
-            ("Not Set", "Not Set"),
-        ),
+        choices=GENDER_CHOICES,
     )
     date_of_birth = models.DateField(null=True)
     profile_picture = models.ImageField(default="profile_images/default_profile_image.png", upload_to="profile_images",
-                              null=True)
+                                        null=True)
 
     # Social Media
     facebook_username = models.CharField(max_length=100, null=True)

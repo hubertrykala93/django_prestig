@@ -33,11 +33,11 @@ class DeliveryDetailsForm(forms.ModelForm):
 
 
 class BrandForm(forms.ModelForm):
-    name = forms.CharField(help_text="Provide the brand name.", label="Brand Name")
+    name = forms.CharField(help_text="Provide the brand name.", label="Name")
     slug = forms.SlugField(required=False)
     description = forms.CharField(max_length=10000, help_text="Provide a brief description of the brand.",
-                                  label="Brand Description")
-    logo = forms.ImageField(help_text="Upload the brand logo.", label="Brand Logo")
+                                  label="Description")
+    logo = forms.ImageField(help_text="Upload the brand logo.", label="Logo")
 
     class Meta:
         model = Brand
@@ -45,8 +45,8 @@ class BrandForm(forms.ModelForm):
 
 
 class ProductTagsForm(forms.ModelForm):
-    name = forms.CharField(help_text="Provide the tag name.", label="Tag Name")
-    slug = forms.SlugField(help_text="It will be created automatically.")
+    name = forms.CharField(help_text="Provide the tag name.", label="Name")
+    slug = forms.SlugField(required=False)
 
     class Meta:
         model = ProductTags
@@ -54,15 +54,17 @@ class ProductTagsForm(forms.ModelForm):
 
 
 class ProductCategoryForm(forms.ModelForm):
-    name = forms.CharField(help_text="Provide the category name.", label="Category Name")
-    image = forms.ImageField(help_text="Upload an image for this category.", label="Category Image")
-    is_active = forms.BooleanField(help_text="Indicate whether the category is active.")
+    name = forms.CharField(help_text="Provide the category name.", label="Name")
+    slug = forms.SlugField(required=False)
+    image = forms.ImageField(help_text="Upload an image for this category.", label="Image")
+    is_active = forms.BooleanField(help_text="Indicate whether the category is active.", required=False)
 
     def __init__(self, *args, **kwargs):
         super(ProductCategoryForm, self).__init__(*args, **kwargs)
 
         self.fields["subcategory"].help_text = "Add a subcategory for this category."
-        self.fields["subcategory"].label = "Subcategory"
+        self.fields["subcategory"].label = "SubCategory"
+        self.fields["subcategory"].required = False
 
     class Meta:
         model = ProductCategory
@@ -70,9 +72,9 @@ class ProductCategoryForm(forms.ModelForm):
 
 
 class ProductSubCategoryForm(forms.ModelForm):
-    name = forms.CharField(help_text="Provide the subcategory name.", label="Subcategory Name")
-    slug = forms.SlugField(help_text="It will be created automatically.")
-    image = forms.ImageField(help_text="Upload an image for this subcategory.", label="Subcategory Image")
+    name = forms.CharField(help_text="Provide the subcategory name.", label="Name")
+    slug = forms.SlugField(required=False)
+    image = forms.ImageField(help_text="Upload an image for this subcategory.", label="Image")
 
     class Meta:
         model = ProductSubCategory
@@ -80,7 +82,7 @@ class ProductSubCategoryForm(forms.ModelForm):
 
 
 class SizeForm(forms.ModelForm):
-    size = forms.CharField(help_text="Provide the size.", label="Product Size")
+    size = forms.CharField(help_text="Provide the size.", label="Size")
 
     class Meta:
         model = Size
@@ -88,8 +90,8 @@ class SizeForm(forms.ModelForm):
 
 
 class ColorForm(forms.ModelForm):
-    color = forms.CharField(help_text="Provide the color.", label="Product Color")
-    hex = forms.CharField(help_text="Provide the hex.", label="Color Hex")
+    color = forms.CharField(help_text="Provide the color.", label="Color")
+    hex = forms.CharField(help_text="Provide the hex.", label="Hex")
 
     class Meta:
         model = Color
@@ -105,7 +107,7 @@ class ProductGalleryForm(forms.ModelForm):
 
 
 class StockForm(forms.ModelForm):
-    quantity = forms.IntegerField(help_text="Provide the quantity of the product.", label="Product Quantity")
+    quantity = forms.IntegerField(help_text="Provide the quantity of the product.", label="Quantity")
 
     def __init__(self, *args, **kwargs):
         super(StockForm, self).__init__(*args, **kwargs)
@@ -113,8 +115,8 @@ class StockForm(forms.ModelForm):
         self.fields["color"].help_text = "Provide the color of the product."
         self.fields["size"].help_text = "Provide the size of the product."
 
-        self.fields["color"].label = "Product Color"
-        self.fields["size"].label = "Product Size"
+        self.fields["color"].label = "Color"
+        self.fields["size"].label = "Size"
 
     class Meta:
         model = Stock
@@ -122,16 +124,16 @@ class StockForm(forms.ModelForm):
 
 
 class ProductForm(forms.ModelForm):
-    name = forms.CharField(help_text="Provide the product name.", label="Product Name")
-    slug = forms.SlugField(help_text="It will be created automatically.")
+    name = forms.CharField(help_text="Provide the product name.", label="Name")
+    slug = forms.SlugField(required=False)
     short_description = forms.CharField(help_text="Provide a short description of the product.",
-                                        label="Product Short Description")
-    price = forms.FloatField(help_text="Provide the product price.", label="Product Price")
-    thumbnail = forms.ImageField(help_text="Upload a product thumbnail.", label="Product Thumbnail")
+                                        label="Short Description")
+    price = forms.FloatField(help_text="Provide the product price.", label="Price")
+    thumbnail = forms.ImageField(help_text="Upload a product thumbnail.", label="Thumbnail")
     full_description = forms.CharField(max_length=100000, help_text="Provide a full description of the product.",
-                                       label="Product Full Description")
-    is_active = forms.BooleanField(help_text="Indicate if the product is active for sale.")
-    is_featured = forms.BooleanField(help_text="Indicate if you want to feature the product.")
+                                       label="Full Description")
+    is_active = forms.BooleanField(help_text="Indicate if the product is active for sale.", required=False)
+    is_featured = forms.BooleanField(help_text="Indicate if you want to feature the product.", required=False)
 
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
@@ -141,13 +143,13 @@ class ProductForm(forms.ModelForm):
         self.fields["quantity"].help_text = "Provide the quantity, and select the color and size of the product."
         self.fields["gallery"].help_text = "Upload a product image gallery or select images from the gallery."
         self.fields["tags"].help_text = "Provide or select the product tag(s)."
+        self.fields["tags"].required = False
 
-        self.fields["brand"].label = "Product Brand"
-        self.fields["category"].label = "Product Category"
-        self.fields["quantity"].label = "Product Quantity, Size and Color"
-        self.fields["gallery"].label = "Product Gallery"
-        self.fields["tags"].label = "Product Tags"
-        self.fields["full_description"].label = "Product Full Description"
+        self.fields["brand"].label = "Brand"
+        self.fields["category"].label = "Category"
+        self.fields["quantity"].label = "Quantity, Size and Color"
+        self.fields["gallery"].label = "Gallery"
+        self.fields["tags"].label = "Tags"
 
     class Meta:
         model = Product

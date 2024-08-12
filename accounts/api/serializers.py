@@ -6,13 +6,24 @@ import re
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        fields = [
+            "id",
+            "username",
+            "email",
+        ]
+        extra_kwargs = {
+            "date_joined": {
+                "format": "%Y-%m-%d %H:%M:%S",
+            }
+        }
 
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = "__all__"
+        exclude = [
+            "user",
+        ]
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):

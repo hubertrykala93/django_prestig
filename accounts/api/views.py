@@ -18,51 +18,6 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import logout, login
 
 
-class UserDetailsAPIView(RetrieveAPIView):
-    serializer_class = UserSerializer
-    lookup_field = "pk"
-    queryset = User.objects.all()
-
-
-class ProfileDetailsAPIView(RetrieveAPIView):
-    serializer_class = ProfileSerializer
-    queryset = Profile.objects.all()
-    lookup_field = "user_id"
-
-
-# class UserDetailsAPIView(RetrieveAPIView):
-#     def get_serializer_class(self):
-#         return UserSerializer
-#
-#     def get(self, request, *args, **kwargs):
-#         try:
-#             user = User.objects.get(id=self.kwargs.get("pk"))
-#
-#         except User.DoesNotExist:
-#             return Response(
-#                 data={
-#                     "error": f"User with ID {self.kwargs.get('pk')} does not exist."
-#                 },
-#                 status=status.HTTP_404_NOT_FOUND,
-#             )
-#
-#         serializer = self.get_serializer(data=user)
-#
-#         if serializer.is_valid():
-#             return Response(
-#                 data={
-#                     "data": serializer.data,
-#                 },
-#                 status=status.HTTP_200_OK,
-#             )
-#
-#         else:
-#             return Response(
-#                 data=serializer.errors,
-#                 status=status.HTTP_400_BAD_REQUEST,
-#             )
-
-
 class UserRegisterAPIView(CreateAPIView):
     def get_serializer_class(self):
         return UserRegisterSerializer

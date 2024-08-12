@@ -90,11 +90,19 @@ class AdminProductTags(admin.ModelAdmin):
     """
     Admin options and functionalities for ProductTags model.
     """
-    fields = ["name", "slug"]
     list_display = ["id", "name", "slug"]
     list_editable = ["slug"]
     prepopulated_fields = {"slug": ["name"]}
     form = ProductTagsForm
+    fieldsets = (
+        (
+            "Basic Information", {
+                "fields": [
+                    "name",
+                ],
+            },
+        ),
+    )
 
 
 @admin.register(ProductCategory)
@@ -102,10 +110,39 @@ class AdminProductCategory(admin.ModelAdmin):
     """
     Admin options and functionalities for ProductCategory model.
     """
-    fields = ["name", "slug", "image", "subcategory", "is_active"]
     list_display = ["id", "name", "slug", "image", "get_subcategories", "is_active"]
     prepopulated_fields = {"slug": ["name"]}
     form = ProductCategoryForm
+    fieldsets = (
+        (
+            "Basic Information", {
+                "fields": [
+                    "name",
+                ],
+            },
+        ),
+        (
+            "Uploading", {
+                "fields": [
+                    "image",
+                ],
+            },
+        ),
+        (
+            "Related SubCategory", {
+                "fields": [
+                    "subcategory",
+                ],
+            },
+        ),
+        (
+            "Permissions", {
+                "fields": [
+                    "is_active",
+                ],
+            },
+        ),
+    )
 
     def get_subcategories(self, obj):
         return "\n".join([s.name for s in obj.subcategory.all()])
@@ -116,10 +153,25 @@ class AdminProductSubCategory(admin.ModelAdmin):
     """
     Admin options and functionalities for ProductSubCategory model.
     """
-    fields = ["name", "slug", "image"]
     list_display = ["id", "name", "slug", "image"]
     prepopulated_fields = {"slug": ["name"]}
     form = ProductSubCategoryForm
+    fieldsets = (
+        (
+            "Basic Information", {
+                "fields": [
+                    "name",
+                ],
+            },
+        ),
+        (
+            "Uploading", {
+                "fields": [
+                    "image",
+                ],
+            },
+        ),
+    )
 
 
 @admin.register(Size)
@@ -127,9 +179,17 @@ class AdminSize(admin.ModelAdmin):
     """
     Admin options and functionalities for Size model.
     """
-    fields = ["size"]
     list_display = ["id", "size"]
     form = SizeForm
+    fieldsets = (
+        (
+            "Basic Information", {
+                "fields": [
+                    "size",
+                ],
+            },
+        ),
+    )
 
 
 @admin.register(Color)
@@ -137,9 +197,18 @@ class AdminColor(admin.ModelAdmin):
     """
     Admin options and functionalities for Color model.
     """
-    fields = ["color", "hex"]
     list_display = ["id", "color", "hex"]
     form = ColorForm
+    fieldsets = (
+        (
+            "Basic Information", {
+                "fields": [
+                    "color",
+                    "hex",
+                ],
+            },
+        ),
+    )
 
 
 @admin.register(ProductGallery)
@@ -147,9 +216,17 @@ class AdminProductGallery(admin.ModelAdmin):
     """
     Admin options and functionalities for ProductGallery model.
     """
-    fields = ["image"]
     list_display = ["id", "image"]
     form = ProductGalleryForm
+    fieldsets = (
+        (
+            "Uploading", {
+                "fields": [
+                    "image",
+                ],
+            },
+        ),
+    )
 
 
 @admin.register(Stock)
@@ -157,9 +234,25 @@ class AdminStock(admin.ModelAdmin):
     """
     Admin options and functionalities for Stock model.
     """
-    fields = ["quantity", "size", "color"]
     list_display = ["id", "quantity", "size", "color"]
     form = StockForm
+    fieldsets = (
+        (
+            "Product Quantity", {
+                "fields": [
+                    "quantity",
+                ],
+            },
+        ),
+        (
+            "Product Details", {
+                "fields": [
+                    "size",
+                    "color",
+                ],
+            },
+        ),
+    )
 
 
 @admin.register(Product)
@@ -167,21 +260,6 @@ class AdminProduct(admin.ModelAdmin):
     """
     Admin options and functionalities for Product model.
     """
-    fields = [
-        "brand",
-        "category",
-        "name",
-        "slug",
-        "short_description",
-        "price",
-        "quantity",
-        "thumbnail",
-        "gallery",
-        "tags",
-        "full_description",
-        "is_active",
-        "is_featured",
-    ]
     list_display = [
         "id",
         "uuid",
@@ -204,6 +282,45 @@ class AdminProduct(admin.ModelAdmin):
         "sales_counter",
     ]
     form = ProductForm
+    fieldsets = (
+        (
+            "Basic Information", {
+                "fields": [
+                    "brand",
+                    "category",
+                    "tags",
+                    "name",
+                    "price",
+                    "short_description",
+                    "full_description",
+                    "quantity",
+                ],
+            },
+        ),
+        (
+            "Uploading", {
+                "fields": [
+                    "thumbnail",
+                    "gallery",
+                ],
+            },
+        ),
+        (
+            "Permissions", {
+                "fields": [
+                    "is_active",
+
+                ],
+            },
+        ),
+        (
+            "Additional", {
+                "fields": [
+                    "is_featured",
+                ],
+            },
+        ),
+    )
 
     def get_gallery(self, obj):
         return "\n".join([g.image.name.split("/")[-1] for g in obj.gallery.all()])
