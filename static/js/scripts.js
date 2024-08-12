@@ -340,6 +340,9 @@ const validateNewsletterForm = (formData) => {
     if (email === '') {
         result.email = 'E-mail Address is required.'
     }
+    else if (email.length > 255) {
+        result.email = 'The e-mail address cannot be longer than 255 characters.'
+    }
     else if (!email.match(emailRegex)) {
         result.email = 'The e-mail address format is invalid.'
     }
