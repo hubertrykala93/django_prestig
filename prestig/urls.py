@@ -28,7 +28,6 @@ urlpatterns = [
     path(route="", view=include(arg="shop.urls")),
     path(route="", view=include(arg="core.api.urls")),
     path(route="", view=include(arg="accounts.api.urls")),
-    path(route="", view=include(arg="shop.api.urls")),
 ]
 
 if settings.DEBUG:
