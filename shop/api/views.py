@@ -3,17 +3,50 @@ from rest_framework import status
 from rest_framework.generics import UpdateAPIView
 from shop.models import DeliveryDetails
 from .serializers import DeliveryDetailsSerializer
+from accounts.models import User, Profile
 
 
 class DeliveryDetailsUpdateAPIView(UpdateAPIView):
     def get_object(self):
-        pass
+        return DeliveryDetails.objects.get(id=Profile.objects.get(user_id=self.request.user.id).delivery_details_id)
 
     def get_serializer_class(self):
         return DeliveryDetailsSerializer
 
     def patch(self, request, *args, **kwargs):
-        pass
+        instance = self.get_object()
+        serializer = self.get_serializer(instance=instance, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            self.perform_update(serializer=serializer)
+
+            return Response(
+                data={
+                    "success": "Your delivery information has been successfully updated.",
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+            )
 
     def put(self, request, *args, **kwargs):
-        pass
+        instance = self.get_object()
+        serializer = self.get_serializer(instance=instance, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            self.perform_update(serializer=serializer)
+
+            return Response(
+                data={
+                    "success": "Your delivery information has been successfully updated.",
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+            )

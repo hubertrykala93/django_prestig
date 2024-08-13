@@ -103,18 +103,6 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
-    # def save(self, *args, **kwargs):
-    #     image = Image.open(fp=self.profilepicture.path)
-    #
-    #     if image.mode == "RGBA":
-    #         image.convert(mode="RGB")
-    #
-    #     if image.width > 300 or image.height > 300:
-    #         image.thumbnail(size=(300, 300))
-    #         image.save(fp=self.profilepicture.path)
-    #
-    #     return super(Profile, self).save(*args, **kwargs)
-
 
 @receiver(signal=post_save, sender=User)
 def create_profile(sender, instance=None, created=None, **kwargs):

@@ -519,10 +519,10 @@ const $deliveryDetailsForm = document.querySelector('.js-delivery-details-form')
  * @param {Object} formData - Delivery details formdata object.
  */
 const sendDeliveryDetailsRequest = (formData) => {
-    const url = 'delivery-details'
+    const url = '/api/v1/delivery-details/update-delivery-details'
 
     fetch(url, {
-        method:'POST',
+        method:'PATCH',
         headers:{
          'X-CSRFToken':csrfToken,
         },
@@ -531,6 +531,7 @@ const sendDeliveryDetailsRequest = (formData) => {
          return response.json()
     }).then((response) => {
         clearFormErrors($deliveryDetailsForm)
+        console.log(response)
 
         if (response.hasOwnProperty('success')) {
             showAlert(response.success, 'success')
@@ -546,7 +547,7 @@ const sendDeliveryDetailsRequest = (formData) => {
 
 /**
  * Validates delivery details form data.
- * @returns {Object} Error messages with inpuut names as a key.
+ * @returns {Object} Error messages with input names as a key.
  */
 const validateDeliveryDetailsForm = (formData) => {
     const phone = formData.get('phone').trim()
@@ -555,16 +556,16 @@ const validateDeliveryDetailsForm = (formData) => {
     const city = formData.get('city').trim()
     const street = formData.get('street').trim()
     const housenumber = formData.get('housenumber').trim()
-    const apartamentnumber = formData.get('apartamentnumber').trim()
+    const apartmentnumber = formData.get('apartmentnumber').trim()
     const postalcode = formData.get('postalcode').trim()
 
     const result = {}
 
     if (phone === '') {
-        result.phone = 'Phone is required.'
+        result.phone = 'Phone number is required.'
     }
     else if (phone.length < 8 || phone.length > 20) {
-        result.phone = 'The phone should consist of at least 8 characters and not exceed 20 characters.'
+        result.phone = 'The phone number should consist of at least 8 characters and not exceed 20 characters.'
     }
 
     if (country === '') {
@@ -602,8 +603,8 @@ const validateDeliveryDetailsForm = (formData) => {
         result.housenumber = 'The house number cannot be longer than 5 characters.'
     }
 
-    if (apartamentnumber.length > 5) {
-        result.apartamentnumber = 'The apartament number cannot be longer than 5 characters.'
+    if (apartmentnumber.length > 5) {
+        result.apartmentnumber = 'The apartment number cannot be longer than 5 characters.'
     }
 
     if (postalcode === '') {

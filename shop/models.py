@@ -6,7 +6,7 @@ from django.utils.text import slugify
 
 class DeliveryDetails(models.Model):
     uuid = models.UUIDField(default=uuid4)
-    phone = models.IntegerField(null=True)
+    phone = models.CharField(null=True)
     country = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
