@@ -1,10 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test, login_required
-from accounts.models import Profile, User
-from shop.models import DeliveryDetails
+from accounts.models import Profile
 from shop.api.serializers import DeliveryDetailsSerializer
 from .api.serializers import UserSerializer, ProfileSerializer
-import requests
 from datetime import date
 
 
@@ -41,8 +39,7 @@ def my_account(request):
             "title": "My Account",
             "user": UserSerializer(instance=request.user).data,
             "profile": ProfileSerializer(instance=request.user.profile).data,
-            "delivery_details": DeliveryDetailsSerializer(
-                instance=DeliveryDetails.objects.get(id=request.user.profile.delivery_details.id)).data,
+            "delivery_details": DeliveryDetailsSerializer(instance=request.user.profile.delivery_details).data,
         }
     )
 
@@ -75,15 +72,12 @@ def profile_settings(request):
 
 @login_required(login_url="login")
 def delivery_details(request):
-    delivery_details = DeliveryDetails.objects.get(id=Profile.objects.get(user_id=request.user.id).delivery_details_id)
-    serializer = DeliveryDetailsSerializer(instance=delivery_details)
-
     return render(
         request=request,
         template_name="accounts/delivery-details.html",
         context={
             "title": "Delivery Details",
-            "delivery_details": serializer.data,
+            "delivery_details": DeliveryDetailsSerializer(instance=request.user.profile.delivery_details).data,
         }
     )
 

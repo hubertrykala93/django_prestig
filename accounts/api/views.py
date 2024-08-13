@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from accounts.models import User, Profile
+from accounts.models import User
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, UpdateAPIView
 from .serializers import UserRegisterSerializer, UserLoginSerializer, ProfileUpdateSerializer
