@@ -185,6 +185,59 @@ class UserLogoutAPIView(APIView):
         return redirect(to="index")
 
 
+class UserUpdateAPIView(UpdateAPIView):
+    def get_object(self):
+        return User.objects.get(id=self.request.user.id)
+
+    def get_serializer_class(self):
+        return UserRegisterSerializer
+
+    def get_serializer_context(self):
+        context = super(UserUpdateAPIView, self).get_serializer_context()
+
+        context["password"] = self.request.data.get("password")
+
+        return context
+
+    def patch(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance=instance, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            self.perform_update(serializer=serializer)
+
+            return Response(
+                data={
+                    "success": "Your user information has been successfully updated.",
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+            )
+
+    def put(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance=instance, data=request.data, partial=False)
+
+        if serializer.is_valid():
+            self.perform_update(serializer=serializer)
+
+            return Response(
+                data={
+                    "success": "Your user information has been successfully updated.",
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+            )
+
+
 class ProfileUpdateAPIView(UpdateAPIView):
     def get_object(self):
         return Profile.objects.get(user_id=self.request.user.id)
@@ -201,7 +254,7 @@ class ProfileUpdateAPIView(UpdateAPIView):
 
             return Response(
                 data={
-                    "success": "The profile has been successfully updated.",
+                    "success": "Your profile information has been successfully updated.",
                 },
                 status=status.HTTP_200_OK,
             )
@@ -220,7 +273,7 @@ class ProfileUpdateAPIView(UpdateAPIView):
 
             return Response(
                 data={
-                    "success":"The profile has been successfully updated.",
+                    "success": "Your profile information has been successfully updated.",
                 },
                 status=status.HTTP_200_OK
             )

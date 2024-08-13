@@ -263,10 +263,10 @@ const $accountSettingsForm = document.querySelector('.js-account-settings-form')
  * @param {Object} formData - Account settings formdata object.
  */
 const sendAccountSettingsRequest = (formData) => {
-    const url = 'account-settings'
+    const url = '/api/v1/accounts/update-account'
 
     fetch(url, {
-        method:'POST',
+        method:'PATCH',
         headers:{
          'X-CSRFToken':csrfToken,
         },
@@ -275,6 +275,7 @@ const sendAccountSettingsRequest = (formData) => {
          return response.json()
     }).then((response) => {
         clearFormErrors($accountSettingsForm)
+        console.log(response)
 
         if (response.hasOwnProperty('success')) {
             showAlert(response.success, 'success')

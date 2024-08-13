@@ -30,14 +30,14 @@ class AdminDeliveryDetails(admin.ModelAdmin):
     """
     Admin options and functionalities for DeliveryDetails model.
     """
-    list_display = ["id", "uuid", "phone_number", "country", "state", "city", "street", "house_number",
-                    "apartment_number", "postal_code"]
+    list_display = ["id", "uuid", "phone", "country", "state", "city", "street", "housenumber",
+                    "apartmentnumber", "postalcode"]
     form = DeliveryDetailsForm
     fieldsets = (
         (
             "Contact Information", {
                 "fields": [
-                    "phone_number",
+                    "phone",
                 ],
             },
         ),
@@ -48,9 +48,9 @@ class AdminDeliveryDetails(admin.ModelAdmin):
                     "state",
                     "city",
                     "street",
-                    "house_number",
-                    "apartment_number",
-                    "postal_code",
+                    "housenumber",
+                    "apartmentnumber",
+                    "postalcode",
                 ],
             },
         ),

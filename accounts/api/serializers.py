@@ -6,6 +6,7 @@ from PIL import Image
 from io import BytesIO
 from django.core.files.base import ContentFile
 from uuid import uuid4
+from django.contrib.auth import update_session_auth_hash
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -215,11 +216,13 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if self.context.get("view").__class__.__name__ == "UserLoginAPIView":
-            fields = ["username", "repassword", "policy"]
+        if self.context.get("view").__class__.__name__ == "UserUpdateAPIView":
+            self.fields.pop("policy")
+            self.fields["password"].allow_blank = False
+            self.fields["password"].required = False
 
-            for field in fields:
-                self.fields.pop(field)
+            self.fields["repassword"].allow_blank = False
+            self.fields["repassword"].required = False
 
     def validate_username(self, username):
         if username == "":
@@ -237,10 +240,17 @@ class UserRegisterSerializer(serializers.ModelSerializer):
                 detail="The username cannot be longer than 35 characters.",
             )
 
-        if User.objects.filter(username=username).exists():
-            raise serializers.ValidationError(
-                detail=f"The '{username}' already exists.",
-            )
+        if self.context.get("view").__class__.__name__ == "UserRegisterAPIView":
+            if User.objects.filter(username=username).exists():
+                raise serializers.ValidationError(
+                    detail=f"The user with the username '{username}' already exists.",
+                )
+        else:
+            if username != self.instance.username:
+                if User.objects.filter(username=username).exists():
+                    raise serializers.ValidationError(
+                        detail=f"The user with the username '{username}' already exists."
+                    )
 
         return username
 
@@ -266,30 +276,36 @@ class UserRegisterSerializer(serializers.ModelSerializer):
                     detail=f"The user with the e-mail address '{email}' already exists.",
                 )
 
+        else:
+            if email != self.instance.email:
+                if User.objects.filter(email=email).exists():
+                    raise serializers.ValidationError(
+                        detail=f"The user with the e-mail address '{email}' already exists.",
+                    )
+
         return email
 
     def validate_password(self, password):
-        if self.context.get("view").__class__.__name__ == "UserRegisterAPIView":
-            if password == "":
-                raise serializers.ValidationError(
-                    detail="Password is required",
-                )
+        if password == "":
+            raise serializers.ValidationError(
+                detail="Password is required",
+            )
 
-            if len(password) < 8:
-                raise serializers.ValidationError(
-                    detail="The password should consist of at least 8 characters.",
-                )
+        if len(password) < 8:
+            raise serializers.ValidationError(
+                detail="The password should consist of at least 8 characters.",
+            )
 
-            if len(password) > 255:
-                raise serializers.ValidationError(
-                    detail="The password cannot be longer than 255 characters.",
-                )
+        if len(password) > 255:
+            raise serializers.ValidationError(
+                detail="The password cannot be longer than 255 characters.",
+            )
 
-            if not re.match(pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", string=password):
-                raise serializers.ValidationError(
-                    detail="The password should contain at least one uppercase letter, one lowercase letter, one number, "
-                           "and one special character."
-                )
+        if not re.match(pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", string=password):
+            raise serializers.ValidationError(
+                detail="The password should contain at least one uppercase letter, one lowercase letter, one number, "
+                       "and one special character."
+            )
 
         return password
 
@@ -331,6 +347,21 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+    def update(self, instance, validated_data):
+        password = validated_data.get("password", None)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        if password is not None:
+            instance.set_password(raw_password=password)
+
+        instance.save()
+
+        update_session_auth_hash(request=self.context.get("request"), user=instance)
+
+        return instance
 
     def run_validation(self, data):
         try:

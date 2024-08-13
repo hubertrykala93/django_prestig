@@ -23,6 +23,11 @@ urlpatterns = [
         name="logout",
     ),
     path(
+        route="api/v1/accounts/update-account",
+        view=views.UserUpdateAPIView.as_view(),
+        name="api-v1-accounts-update-account",
+    ),
+    path(
         route="api/v1/profiles/update-profile",
         view=views.ProfileUpdateAPIView.as_view(),
         name="api-v1-profiles-update-profile"
