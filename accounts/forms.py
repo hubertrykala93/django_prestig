@@ -23,12 +23,12 @@ class ProfileForm(forms.ModelForm):
     gender = forms.ChoiceField(help_text="Select your gender.", label="Gender", choices=(
         ("Male", "Male"),
         ("Female", "Female"),
-        ("Not Set", "Not Set"),
+        ("Undefined", "Undefined"),
     ), widget=forms.RadioSelect, required=False)
-    date_of_birth = forms.DateTimeField(help_text="Provide your date of birth", label="Date of Birth", required=False)
-    profile_picture = forms.ImageField(help_text="Upload your profile picture.", label="Profile Picture", required=False)
-    facebook_username = forms.CharField(help_text="Provide your Facebook username.", label="Facebook Username", required=False)
-    instagram_username = forms.CharField(help_text="Provide your Instagram username.", label="Instagram Username", required=False)
+    dateofbirth = forms.DateTimeField(help_text="Provide your date of birth", label="Date of Birth", required=False)
+    profilepicture = forms.ImageField(help_text="Upload your profile picture.", label="Profile Picture", required=False)
+    facebook = forms.CharField(help_text="Provide your Facebook username.", label="Facebook Username", required=False)
+    instagram = forms.CharField(help_text="Provide your Instagram username.", label="Instagram Username", required=False)
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)

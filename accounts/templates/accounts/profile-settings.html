@@ -34,7 +34,7 @@
             <div class="form__field js-form-field">
               <label for="dateofbirth" class="form__label">date of birth</label>
               <div class="form__input-wrap">
-                  <input type="date" id="dateofbirth" name="dateofbirth" value="{% if profile.date_of_birth %}{{ profile.date_of_birth }}{% endif %}" max="{{ max }}">
+                  <input type="date" id="dateofbirth" name="dateofbirth" value="{% if profile.dateofbirth %}{{ profile.dateofbirth }}{% endif %}" max="{{ max }}">
               </div>
             </div>
           </div>
@@ -54,7 +54,7 @@
 
                 <div class="form__upload-container__image-preview">
                   <span>Profile Picture Preview:</span>
-                  <img src="/media/profile_images/default_profile_image.png" class="form__upload-container__image-preview__image js-form-upload-preview-image" alt="user avatar">
+                  <img src="{{ profile.profilepicture }}" class="form__upload-container__image-preview__image js-form-upload-preview-image" alt="user avatar">
                 </div>
               </div>
             </div>
@@ -75,8 +75,8 @@
               <label class="form__label">gender *</label>
               {% for gender in genders %}
               <div class="form__radio">
-                <input class="form__radio__input" type="radio" name="gender" id="{{ gender|cut:' '|lower }}" value="{{ gender|cut:' '|lower }}" {% if gender == 'Not Set' %}checked{% endif %}>
-                <label for="{{ gender|cut:' '|lower }}"><span>{{ gender }}</span></label>
+                <input class="form__radio__input" type="radio" name="gender" id="{{ gender|lower }}" value="{{ gender|lower }}" {% if profile.gender == gender %}checked{% endif %}>
+                <label for="{{ gender|lower }}"><span>{{ gender }}</span></label>
               </div>
               {% endfor %}
             </div>
@@ -87,14 +87,14 @@
             <div class="form__field js-form-field">
                 <label for="facebook" class="form__label">facebook username</label>
                 <div class="form__input-wrap">
-                    <input type="text" id="facebook" name="facebook" value="{% if profile.facebook_username %}{{ profile.facebook_username }}{% endif %}" placeholder="Your facebook username">
+                    <input type="text" id="facebook" name="facebook" value="{% if profile.facebook %}{{ profile.facebook }}{% endif %}" placeholder="Your facebook username">
                 </div>
             </div>
 
             <div class="form__field js-form-field">
               <label for="instagram" class="form__label">instagram username</label>
               <div class="form__input-wrap">
-                  <input type="text" id="instagram" name="instagram" value="{% if profile.instagram_username %}{{ profile.instagram_username }}{% endif %}" placeholder="Your instagram username">
+                  <input type="text" id="instagram" name="instagram" value="{% if profile.instagram %}{{ profile.instagram }}{% endif %}" placeholder="Your instagram username">
               </div>
             </div>
           </div>

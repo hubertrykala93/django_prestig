@@ -42,8 +42,8 @@ class AdminProfile(admin.ModelAdmin):
     """
     Admin options and functionalities for Profile model.
     """
-    list_display = ["id", "user", "firstname", "lastname", "bio", "gender", "date_of_birth", "profile_picture", "facebook_username",
-                    "instagram_username", "delivery_details"]
+    list_display = ["id", "user", "firstname", "lastname", "bio", "gender", "dateofbirth", "profilepicture", "facebook",
+                    "instagram", "delivery_details"]
     form = ProfileForm
     fieldsets = (
         (

@@ -1,6 +1,11 @@
 from rest_framework import serializers
 from accounts.models import User, Profile
 import re
+from datetime import date
+from PIL import Image
+from io import BytesIO
+from django.core.files.base import ContentFile
+from uuid import uuid4
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -25,13 +30,164 @@ class ProfileSerializer(serializers.ModelSerializer):
             "user",
         ]
 
+
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    firstname = serializers.CharField(allow_blank=True)
+    lastname = serializers.CharField(allow_blank=True)
+    bio = serializers.CharField(allow_blank=True)
+    gender = serializers.CharField()
+    dateofbirth = serializers.DateField(required=False)
+    profilepicture = serializers.ImageField(required=False)
+    facebook = serializers.CharField(required=False)
+    instagram = serializers.CharField(required=False)
+
+    class Meta:
+        model = Profile
+        exclude = [
+            "user",
+        ]
+
     def validate_firstname(self, firstname):
-        if len(firstname) < 10000:
+        if firstname == "":
             raise serializers.ValidationError(
-                detail="Error",
+                detail="First Name is required.",
+            )
+
+        if len(firstname) < 2:
+            raise serializers.ValidationError(
+                detail="The first name should consist of at least 2 characters.",
+            )
+
+        if len(firstname) > 35:
+            raise serializers.ValidationError(
+                detail="The first name cannot be longer than 35 characters."
             )
 
         return firstname
+
+    def validate_lastname(self, lastname):
+        if lastname == "":
+            raise serializers.ValidationError(
+                detail="Last Name is required.",
+            )
+
+        if len(lastname) < 2:
+            raise serializers.ValidationError(
+                detail="The last name should consist of at least 2 characters."
+            )
+
+        if len(lastname) > 35:
+            raise serializers.ValidationError(
+                detail="The last name cannot be longer than 35 characters.",
+            )
+
+        return lastname
+
+    def validate_bio(self, bio):
+        if len(bio) != 0:
+            if len(bio) < 10:
+                raise serializers.ValidationError(
+                    detail="The bio should consist of at least 10 characters.",
+                )
+
+            if len(bio) > 150:
+                raise serializers.ValidationError(
+                    detail="The bio cannot be longer than 150 characters.",
+                )
+
+        return bio
+
+    def validate_gender(self, gender):
+        gender = gender.capitalize()
+
+        if gender not in ["Undefined", "Female", "Male"]:
+            raise serializers.ValidationError(
+                detail="Gender must be 'Male' 'Female,' or 'Undefined.'",
+            )
+        return gender
+
+    def validate_dateofbirth(self, dateofbirth):
+        if dateofbirth > date.today():
+            raise serializers.ValidationError(
+                detail="You cannot enter a future date. Please select a valid date.",
+            )
+
+        if not re.match(pattern=r'^\d{4}-\d{2}-\d{2}$', string=dateofbirth.strftime("%Y-%m-%d")):
+            raise serializers.ValidationError(
+                detail="Invalid date format. The correct format is 'YYYY-MM-DD'.",
+            )
+        return dateofbirth
+
+    def validate_profilepicture(self, profilepicture):
+        allowed_formats = ["jpg", "jpeg", "png", "webp"]
+
+        if profilepicture.name.split(sep=".")[1] not in allowed_formats:
+            raise serializers.ValidationError(
+                detail="Invalid file format. The correct formats are 'jpeg', 'jpg', 'png', 'webp'.",
+            )
+
+        return profilepicture
+
+    def validate_facebook(self, facebook):
+        if len(facebook) > 50:
+            raise serializers.ValidationError(
+                detail="The facebook username cannot be longer than 50 characters.",
+            )
+
+        if not re.match(pattern=r'^[a-zA-Z0-9_.-]+$', string=facebook):
+            raise serializers.ValidationError(
+                detail="The facebook username should contain only letters, digits, dashes, underscores, periods.",
+            )
+        return facebook
+
+    def validate_instagram(self, instagram):
+        if len(instagram) > 50:
+            raise serializers.ValidationError(
+                detail="The instagram username cannot be longer than 50 characters.",
+            )
+
+        if not re.match(pattern=r'^[a-zA-Z0-9_.-]+$', string=instagram):
+            raise serializers.ValidationError(
+                detail="The instagram username should contain only letters, digits, dashes, underscores, periods.",
+            )
+        return instagram
+
+    def update(self, instance, validated_data):
+        profilepicture = validated_data.pop("profilepicture", None)
+
+        if profilepicture:
+            profilepicture.name = str(uuid4()) + "." + profilepicture.name.split(sep=".")[-1]
+
+            image = Image.open(fp=profilepicture)
+
+            if image.mode == "RGBA":
+                image.convert(mode="RGB")
+
+            image = image.resize(size=(300, 300))
+
+            image_io = BytesIO()
+            image.save(fp=image_io, format="png")
+
+            instance.profilepicture.delete()
+            instance.profilepicture.save(profilepicture.name, ContentFile(image_io.getvalue()), save=False)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+
+        return instance
+
+    def run_validation(self, data):
+        try:
+            validated_data = super().run_validation(data=data)
+
+        except serializers.ValidationError as exc:
+            new_errors = {field: value[0] if isinstance(value, list) else value for field, value in exc.detail.items()}
+
+            raise serializers.ValidationError(detail=new_errors)
+
+        return validated_data
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):

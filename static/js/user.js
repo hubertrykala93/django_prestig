@@ -369,7 +369,7 @@ const sendProfileSettingsRequest = (formData) => {
     const url = '/api/v1/profiles/update-profile'
 
     fetch(url, {
-        method:'POST',
+        method:'PATCH',
         headers:{
          'X-CSRFToken':csrfToken,
         },
@@ -377,7 +377,7 @@ const sendProfileSettingsRequest = (formData) => {
     }).then((response) => {
          return response.json()
     }).then((response) => {
-        clearFormErrors($accountSettingsForm)
+        clearFormErrors($profileSettingsForm)
         console.log(response)
 
         if (response.hasOwnProperty('success')) {
@@ -432,14 +432,14 @@ const validateProfileSettingsForm = (formData) => {
 
     if (dateofbirth) {
         if (!dateofbirth.match(dateRegex)) {
-            result.dateofbirth = 'Invalid date format.'
+            result.dateofbirth = "Invalid date format. The correct format is 'YYYY-MM-DD'."
         }
         else {
             const now = new Date().getTime()
             const chosenDate = new Date(dateofbirth).getTime()
             
             if (chosenDate > now) {
-                result.dateofbirth = 'Future dates not allowed.'
+                result.dateofbirth = 'You cannot enter a future date. Please select a valid date.'
             }
         }
     }
@@ -447,7 +447,7 @@ const validateProfileSettingsForm = (formData) => {
     if (profilepicture.name) {
         const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
         if (allowedTypes.indexOf(profilepicture.type) === -1) {
-            result.profilepicture = 'Allowed image extensions: JPG, JPEG, PNG, WEBP.'
+            result.profilepicture = "Invalid file format. The correct formats are 'jpeg', 'jpg', 'png', 'webp'."
         }
     }
 
@@ -456,7 +456,7 @@ const validateProfileSettingsForm = (formData) => {
     }
 
     if (gender) {
-        const allowedGenders = ['male', 'female', 'notset']
+        const allowedGenders = ['male', 'female', 'undefined']
         if (allowedGenders.indexOf(gender) === -1) {
             result.gender = 'Wrong gender value.'
         }

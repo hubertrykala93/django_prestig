@@ -2,7 +2,8 @@ from rest_framework.response import Response
 from accounts.models import User, Profile
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView
-from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, ProfileSerializer
+from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, ProfileSerializer, \
+    ProfileUpdateSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.utils.html import strip_tags
@@ -188,13 +189,10 @@ class ProfileUpdateAPIView(UpdateAPIView):
     def get_object(self):
         return Profile.objects.get(user_id=self.request.user.id)
 
-    def get_queryset(self):
-        return Profile.objects.all()
-
     def get_serializer_class(self):
-        return ProfileSerializer
+        return ProfileUpdateSerializer
 
-    def post(self, request, *args, **kwargs):
+    def patch(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance=instance, data=request.data, partial=True)
 
@@ -206,6 +204,25 @@ class ProfileUpdateAPIView(UpdateAPIView):
                     "success": "The profile has been successfully updated.",
                 },
                 status=status.HTTP_200_OK,
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+            )
+
+    def put(self, request, *args, **kwargs):
+        instance = self.get_serializer()
+        serializer = self.get_serializer(instance=instance, data=request.data, partial=False)
+
+        if serializer.is_valid():
+            self.perform_update(serializer=serializer)
+
+            return Response(
+                data={
+                    "success":"The profile has been successfully updated.",
+                },
+                status=status.HTTP_200_OK
             )
 
         else:
