@@ -41,7 +41,16 @@ class AdminArticleTag(admin.ModelAdmin):
 
 @admin.register(Article)
 class AdminArticle(admin.ModelAdmin):
-    list_display = ["id", "created_at", "user", "title", "slug", "description", "article_category", "article_tags"]
+    list_display = [
+        "id",
+        "formatted_created_at",
+        "user",
+        "title",
+        "slug",
+        "description",
+        "get_category",
+        "article_tags"
+    ]
     prepopulated_fields = {
         "slug": ["title"],
     }
@@ -72,13 +81,33 @@ class AdminArticle(admin.ModelAdmin):
         ),
     )
 
+    def get_category(self, obj):
+        return obj.article_category.name
+
+    get_category.short_description = "Category"
+
     def article_tags(self, obj):
         return "\n".join([t.name for t in obj.article_tag.all()])
+
+    article_tags.short_description = "Tags"
+
+    def formatted_created_at(self, obj):
+        return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_created_at.short_description = "Created At"
 
 
 @admin.register(ArticleComment)
 class AdminArticleComment(admin.ModelAdmin):
-    list_display = ["id", "created_at", "user", "fullname", "email", "message", "is_active"]
+    list_display = [
+        "id",
+        "formatted_created_at",
+        "user",
+        "get_fullname",
+        "email",
+        "message",
+        "is_active"
+    ]
     form = ArticleCommentForm
     fieldsets = (
         (
@@ -112,3 +141,13 @@ class AdminArticleComment(admin.ModelAdmin):
             },
         ),
     )
+
+    def formatted_created_at(self, obj):
+        return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_created_at.short_description = "Created At"
+
+    def get_fullname(self, obj):
+        return obj.fullname
+
+    get_fullname.short_description = "Full Name"

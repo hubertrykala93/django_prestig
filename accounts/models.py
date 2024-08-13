@@ -4,7 +4,6 @@ from django.utils.timezone import now
 from uuid import uuid4
 from django.dispatch import receiver
 from django.db.models.signals import post_save
-from PIL import Image
 from shop.models import Product, DeliveryDetails
 
 
@@ -46,8 +45,8 @@ class CustomUserManager(UserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     uuid = models.UUIDField(default=uuid4)
     date_joined = models.DateTimeField(default=now)
-    username = models.CharField(max_length=50, unique=True)
-    email = models.EmailField(max_length=200, unique=True)
+    username = models.CharField(max_length=35, unique=True)
+    email = models.EmailField(max_length=255, unique=True)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -78,7 +77,7 @@ class Profile(models.Model):
     # Basic Info
     firstname = models.CharField(max_length=35)
     lastname = models.CharField(max_length=35)
-    bio = models.CharField(max_length=100)
+    bio = models.CharField(max_length=150)
     gender = models.CharField(
         choices=GENDER_CHOICES,
         default="Undefined")
@@ -87,8 +86,8 @@ class Profile(models.Model):
                                        null=True)
 
     # Social Media
-    facebook = models.CharField(max_length=100, null=True)
-    instagram = models.CharField(max_length=100, null=True)
+    facebook = models.CharField(max_length=50, null=True)
+    instagram = models.CharField(max_length=50, null=True)
 
     # Order Information
     wishlist = models.ManyToManyField(to=Product)

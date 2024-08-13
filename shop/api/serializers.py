@@ -158,14 +158,8 @@ class DeliveryDetailsSerializer(serializers.ModelSerializer):
         return postalcode
 
     def update(self, instance, validated_data):
-        print(validated_data)
-
         for attr, value in validated_data.items():
-            if attr == "phone":
-                setattr(instance, attr, int(value))
-
-            else:
-                setattr(instance, attr, value)
+            setattr(instance, attr, value)
 
         instance.save()
 
