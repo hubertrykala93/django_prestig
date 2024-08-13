@@ -1,9 +1,8 @@
 from rest_framework.response import Response
 from accounts.models import User, Profile
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView
-from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, ProfileSerializer, \
-    ProfileUpdateSerializer
+from rest_framework.generics import CreateAPIView, UpdateAPIView
+from .serializers import UserRegisterSerializer, UserLoginSerializer, ProfileUpdateSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.utils.html import strip_tags
@@ -187,7 +186,7 @@ class UserLogoutAPIView(APIView):
 
 class UserUpdateAPIView(UpdateAPIView):
     def get_object(self):
-        return User.objects.get(id=self.request.user.id)
+        return self.request.user
 
     def get_serializer_class(self):
         return UserRegisterSerializer
@@ -240,7 +239,7 @@ class UserUpdateAPIView(UpdateAPIView):
 
 class ProfileUpdateAPIView(UpdateAPIView):
     def get_object(self):
-        return Profile.objects.get(user_id=self.request.user.id)
+        return self.request.user.profile
 
     def get_serializer_class(self):
         return ProfileUpdateSerializer

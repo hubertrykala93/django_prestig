@@ -8,7 +8,7 @@ from accounts.models import User, Profile
 
 class DeliveryDetailsUpdateAPIView(UpdateAPIView):
     def get_object(self):
-        return DeliveryDetails.objects.get(id=Profile.objects.get(user_id=self.request.user.id).delivery_details_id)
+        return DeliveryDetails.objects.get(id=self.request.user.profile.delivery_details.id)
 
     def get_serializer_class(self):
         return DeliveryDetailsSerializer

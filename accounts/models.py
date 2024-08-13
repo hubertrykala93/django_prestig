@@ -72,7 +72,7 @@ class Profile(models.Model):
         ("Female", "Female"),
         ("Undefined", "Undefined"),
     )
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
 
     # Basic Info
     firstname = models.CharField(max_length=35)

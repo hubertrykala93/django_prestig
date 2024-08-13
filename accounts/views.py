@@ -34,50 +34,40 @@ def login(request):
 
 @login_required(login_url="login")
 def my_account(request):
-    data = {
-        "user": UserSerializer(instance=User.objects.get(id=request.user.id)).data,
-        "profile": ProfileSerializer(instance=Profile.objects.get(user_id=request.user.id)).data,
-        "delivery_details": DeliveryDetailsSerializer(instance=DeliveryDetails.objects.get(
-            id=Profile.objects.get(user_id=request.user.id).delivery_details_id)).data,
-    }
-
     return render(
         request=request,
         template_name="accounts/my-account.html",
         context={
             "title": "My Account",
-            "data": data,
+            "user": UserSerializer(instance=request.user).data,
+            "profile": ProfileSerializer(instance=request.user.profile).data,
+            "delivery_details": DeliveryDetailsSerializer(
+                instance=DeliveryDetails.objects.get(id=request.user.profile.delivery_details.id)).data,
         }
     )
 
 
 @login_required(login_url="login")
 def account_settings(request):
-    user = User.objects.get(id=request.user.id)
-    serializer = UserSerializer(instance=user)
-
     return render(
         request=request,
         template_name="accounts/account-settings.html",
         context={
             "title": "Account Settings",
-            "account": serializer.data,
+            "account": UserSerializer(instance=request.user).data,
         }
     )
 
 
 @login_required(login_url="login")
 def profile_settings(request):
-    profile = Profile.objects.get(user_id=request.user.id)
-    serializer = ProfileSerializer(instance=profile)
-
     return render(
         request=request,
         template_name="accounts/profile-settings.html",
         context={
             "title": "Profile Settings",
             "max": date.today().strftime("%Y-%m-%d"),
-            "profile": serializer.data,
+            "profile": ProfileSerializer(instance=request.user.profile).data,
             "genders": [choice[0] for choice in Profile._meta.get_field("gender").choices],
         }
     )
