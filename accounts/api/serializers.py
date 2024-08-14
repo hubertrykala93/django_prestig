@@ -64,6 +64,11 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
                 detail="The first name cannot be longer than 35 characters."
             )
 
+        if not firstname.is_alpha():
+            raise serializers.ValidationError(
+                detail="The first name should contain only letters.",
+            )
+
         return firstname
 
     def validate_lastname(self, lastname):
@@ -80,6 +85,11 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         if len(lastname) > 35:
             raise serializers.ValidationError(
                 detail="The last name cannot be longer than 35 characters.",
+            )
+
+        if not lastname.is_alpha():
+            raise serializers.ValidationError(
+                detail="The last name should contain only letters.",
             )
 
         return lastname
