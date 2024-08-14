@@ -846,3 +846,89 @@ if ($forgotPasswordForm) {
         handleForgotPasswordForm(e)
     })
 }
+
+// CHANGE PASSWORD
+const $changePasswordForm = document.querySelector('.js-change-password-form')
+
+/**
+ * Sends change password post data and handles messages.
+ * @param {Object} formData - Change password formdata object.
+ */
+const sendChangePasswordRequest = (formData) => {
+    const url = 'change password'
+
+    fetch(url, {
+        method:'POST',
+        headers:{
+         'X-CSRFToken':csrfToken,
+        },
+        body: formData
+    }).then((response) => {
+         return response.json()
+    }).then((response) => {
+        clearFormErrors($changePasswordForm)
+
+        if (response.hasOwnProperty('success')) {
+            showAlert(response.success, 'success')
+            $changePasswordForm.reset()
+        }
+        else if (response.hasOwnProperty('error')) {
+            showAlert(response.error, 'error')
+            $changePasswordForm.reset()
+        }
+        else {
+            showFormErrors($changePasswordForm, response)
+        }
+    })
+}
+
+/**
+ * Validates change password form data.
+ * @returns {Object} Error messages with inpuut names as a key.
+ */
+const validateChangePasswordForm = (formData) => {
+    const password = formData.get('password').trim()
+    const repassword = formData.get('repassword').trim()
+
+    const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
+    const result = {}
+
+    if (password === '') {
+        result.password = 'Password is required.'
+    }
+    else if (!password.match(passwordRegex)) {
+      result.password = 'The password should be at least 8 characters long, including at least one uppercase letter, one lowercase letter, one digit, and one special character.'
+    }
+    else if (password.length > 255) {
+        result.password = 'The password cannot be longer than 255 characters.'
+    }
+    else if (password !== repassword) {
+        result.repassword = 'The confirm password does not match the password.'
+    }
+
+    return result
+}
+
+/**
+ * Handles change password form actions.
+ */
+const handleChangePasswordForm = (e) => {
+    const $form = e.target
+    const formData = new FormData($form)
+    const errors = validateChangePasswordForm(formData)
+    clearFormErrors($form)
+
+    if (true) { //Object.keys(errors).length === 0 
+        sendChangePasswordRequest(formData)
+    }
+    else {
+       showFormErrors($form, errors)
+    }
+}
+
+if ($changePasswordForm) {
+    $changePasswordForm.addEventListener('submit', (e) => {
+        e.preventDefault()
+        handleChangePasswordForm(e)
+    })
+}
