@@ -130,12 +130,12 @@ def forgot_password(request):
 
 
 @user_passes_test(test_func=lambda u: not u.is_authenticated, login_url="index")
-def change_password(request, uuid):
+def change_password(request):
+    print(request.GET)
     return render(
         request=request,
         template_name="accounts/change-password.html",
         context={
             "title": "Change Password",
-            "uuid": uuid,
         },
     )

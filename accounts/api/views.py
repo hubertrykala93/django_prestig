@@ -11,14 +11,13 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .tokens import token_generator
-from django.shortcuts import redirect
+from django.shortcuts import redirect, reverse
 from django.contrib import messages
 import os
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout, login
 from rest_framework.exceptions import ValidationError
-import random as rnd
 
 
 class UserRegisterAPIView(CreateAPIView):
@@ -54,7 +53,7 @@ class UserRegisterAPIView(CreateAPIView):
                 plain_message = strip_tags(html_message)
 
                 message = EmailMultiAlternatives(
-                    subject="Account activation request.",
+                    subject="Account Activation Request",
                     body=plain_message,
                     from_email=os.environ.get("EMAIL_HOST_USER"),
                     to=[user.email],
@@ -249,7 +248,7 @@ class ProfileUpdateAPIView(UpdateAPIView):
             )
 
 
-class ProfileDeleteAPIView(DestroyAPIView):
+class ProfilePictureDeleteAPIView(DestroyAPIView):
     def get_object(self):
         return self.request.user.profile
 
@@ -292,9 +291,6 @@ class ProfileDeleteAPIView(DestroyAPIView):
 
 
 class ForgotPasswordAPIView(APIView):
-    def get_serializer_class(self):
-        return PasswordResetSerializer
-
     def post(self, request, *args, **kwargs):
         serializer = PasswordResetSerializer(data=request.data, context={
             "request": request,
@@ -321,6 +317,7 @@ class ForgotPasswordAPIView(APIView):
                         context={
                             "user": user,
                             "domain": get_current_site(request=request),
+                            "uid": urlsafe_base64_encode(s=force_bytes(s=user.pk)),
                             "uuid": OneTimePassword.objects.get(user=user).uuid,
                         },
                         request=request
@@ -329,7 +326,7 @@ class ForgotPasswordAPIView(APIView):
                     plain_message = strip_tags(html_message)
 
                     message = EmailMultiAlternatives(
-                        subject="Password reset request.",
+                        subject="Password Reset Request",
                         body=plain_message,
                         from_email=os.environ.get("EMAIL_HOST_USER"),
                         to=[user.email],
@@ -338,12 +335,15 @@ class ForgotPasswordAPIView(APIView):
                     message.attach_alternative(content=html_message, mimetype="text/html")
                     message.send()
 
-                    return Response(
+                    response = Response(
                         data={
                             "success": "Check your email inbox; we've sent you information about changing your password.",
                         },
                         status=status.HTTP_200_OK,
                     )
+                    # response.set_cookie(key="email", value=serializer.validated_data.get("email"))
+
+                    return response
 
                 except Exception as e:
                     return Response(
@@ -357,3 +357,34 @@ class ForgotPasswordAPIView(APIView):
             return Response(
                 data=serializer.errors,
             )
+
+
+def reset_password(request, uidb64, uuid):
+    try:
+        uid = force_str(s=urlsafe_base64_decode(s=uidb64))
+        user = User.objects.get(id=uid)
+        token = OneTimePassword.objects.get(user_id=user.id)
+
+    except User.DoesNotExist:
+        messages.info(
+            request=request,
+            message="We apologize, but your account has been unexpectedly deleted. Please register again.",
+        )
+
+        return redirect(to="register")
+
+    except OneTimePassword.DoesNotExist:
+        messages.info(
+            request=request,
+            message="Something went wrong. Please provide your email address again, "
+                    "and we will send you instructions to reset your password.",
+        )
+
+        return redirect(to="forgot-password")
+
+    return redirect(to=f"{reverse(viewname='change-password')}?token={uuid}")
+
+
+class ChangePasswordAPIView(APIView):
+    def patch(self, request, *args, **kwargs):
+        pass

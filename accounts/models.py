@@ -116,3 +116,6 @@ class OneTimePassword(models.Model):
     class Meta:
         verbose_name = "One Time Password"
         verbose_name_plural = "One Time Passwords"
+
+    def __str__(self):
+        return self.user.username

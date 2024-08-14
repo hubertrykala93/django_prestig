@@ -855,10 +855,10 @@ const $changePasswordForm = document.querySelector('.js-change-password-form')
  * @param {Object} formData - Change password formdata object.
  */
 const sendChangePasswordRequest = (formData) => {
-    const url = 'change password'
+    const url = '/api/v1/accounts/change-password'
 
     fetch(url, {
-        method:'POST',
+        method:'PATCH',
         headers:{
          'X-CSRFToken':csrfToken,
         },
@@ -867,6 +867,7 @@ const sendChangePasswordRequest = (formData) => {
          return response.json()
     }).then((response) => {
         clearFormErrors($changePasswordForm)
+        console.log()
 
         if (response.hasOwnProperty('success')) {
             showAlert(response.success, 'success')

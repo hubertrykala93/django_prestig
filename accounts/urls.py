@@ -4,7 +4,7 @@ from . import views as accounts_views
 urlpatterns = [
     path(route="register", view=accounts_views.register, name="register"),
     path(route="login", view=accounts_views.login, name="login"),
-    path(route="change-password/<uuid>", view=accounts_views.change_password, name="change-password"),
+    path(route="change-password", view=accounts_views.change_password, name="change-password"),
     path(route="forgot-password", view=accounts_views.forgot_password, name="forgot-password"),
     path(route="my-account", view=accounts_views.my_account, name="my-account"),
     path(route="my-account/account-settings", view=accounts_views.account_settings, name="account-settings"),

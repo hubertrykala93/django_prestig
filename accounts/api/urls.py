@@ -28,6 +28,16 @@ urlpatterns = [
         name="api-v1-accounts-forgot-password",
     ),
     path(
+        route="reset-password/<uidb64>/<uuid>",
+        view=views.reset_password,
+        name="reset-password",
+    ),
+    path(
+        route="api/v1/accounts/change-password",
+        view=views.ChangePasswordAPIView.as_view(),
+        name="api-v1-accounts-change-password",
+    ),
+    path(
         route="api/v1/accounts/update-account",
         view=views.UserUpdateAPIView.as_view(),
         name="api-v1-accounts-update-account",
@@ -39,7 +49,7 @@ urlpatterns = [
     ),
     path(
         route="api/v1/profiles/delete-profile-picture",
-        view=views.ProfileDeleteAPIView.as_view(),
+        view=views.ProfilePictureDeleteAPIView.as_view(),
         name="api-v1-profiles-delete-profile-picture",
     ),
 ]

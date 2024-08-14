@@ -465,30 +465,14 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
 class PasswordResetSerializer(serializers.ModelSerializer):
     email = serializers.CharField(allow_blank=True)
-    password = serializers.CharField(write_only=True, style={
-        "input_type": "password",
-    })
-    repassword = serializers.CharField(write_only=True, style={
-        "input_type": "password",
-    })
 
     class Meta:
         model = User
         fields = [
             "email",
-            "password",
-            "repassword",
         ]
 
-    def __init__(self, *args, **kwargs):
-        super(PasswordResetSerializer, self).__init__(*args, **kwargs)
-
-        if self.context["request"].parser_context.get("view").__class__.__name__ == "ForgotPasswordAPIView":
-            self.fields.pop("password")
-            self.fields.pop("repassword")
-
     def validate_email(self, email):
-        print("Validate Email")
         if email == "":
             raise serializers.ValidationError(
                 detail="E-mail address is required.",
