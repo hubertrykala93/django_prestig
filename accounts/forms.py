@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Profile, OneTimePassword
+from .models import User, Profile, OneTimePassword, DeliveryDetails
 
 
 class UserForm(forms.ModelForm):
@@ -14,6 +14,20 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = "__all__"
+
+
+class OneTimePasswordForm(forms.ModelForm):
+    uuid = forms.UUIDField(required=False)
+
+    class Meta:
+        model = OneTimePassword
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(OneTimePasswordForm, self).__init__(*args, **kwargs)
+
+        self.fields["user"].help_text = "Select the user for whom a one-time code should be generated."
+        self.fields["user"].label = "User"
 
 
 class ProfileForm(forms.ModelForm):
@@ -50,15 +64,20 @@ class ProfileForm(forms.ModelForm):
         fields = "__all__"
 
 
-class OneTimePasswordForm(forms.ModelForm):
-    uuid = forms.UUIDField(required=False)
-
-    class Meta:
-        model = OneTimePassword
-        fields = "__all__"
+class DeliveryDetailsForm(forms.ModelForm):
+    phone = forms.IntegerField(help_text="Provide your phone number.", label="Phone Number")
+    country = forms.CharField(help_text="Provide the country.", label="Country")
+    state = forms.CharField(help_text="Provide the state.", label="State")
+    city = forms.CharField(help_text="Provide the city.", label="City")
+    street = forms.CharField(help_text="Provide the street.", label="Street")
+    housenumber = forms.CharField(help_text="Provide the house number.", label="House Number")
+    apartmentnumber = forms.CharField(help_text="Provide the apartment number.", label="Apartment Number",
+                                      required=False)
+    postalcode = forms.CharField(help_text="Provide the postal code.", label="Postal Code")
 
     def __init__(self, *args, **kwargs):
-        super(OneTimePasswordForm, self).__init__(*args, **kwargs)
+        super(DeliveryDetailsForm, self).__init__(*args, **kwargs)
 
-        self.fields["user"].help_text = "Select the user for whom a one-time code should be generated."
-        self.fields["user"].label = "User"
+    class Meta:
+        model = DeliveryDetails
+        fields = "__all__"

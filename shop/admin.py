@@ -9,7 +9,6 @@ from .models import (
     Size,
     Stock,
     ProductGallery,
-    DeliveryDetails,
 )
 from .forms import (
     BrandForm,
@@ -21,55 +20,7 @@ from .forms import (
     ProductGalleryForm,
     StockForm,
     ProductForm,
-    DeliveryDetailsForm,
 )
-
-
-@admin.register(DeliveryDetails)
-class AdminDeliveryDetails(admin.ModelAdmin):
-    """
-    Admin options and functionalities for DeliveryDetails model.
-    """
-    list_display = ["id", "uuid", "country", "state", "city", "street", "get_house_number",
-                    "get_apartment_number", "get_postal_code", "phone"]
-    form = DeliveryDetailsForm
-    fieldsets = (
-        (
-            "Contact Information", {
-                "fields": [
-                    "phone",
-                ],
-            },
-        ),
-        (
-            "Shipping Address", {
-                "fields": [
-                    "country",
-                    "state",
-                    "city",
-                    "street",
-                    "housenumber",
-                    "apartmentnumber",
-                    "postalcode",
-                ],
-            },
-        ),
-    )
-
-    def get_house_number(self, obj):
-        return obj.housenumber
-
-    get_house_number.short_description = "House Number"
-
-    def get_apartment_number(self, obj):
-        return obj.apartmentnumber
-
-    get_apartment_number.short_description = "Apartment Number"
-
-    def get_postal_code(self, obj):
-        return obj.postalcode
-
-    get_postal_code.short_description = "Postal Code"
 
 
 @admin.register(Brand)

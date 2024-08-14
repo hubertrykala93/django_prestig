@@ -9,27 +9,7 @@ from .models import (
     ProductGallery,
     Stock,
     Product,
-    DeliveryDetails,
 )
-
-
-class DeliveryDetailsForm(forms.ModelForm):
-    phone = forms.IntegerField(help_text="Provide your phone number.", label="Phone Number")
-    country = forms.CharField(help_text="Provide the country.", label="Country")
-    state = forms.CharField(help_text="Provide the state.", label="State")
-    city = forms.CharField(help_text="Provide the city.", label="City")
-    street = forms.CharField(help_text="Provide the street.", label="Street")
-    housenumber = forms.CharField(help_text="Provide the house number.", label="House Number")
-    apartmentnumber = forms.CharField(help_text="Provide the apartment number.", label="Apartment Number",
-                                       required=False)
-    postalcode = forms.CharField(help_text="Provide the postal code.", label="Postal Code")
-
-    def __init__(self, *args, **kwargs):
-        super(DeliveryDetailsForm, self).__init__(*args, **kwargs)
-
-    class Meta:
-        model = DeliveryDetails
-        fields = "__all__"
 
 
 class BrandForm(forms.ModelForm):

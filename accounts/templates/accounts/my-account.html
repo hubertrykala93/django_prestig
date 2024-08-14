@@ -42,7 +42,7 @@
 
           <li>
             <h6 class="my-account__details__heading heading heading--h6">Gender</h6>
-            <p>{% if profile.gender %}{% if profile.gender == 'Not Set' %}-{% else %}{{ data.profile.gender }}{% endif %}{% endif %}</p>
+            <p>{% if profile.gender %}{{ profile.gender }}{% else %}-{% endif %}</p>
           </li>
 
           <li>

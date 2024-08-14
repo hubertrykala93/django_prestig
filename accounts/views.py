@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test, login_required
 from accounts.models import Profile
-from shop.api.serializers import DeliveryDetailsSerializer
+from accounts.api.serializers import DeliveryDetailsSerializer
 from .api.serializers import UserSerializer, ProfileSerializer
 from datetime import date
 
@@ -131,7 +131,6 @@ def forgot_password(request):
 
 @user_passes_test(test_func=lambda u: not u.is_authenticated, login_url="index")
 def change_password(request):
-    print(request.GET)
     return render(
         request=request,
         template_name="accounts/change-password.html",

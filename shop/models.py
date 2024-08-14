@@ -4,25 +4,6 @@ from django.utils.timezone import now
 from django.utils.text import slugify
 
 
-class DeliveryDetails(models.Model):
-    uuid = models.UUIDField(default=uuid4)
-    phone = models.CharField(max_length=20, null=True)
-    country = models.CharField(max_length=56)
-    state = models.CharField(max_length=50)
-    city = models.CharField(max_length=169)
-    street = models.CharField(max_length=50)
-    housenumber = models.CharField(max_length=5)  # Include the house number if the delivery is to a residential home
-    apartmentnumber = models.CharField(max_length=5)  # Include the apartment number if the delivery is to a building with multiple units
-    postalcode = models.CharField(max_length=10)
-
-    class Meta:
-        verbose_name = "Delivery Detail"
-        verbose_name_plural = "Delivery Details"
-
-    def __str__(self):
-        return str(self.uuid)
-
-
 class Brand(models.Model):
     name = models.CharField(max_length=1000, unique=True)
     description = models.CharField(max_length=10000)

@@ -52,4 +52,9 @@ urlpatterns = [
         view=views.ProfilePictureDeleteAPIView.as_view(),
         name="api-v1-profiles-delete-profile-picture",
     ),
+    path(
+        route="api/v1/delivery-details/update-delivery-details",
+        view=views.DeliveryDetailsUpdateAPIView.as_view(),
+        name="api-v1-delivery-details-update-delivery-details",
+    ),
 ]

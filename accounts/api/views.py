@@ -1,9 +1,9 @@
 from rest_framework.response import Response
-from accounts.models import User, OneTimePassword
+from accounts.models import User, OneTimePassword, DeliveryDetails
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, UpdateAPIView, DestroyAPIView
 from .serializers import UserRegisterSerializer, UserLoginSerializer, ProfileUpdateSerializer, \
-    ProfilePictureDeleteSerializer, PasswordResetSerializer
+    ProfilePictureDeleteSerializer, PasswordResetSerializer, ChangePasswordSerializer, DeliveryDetailsSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.utils.html import strip_tags
@@ -341,7 +341,7 @@ class ForgotPasswordAPIView(APIView):
                         },
                         status=status.HTTP_200_OK,
                     )
-                    # response.set_cookie(key="email", value=serializer.validated_data.get("email"))
+                    response.set_cookie(key="email", value=serializer.validated_data.get("email"))
 
                     return response
 
@@ -385,6 +385,63 @@ def reset_password(request, uidb64, uuid):
     return redirect(to=f"{reverse(viewname='change-password')}?token={uuid}")
 
 
-class ChangePasswordAPIView(APIView):
+class ChangePasswordAPIView(UpdateAPIView):
     def patch(self, request, *args, **kwargs):
-        pass
+        serializer = ChangePasswordSerializer(data=request.data, context={
+            "password": request.data.get("password"),
+        })
+
+        if serializer.is_valid():
+            if User.objects.filter(email=request.COOKIES.get("email")).exists():
+                user = User.objects.get(email=request.COOKIES.get("email"))
+
+                user.set_password(raw_password=serializer.validated_data.get("password"))
+                user.save()
+
+                response = Response(
+                    data={
+                        "success": f"The password for the account '{request.COOKIES.get('email')}' has been successfully changed. "
+                                   "You can continue using our platform.",
+                    },
+                    status=status.HTTP_200_OK,
+                )
+
+                if OneTimePassword.objects.filter(user_id=user.id).exists():
+                    one_time_password = OneTimePassword.objects.get(user_id=user.id)
+                    one_time_password.delete()
+
+                response.delete_cookie(key="email")
+
+                return response
+
+        else:
+            return Response(
+                data=serializer.errors,
+            )
+
+
+class DeliveryDetailsUpdateAPIView(UpdateAPIView):
+    def get_object(self):
+        return DeliveryDetails.objects.get(id=self.request.user.profile.delivery_details.id)
+
+    def get_serializer_class(self):
+        return DeliveryDetailsSerializer
+
+    def patch(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance=instance, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            self.perform_update(serializer=serializer)
+
+            return Response(
+                data={
+                    "success": "Your delivery information has been successfully updated.",
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+            )

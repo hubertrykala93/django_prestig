@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import User, Profile, OneTimePassword
-from .forms import UserForm, ProfileForm, OneTimePasswordForm
+from .models import User, Profile, OneTimePassword, DeliveryDetails
+from .forms import UserForm, ProfileForm, OneTimePasswordForm, DeliveryDetailsForm
 from django.contrib.sessions.models import Session
 
 
@@ -54,6 +54,24 @@ class AdminUser(admin.ModelAdmin):
             return obj.last_login.strftime("%Y-%m-%d %H:%M:%S")
 
     formatted_last_login.short_description = "Last Login"
+
+
+@admin.register(OneTimePassword)
+class AdminOneTimePassword(admin.ModelAdmin):
+    """
+    Admin options and functionalities for OneTimePassword model.
+    """
+    list_display = ["id", "user", "uuid"]
+    form = OneTimePasswordForm
+    fieldsets = (
+        (
+            "Basic Information", {
+                "fields": [
+                    "user",
+                ],
+            },
+        ),
+    )
 
 
 @admin.register(Profile)
@@ -145,22 +163,61 @@ class AdminProfile(admin.ModelAdmin):
     formatted_profile_picture.short_description = "Profile Picture"
 
 
-@admin.register(OneTimePassword)
-class AdminOneTimePassword(admin.ModelAdmin):
+@admin.register(DeliveryDetails)
+class AdminDeliveryDetails(admin.ModelAdmin):
     """
-    Admin options and functionalities for OneTimePassword model.
+    Admin options and functionalities for DeliveryDetails model.
     """
-    list_display = ["id", "user", "uuid"]
-    form = OneTimePasswordForm
+    list_display = [
+        "id",
+        "uuid",
+        "country",
+        "state",
+        "city",
+        "street",
+        "get_house_number",
+        "get_apartment_number",
+        "get_postal_code",
+        "phone"
+    ]
+    form = DeliveryDetailsForm
     fieldsets = (
         (
-            "Basic Information", {
+            "Contact Information", {
                 "fields": [
-                    "user",
+                    "phone",
+                ],
+            },
+        ),
+        (
+            "Shipping Address", {
+                "fields": [
+                    "country",
+                    "state",
+                    "city",
+                    "street",
+                    "housenumber",
+                    "apartmentnumber",
+                    "postalcode",
                 ],
             },
         ),
     )
+
+    def get_house_number(self, obj):
+        return obj.housenumber
+
+    get_house_number.short_description = "House Number"
+
+    def get_apartment_number(self, obj):
+        return obj.apartmentnumber
+
+    get_apartment_number.short_description = "Apartment Number"
+
+    def get_postal_code(self, obj):
+        return obj.postalcode
+
+    get_postal_code.short_description = "Postal Code"
 
 
 @admin.register(Session)

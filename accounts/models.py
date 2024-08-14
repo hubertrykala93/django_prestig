@@ -4,7 +4,7 @@ from django.utils.timezone import now
 from uuid import uuid4
 from django.dispatch import receiver
 from django.db.models.signals import post_save
-from shop.models import Product, DeliveryDetails
+from shop.models import Product
 
 
 class CustomUserManager(UserManager):
@@ -66,6 +66,38 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.username}"
 
 
+class OneTimePassword(models.Model):
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
+    uuid = models.UUIDField(default=uuid4)
+
+    class Meta:
+        verbose_name = "One Time Password"
+        verbose_name_plural = "One Time Passwords"
+
+    def __str__(self):
+        return self.user.username
+
+
+class DeliveryDetails(models.Model):
+    uuid = models.UUIDField(default=uuid4)
+    phone = models.CharField(max_length=20, null=True)
+    country = models.CharField(max_length=56)
+    state = models.CharField(max_length=50)
+    city = models.CharField(max_length=169)
+    street = models.CharField(max_length=50)
+    housenumber = models.CharField(max_length=5)  # Include the house number if the delivery is to a residential home
+    apartmentnumber = models.CharField(
+        max_length=5)  # Include the apartment number if the delivery is to a building with multiple units
+    postalcode = models.CharField(max_length=10)
+
+    class Meta:
+        verbose_name = "Delivery Detail"
+        verbose_name_plural = "Delivery Details"
+
+    def __str__(self):
+        return str(self.uuid)
+
+
 class Profile(models.Model):
     GENDER_CHOICES = (
         ("Male", "Male"),
@@ -93,7 +125,7 @@ class Profile(models.Model):
     wishlist = models.ManyToManyField(to=Product)
 
     # Delivery Details
-    delivery_details = models.ForeignKey(to=DeliveryDetails, on_delete=models.SET_NULL, null=True)
+    delivery_details = models.OneToOneField(to=DeliveryDetails, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         verbose_name = "Profile"
@@ -109,13 +141,9 @@ def create_profile(sender, instance=None, created=None, **kwargs):
         Profile.objects.create(user=instance)
 
 
-class OneTimePassword(models.Model):
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
-    uuid = models.UUIDField(default=uuid4)
-
-    class Meta:
-        verbose_name = "One Time Password"
-        verbose_name_plural = "One Time Passwords"
-
-    def __str__(self):
-        return self.user.username
+@receiver(signal=post_save, sender=Profile)
+def create_delivery_details(sender, instance=None, created=None, **kwargs):
+    if created:
+        delivery_details = DeliveryDetails.objects.create()
+        instance.delivery_details = delivery_details
+        instance.save()
