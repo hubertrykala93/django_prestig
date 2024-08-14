@@ -913,6 +913,11 @@ textarea::placeholder{
   row-gap: .3rem;
 }
 
+.header__buttons__dropdown__content > .header__buttons__dropdown__content__nav > li > a {
+  font-weight: 500;
+  font-size: 105%;
+}
+
 .header__buttons__dropdown__content__nav li > a {
   display: inline-flex;
   align-items: center;
@@ -927,6 +932,11 @@ textarea::placeholder{
 
 .header__buttons__dropdown__content__nav li > a i {
   margin-right: .3em;
+}
+
+.header__buttons__dropdown__content__nav--nested {
+  margin: .4rem 0;
+  padding-left: 1rem;
 }
 
 /**

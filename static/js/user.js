@@ -265,6 +265,12 @@ const $accountSettingsForm = document.querySelector('.js-account-settings-form')
 const sendAccountSettingsRequest = (formData) => {
     const url = '/api/v1/accounts/update-account'
 
+    const clearPasswordFields = () => {
+        const $passwordFields = $accountSettingsForm.querySelectorAll('[name="password"], [name="repassword"]')
+
+        $passwordFields.forEach($input => { $input.value = '' })
+    }
+
     fetch(url, {
         method:'PATCH',
         headers:{
@@ -275,9 +281,9 @@ const sendAccountSettingsRequest = (formData) => {
          return response.json()
     }).then((response) => {
         clearFormErrors($accountSettingsForm)
-        console.log(response)
 
         if (response.hasOwnProperty('success')) {
+            clearPasswordFields()
             showAlert(response.success, 'success')
         }
         else if (response.hasOwnProperty('error')) {
@@ -379,7 +385,6 @@ const sendProfileSettingsRequest = (formData) => {
          return response.json()
     }).then((response) => {
         clearFormErrors($profileSettingsForm)
-        console.log(response)
 
         if (response.hasOwnProperty('success')) {
             showAlert(response.success, 'success')
@@ -452,8 +457,10 @@ const validateProfileSettingsForm = (formData) => {
         }
     }
 
-    if (bio.length > 150) {
-        result.bio = 'The bio cannot be longer than 150 characters.'
+    if (bio) {
+        if (bio.length < 10 || bio.length > 150) {
+            result.bio = 'The bio should consist of at least 10 characters and not exceed 150 characters.'
+        }
     }
 
     if (gender) {
@@ -531,7 +538,6 @@ const sendDeliveryDetailsRequest = (formData) => {
          return response.json()
     }).then((response) => {
         clearFormErrors($deliveryDetailsForm)
-        console.log(response)
 
         if (response.hasOwnProperty('success')) {
             showAlert(response.success, 'success')
@@ -558,6 +564,8 @@ const validateDeliveryDetailsForm = (formData) => {
     const housenumber = formData.get('housenumber').trim()
     const apartmentnumber = formData.get('apartmentnumber').trim()
     const postalcode = formData.get('postalcode').trim()
+    const onlyDigitsRegex = /^[\d]+$/
+    const onlyLettersAndDigitsRegex = /^[a-z0-9]+$/i
 
     const result = {}
 
@@ -566,6 +574,9 @@ const validateDeliveryDetailsForm = (formData) => {
     }
     else if (phone.length < 8 || phone.length > 20) {
         result.phone = 'The phone number should consist of at least 8 characters and not exceed 20 characters.'
+    }
+    else if (!phone.match(onlyDigitsRegex)) {
+        result.phone = 'The phone number should consist of digits only.'
     }
 
     if (country === '') {
@@ -602,9 +613,17 @@ const validateDeliveryDetailsForm = (formData) => {
     else if (housenumber.length > 5) {
         result.housenumber = 'The house number cannot be longer than 5 characters.'
     }
+    else if (!housenumber.match(onlyLettersAndDigitsRegex)) {
+        result.housenumber = 'The house number must consist of letters or digits only.'
+    }
 
-    if (apartmentnumber.length > 5) {
-        result.apartmentnumber = 'The apartment number cannot be longer than 5 characters.'
+    if (apartmentnumber) {
+        if (apartmentnumber.length > 5) {
+            result.apartmentnumber = 'The apartment number cannot be longer than 5 characters.'
+        }
+        else if (!apartmentnumber.match(onlyLettersAndDigitsRegex)) {
+            result.apartmentnumber = 'The apartment number must consist of letters or digits only.'
+        }
     }
 
     if (postalcode === '') {
@@ -626,7 +645,7 @@ const handleDeliveryDetailsForm = (e) => {
     const errors = validateDeliveryDetailsForm(formData)
     clearFormErrors($form)
 
-    if (true) { //Object.keys(errors).length === 0 
+    if (Object.keys(errors).length === 0) { //Object.keys(errors).length === 0 
         sendDeliveryDetailsRequest(formData)
     }
     else {

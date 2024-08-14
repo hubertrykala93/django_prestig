@@ -490,12 +490,15 @@ const validateContactForm = (formData) => {
     if (fullname === '') {
         result.fullname = 'Full name is required.'
     }
-    else if (fullname.length < 8) {
-        result.fullname = 'The full name must be at least 8 characters long.'
+    else if (fullname.length < 8 || fullname.length > 50) {
+        result.fullname = 'The full name must be at least 8 characters long and not exceed 50 characters.'
     }
 
     if (email === '') {
         result.email = 'E-mail address is required.'
+    }
+    else if (email.length > 255) {
+        result.email = 'The email cannot be longer than 255 characters.'
     }
     else if (!email.match(emailRegex)) {
         result.email = 'The e-mail address format is invalid.'
@@ -504,8 +507,8 @@ const validateContactForm = (formData) => {
     if (subject === '') {
         result.subject = 'Subject is required.'
     }
-    else if (subject.length < 8) {
-        result.subject = 'The subject must be at least 8 characters long.'
+    else if (subject.length < 8 || subject.length > 100) {
+        result.subject = 'The subject must be at least 8 characters long and not exceed 100 characters.'
     }
 
     if (message === '') {

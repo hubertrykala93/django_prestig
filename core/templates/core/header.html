@@ -67,6 +67,50 @@
                   <i class="ri-account-box-line" aria-hidden="true"></i>
                   My Account
                 </a>
+
+                <ul class="header__buttons__dropdown__content__nav header__buttons__dropdown__content__nav--nested">
+                  <li>
+                    <a href="{% url 'account-settings' %}" class="{% if request.resolver_match.url_name == 'account-settings' %}active{% endif %}">
+                      <i class="ri-settings-5-line" aria-hidden="true"></i>
+                      Account Settings
+                    </a>
+                  </li>
+              
+                  <li>
+                    <a href="{% url 'profile-settings' %}" class="{% if request.resolver_match.url_name == 'profile-settings' %}active{% endif %}">
+                      <i class="ri-file-user-line" aria-hidden="true"></i>
+                      Profile Settings
+                    </a>
+                  </li>
+              
+                  <li>
+                    <a href="{% url 'delivery-details' %}" class="{% if request.resolver_match.url_name == 'delivery-details' %}active{% endif %}">
+                      <i class="ri-truck-line" aria-hidden="true"></i>
+                      Delivery Details
+                    </a>
+                  </li>
+              
+                  <li>
+                    <a href="{% url 'purchased-products' %}" class="{% if request.resolver_match.url_name == 'purchased-products' %}active{% endif %}">
+                      <i class="ri-shopping-cart-2-line" aria-hidden="true"></i>
+                      Purchased Products
+                    </a>
+                  </li>
+              
+                  <li>
+                    <a href="{% url 'product-returns' %}" class="{% if request.resolver_match.url_name == 'product-returns' %}active{% endif %}">
+                      <i class="ri-arrow-turn-forward-line" aria-hidden="true"></i>
+                      Product Returns
+                    </a>
+                  </li>
+              
+                  <li>
+                    <a href="{% url 'product-reviews' %}" class="{% if request.resolver_match.url_name == 'product-reviews' %}active{% endif %}">
+                      <i class="ri-questionnaire-line" aria-hidden="true"></i>
+                      Product Reviews
+                    </a>
+                  </li>
+                </ul>
               </li>
               <li>
                 <a href="{% url 'logout' %}">

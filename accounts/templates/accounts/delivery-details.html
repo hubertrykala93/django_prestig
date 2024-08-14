@@ -15,64 +15,64 @@
         <form method="post" class="form js-delivery-details-form">
           <div class="form__row">
             <div class="form__field js-form-field">
-                <label for="phone" class="form__label">phone number *</label>
-                <div class="form__input-wrap">
-                    <input type="text" id="phone" name="phone" value="{% if delivery_details.phone %}{{ delivery_details.phone }}{% endif %}" placeholder="Your phone number">
-                </div>
-            </div>
-
-            <div class="form__field js-form-field">
               <label for="country" class="form__label">country *</label>
               <div class="form__input-wrap">
                   <input type="text" id="country" name="country" value="{% if delivery_details.country %}{{ delivery_details.country }}{% endif %}" placeholder="Your country">
               </div>
             </div>
+
+            <div class="form__field js-form-field">
+              <label for="state" class="form__label">state *</label>
+              <div class="form__input-wrap">
+                  <input type="text" id="state" name="state" value="{% if delivery_details.state %}{{ delivery_details.state }}{% endif %}" placeholder="Your state">
+              </div>
+            </div>
           </div>
 
           <div class="form__row">
-            <div class="form__field js-form-field">
-                <label for="state" class="form__label">state *</label>
-                <div class="form__input-wrap">
-                    <input type="text" id="state" name="state" value="{% if delivery_details.state %}{{ delivery_details.state }}{% endif %}" placeholder="Your state">
-                </div>
-            </div>
-
             <div class="form__field js-form-field">
               <label for="city" class="form__label">city *</label>
               <div class="form__input-wrap">
                   <input type="text" id="city" name="city" value="{% if delivery_details.city %}{{ delivery_details.city }}{% endif %}" placeholder="Your city">
               </div>
             </div>
-          </div>
-
-          <div class="form__row">
-            <div class="form__field js-form-field">
-                <label for="street" class="form__label">street *</label>
-                <div class="form__input-wrap">
-                    <input type="text" id="street" name="street" value="{% if delivery_details.street %}{{ delivery_details.street }}{% endif %}" placeholder="Your street">
-                </div>
-            </div>
 
             <div class="form__field js-form-field">
-              <label for="housenumber" class="form__label">house number *</label>
+              <label for="street" class="form__label">street *</label>
               <div class="form__input-wrap">
-                  <input type="text" id="housenumber" name="housenumber" value="{% if delivery_details.housenumber %}{{ delivery_details.housenumber }}{% endif %}" placeholder="Your house number">
+                  <input type="text" id="street" name="street" value="{% if delivery_details.street %}{{ delivery_details.street }}{% endif %}" placeholder="Your street">
               </div>
             </div>
           </div>
 
           <div class="form__row">
             <div class="form__field js-form-field">
-                <label for="apartmentnumber" class="form__label">apartament number</label>
-                <div class="form__input-wrap">
-                    <input type="text" id="apartmentnumber" name="apartmentnumber" value="{% if delivery_details.apartmentnumber %}{{ delivery_details.apartmentnumber }}{% endif %}" placeholder="Your apartament number">
-                </div>
+              <label for="housenumber" class="form__label">house number *</label>
+              <div class="form__input-wrap">
+                  <input type="text" id="housenumber" name="housenumber" value="{% if delivery_details.housenumber %}{{ delivery_details.housenumber }}{% endif %}" placeholder="Your house number">
+              </div>
             </div>
 
+            <div class="form__field js-form-field">
+              <label for="apartmentnumber" class="form__label">apartament number</label>
+              <div class="form__input-wrap">
+                  <input type="text" id="apartmentnumber" name="apartmentnumber" value="{% if delivery_details.apartmentnumber %}{{ delivery_details.apartmentnumber }}{% endif %}" placeholder="Your apartament number">
+              </div>
+            </div>
+          </div>
+
+          <div class="form__row">
             <div class="form__field js-form-field">
               <label for="postalcode" class="form__label">postal code *</label>
               <div class="form__input-wrap">
                   <input type="text" id="postalcode" name="postalcode" value="{% if delivery_details.postalcode %}{{ delivery_details.postalcode }}{% endif %}" placeholder="Your postal code">
+              </div>
+            </div>
+
+            <div class="form__field js-form-field">
+              <label for="phone" class="form__label">phone number *</label>
+              <div class="form__input-wrap">
+                  <input type="text" id="phone" name="phone" value="{% if delivery_details.phone %}{{ delivery_details.phone }}{% endif %}" placeholder="Your phone number">
               </div>
             </div>
           </div>
