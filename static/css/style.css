@@ -422,7 +422,6 @@ textarea::placeholder{
   width: 100%;
   background-color: var(--clr-gray-100);
   border: 2px dashed var(--clr-accent-400);
-  border-radius: var(--br-400);
   position: relative;
   text-align: center;
   cursor: pointer;
@@ -430,31 +429,32 @@ textarea::placeholder{
 }
 
 .form__upload:hover {
-  background-color: var(--clr-primary-light-alt);
+  background-color: var(--clr-accent-100);
 }
 
 .form__upload:focus,
 .form__upload:focus-within {
-  border-color: var(--clr-secondary);
+  border-color: var(--clr-black);
 }
 
 .form__upload__text {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 1.6rem;
+  font-size: 1.2rem;
+  font-weight: 500;
 }
 
 .form__upload__text i {
-  margin-bottom: 1rem;
-  font-size: 3rem;
+  margin-bottom: .8rem;
+  font-size: 2rem;
   line-height: 1;
-  color: var(--clr-primary);
+  color: var(--clr-accent-400);
 }
 
 .form__upload__file-name {
   margin-top: 1rem;
-  color: var(--clr-primary);
+  font-size: var(--fs-300);
 }
 
 .form__upload__input {
@@ -471,14 +471,19 @@ textarea::placeholder{
 
 .form__upload-container__image-preview {
   margin-top: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .form__upload-container__image-preview span{
   display: block;
   margin-bottom: 1rem;
   font-weight: 500;
-  font-size: var(--fs-body-500);
-  color: var(--clr-secondary);
+}
+
+.form__upload-container__image-preview__image-wrapper {
+  position: relative;
 }
 
 .form__upload-container__image-preview__image {
@@ -486,6 +491,30 @@ textarea::placeholder{
     height: 10rem;
     border-radius: 50%;
     object-fit: cover;
+}
+
+.form__upload-container__image-preview__delete {
+  position: absolute;
+  right: .5em;
+  top: .5em;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background-color: var(--clr-error);
+  color: var(--clr-white);
+  border-radius: 50%;
+  transition: background-color .3s;
+}
+
+.form__upload-container__image-preview__delete.active {
+  display: flex;
+}
+
+.form__upload-container__image-preview__delete:hover,
+.form__upload-container__image-preview__delete:focus-visible {
+  background-color: var(--clr-black);
 }
 
 /* TESTIMONIALS */

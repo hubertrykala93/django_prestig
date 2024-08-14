@@ -54,7 +54,13 @@
 
                 <div class="form__upload-container__image-preview">
                   <span>Profile Picture Preview:</span>
-                  <img src="{{ profile.profilepicture }}" class="form__upload-container__image-preview__image js-form-upload-preview-image" alt="user avatar">
+                  <div class="form__upload-container__image-preview__image-wrapper">
+                    <img src="{{ profile.profilepicture }}" class="form__upload-container__image-preview__image js-form-upload-preview-image" alt="user avatar">
+                    <button type="button" class="form__upload-container__image-preview__delete js-form-upload-delete-image active">
+                      <span class="visually-hidden">Delete profile picture</span>
+                      <i class="ri-close-line" aria-hidden="true"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

@@ -51,28 +51,31 @@ const validateRegisterForm = (formData) => {
     if (username === '') {
         result.username = 'Username is required.'
     }
-    else if (username.length < 8 || username.length > 35) {
-        result.username = 'The username should consist of at least 8 characters and not exceed 35 characters.'
+    else if (username.length < 8) {
+        result.username = 'The username should consist of at least 8 characters.'
+    }
+    else if (username.length > 35) {
+        result.username = 'The username cannot be longer than 35 characters.'
     }
 
     if (email === '') {
         result.email = 'E-mail address is required.'
     }
-    else if (email.length > 255) {
-        result.email = 'The email cannot be longer than 255 characters.'
-    }
     else if (!email.match(emailRegex)) {
         result.email = 'The e-mail address format is invalid.'
+    }
+    else if (email.length > 255) {
+        result.email = 'The email cannot be longer than 255 characters.'
     }
 
     if (password === '') {
         result.password = 'Password is required.'
     }
-    else if (password.length > 255) {
-        result.password = 'The password cannot be longer than 255 characters.'
-    }
     else if (!password.match(passwordRegex)) {
       result.password = 'The password should be at least 8 characters long, including at least one uppercase letter, one lowercase letter, one digit, and one special character.'
+    }
+    else if (password.length > 255) {
+        result.password = 'The password cannot be longer than 255 characters.'
     }
     else if (password !== repassword) {
         result.repassword = 'The confirm password does not match the password.'
@@ -158,21 +161,21 @@ const validateLoginForm = (formData) => {
     if (email === '') {
         result.email = 'E-mail address is required.'
     }
-    else if (email.length > 255) {
-        result.email = 'The e-mail address cannot be longer than 255 characters.'
-    }
     else if (!email.match(emailRegex)) {
         result.email = 'The e-mail address format is invalid.'
+    }
+    else if (email.length > 255) {
+        result.email = 'The e-mail address cannot be longer than 255 characters.'
     }
 
     if (password === '') {
         result.password = 'Password is required.'
     }
-    else if (password.length > 255) {
-        result.password = 'The password cannot be longer than 255 characters.'
-    }
     else if (!password.match(passwordRegex)) {
       result.password = 'The password should be at least 8 characters long, including at least one uppercase letter, one lowercase letter, one digit, and one special character.'
+    }
+    else if (password.length > 255) {
+        result.password = 'The password cannot be longer than 255 characters.'
     }
 
     return result
@@ -209,6 +212,10 @@ if ($loginForm) {
 // UPLOAD IMAGE
 const $uploadInputs = document.querySelectorAll('.js-form-upload-input')
 
+const showDeleteImageButton = () => {
+    document.querySelector('.js-form-upload-delete-image').classList.add('active')
+}
+
 /**
  * Updates label of file uploader.
  * @param {HTMLElement} $input - Input which belongs to particular file uploader.
@@ -241,9 +248,10 @@ const validateImage = (e) => {
   if (allowedTypes.indexOf(file.type) > -1) {
     updateFileLabel($input, $input.value.split("\\").pop())
     updateImagePreview($input, file)
+    showDeleteImageButton()
   }else {
     $input.value = null
-    updateFileLabel($input, 'Not supported image type');
+    updateFileLabel($input, 'Not supported image type')
   }
 }
 
@@ -253,6 +261,55 @@ if ($uploadInputs) {
       validateImage(e)
     })
   })
+}
+
+// DELETE IMAGE
+const $deleteImageButton = document.querySelector('.js-form-upload-delete-image')
+
+const hideDeleteImageButton = () => {
+    document.querySelector('.js-form-upload-delete-image').classList.remove('active')
+}
+
+const resetFileInput = () => {
+    document.querySelector('[name="profilepicture"]').value = null
+    document.querySelector('.js-form-upload-filelabel').textContent = 'No File Selected'
+}
+
+const resetPreviewImage = () => {
+    document.querySelector('.js-form-upload-preview-image').src = '/media/profile_images/default_profile_image.png'
+}
+
+const sendDeleteProfilePictureRequest = () => {
+    const url = 'delete-profile-picture'
+    const formData = new FormData()
+
+    fetch(url, {
+        method:'POST',
+        headers:{
+         'X-CSRFToken':csrfToken,
+        },
+        body: formData
+    }).then((response) => {
+         return response.json()
+    }).then((response) => {
+        if (response.hasOwnProperty('success')) {
+            showAlert(response.success, 'success')
+        }
+        else if (response.hasOwnProperty('error')) {
+            showAlert(response.error, 'error')
+        }
+    })
+}
+
+const hadleDeleteImage = () => {
+    resetFileInput()
+    resetPreviewImage()
+    hideDeleteImageButton()
+    sendDeleteProfilePictureRequest()
+}
+
+if ($deleteImageButton) {
+    $deleteImageButton.addEventListener('click', hadleDeleteImage)
 }
 
 // ACCOUNT SETTINGS
@@ -312,26 +369,29 @@ const validateAccountSettingsForm = (formData) => {
     if (username === '') {
         result.username = 'Username is required.'
     }
-    else if (username.length < 8 || username.length > 35) {
-        result.username = 'The username should consist of at least 8 characters and not exceed 35 characters.'
+    else if (username.length < 8) {
+        result.username = 'The username should consist of at least 8 characters long.'
+    }
+    else if (username.length > 35) {
+        result.username = 'The username cannot be longer than 35 characters.'
     }
 
     if (email === '') {
         result.email = 'E-mail address is required.'
     }
-    else if (email.length > 255) {
-        result.email = 'The email cannot be longer than 255 characters.'
-    }
     else if (!email.match(emailRegex)) {
         result.email = 'The e-mail address format is invalid.'
     }
+    else if (email.length > 255) {
+        result.email = 'The email cannot be longer than 255 characters.'
+    }
 
     if (password) {
-        if (password.length > 255) {
-            result.password = 'The password cannot be longer than 255 characters.'
-        }
-        else if (!password.match(passwordRegex)) {
+        if (!password.match(passwordRegex)) {
         result.password = 'The password should be at least 8 characters long, including at least one uppercase letter, one lowercase letter, one digit, and one special character.'
+        }
+        else if (password.length > 255) {
+            result.password = 'The password cannot be longer than 255 characters.'
         }
         else if (password !== repassword) {
             result.repassword = 'The confirm password does not match the password.'
@@ -419,20 +479,26 @@ const validateProfileSettingsForm = (formData) => {
     const result = {}
     
     if (firstname) {
-        if (firstname.length < 2 || firstname.length > 35) {
-            result.firstname = 'The first name should consist of at least 2 characters and not exceed 35 characters.'
-        }
-        else if (!firstname.match(onlyLettersRegex)) {
+        if (!firstname.match(onlyLettersRegex)) {
             result.firstname = 'The first name should contain only letters.'
+        }
+        else if (firstname.length < 2) {
+            result.firstname = 'The first name should consist of at least 2 characters long.'
+        }
+        else if (firstname.length > 35) {
+            result.firstname = 'The first name cannot be longer than 35 characters.'
         }
     }
     
     if (lastname) {
-        if (lastname.length < 2 || firstname.length > 35) {
-            result.lastname = 'The last name should consist of at least 2 characters and not exceed 35 characters.'
-        }
-        else if (!lastname.match(onlyLettersRegex)) {
+        if (!lastname.match(onlyLettersRegex)) {
             result.lastname = 'The last name should contain only letters.'
+        }
+        else if (lastname.length < 2) {
+            result.lastname = 'The last name should consist of at least 2 characters long.'
+        }
+        else if (firstname.length > 35) {
+            result.lastname = 'The last name cannot be longer than 35 characters.'
         }
     }
 
@@ -458,8 +524,11 @@ const validateProfileSettingsForm = (formData) => {
     }
 
     if (bio) {
-        if (bio.length < 10 || bio.length > 150) {
-            result.bio = 'The bio should consist of at least 10 characters and not exceed 150 characters.'
+        if (bio.length < 10) {
+            result.bio = 'The bio should consist of at least 10 characters long.'
+        }
+        else if (bio.length > 150) {
+            result.bio = 'The bio cannot be longer than 150 characters.'
         }
     }
 
@@ -572,65 +641,83 @@ const validateDeliveryDetailsForm = (formData) => {
     if (phone === '') {
         result.phone = 'Phone number is required.'
     }
-    else if (phone.length < 8 || phone.length > 20) {
-        result.phone = 'The phone number should consist of at least 8 characters and not exceed 20 characters.'
-    }
     else if (!phone.match(onlyDigitsRegex)) {
         result.phone = 'The phone number should consist of digits only.'
+    }
+    else if (phone.length < 8) {
+        result.phone = 'The phone number should consist of at least 8 characters long.'
+    }
+    else if (phone.length > 20) {
+        result.phone = 'The phone number cannot be longer than 20 characters.'
     }
 
     if (country === '') {
         result.country = 'Country is required.'
     }
-    else if (country.length < 3 || country.length > 56) {
-        result.country = 'The country should consist of at least 3 characters and not exceed 56 characters.'
+    else if (country.length < 3) {
+        result.country = 'The country should consist of at least 3 characters long.'
+    }
+    else if (country.length > 56) {
+        result.country = 'The country cannot be longer than 56 characters.'
     }
 
     if (state === '') {
         result.state = 'State is required.'
     }
-    else if (state.length < 3 || state.length > 56) {
-        result.state = 'The state should consist of at least 3 characters and not exceed 50 characters.'
+    else if (state.length < 3) {
+        result.state = 'The state should consist of at least 3 characters long.'
+    }
+    else if (state.length > 56) {
+        result.state = 'The state cannot be longer than 50 characters.'
     }
 
     if (city === '') {
         result.city = 'City is required.'
     }
-    else if (city.length < 3 || city.length > 169) {
-        result.city = 'The city should consist of at least 3 characters and not exceed 169 characters.'
+    else if (city.length < 3) {
+        result.city = 'The city should consist of at least 3 characters long.'
+    }
+    else if (city.length > 169) {
+        result.city = 'The city cannot be longer than 169 characters.'
     }
 
     if (street === '') {
         result.street = 'Street is required.'
     }
-    else if (street.length < 3 || street.length > 50) {
-        result.street = 'The street should consist of at least 3 characters and not exceed 50 characters.'
+    else if (street.length < 3) {
+        result.street = 'The street should consist of at least 3 characters long.'
+    }
+    else if (street.length > 50) {
+        result.street = 'The street cannot be longer than 50 characters.'
     }
 
     if (housenumber === '') {
         result.housenumber = 'House number is required.'
     }
-    else if (housenumber.length > 5) {
-        result.housenumber = 'The house number cannot be longer than 5 characters.'
-    }
     else if (!housenumber.match(onlyLettersAndDigitsRegex)) {
         result.housenumber = 'The house number must consist of letters or digits only.'
     }
+    else if (housenumber.length > 5) {
+        result.housenumber = 'The house number cannot be longer than 5 characters.'
+    }
 
     if (apartmentnumber) {
-        if (apartmentnumber.length > 5) {
-            result.apartmentnumber = 'The apartment number cannot be longer than 5 characters.'
-        }
-        else if (!apartmentnumber.match(onlyLettersAndDigitsRegex)) {
+        if (!apartmentnumber.match(onlyLettersAndDigitsRegex)) {
             result.apartmentnumber = 'The apartment number must consist of letters or digits only.'
+        }
+        else if (apartmentnumber.length > 5) {
+            result.apartmentnumber = 'The apartment number cannot be longer than 5 characters.'
         }
     }
 
     if (postalcode === '') {
         result.postalcode = 'Postal code is required.'
     }
-    else if (postalcode.length < 5 || postalcode.length > 10) {
-        result.postalcode = 'The postalcode should consist of at least 5 characters and not exceed 10 characters.'
+    else if (postalcode.length < 5) {
+        result.postalcode = 'The postal code should consist of at least 5 characters long.'
+    }
+    else if (postalcode.length > 10) {
+        result.postalcode = 'The postal code cannot be longer than 10 characters.'
     }
 
     return result
@@ -645,7 +732,7 @@ const handleDeliveryDetailsForm = (e) => {
     const errors = validateDeliveryDetailsForm(formData)
     clearFormErrors($form)
 
-    if (Object.keys(errors).length === 0) { //Object.keys(errors).length === 0 
+    if (true) { //Object.keys(errors).length === 0 
         sendDeliveryDetailsRequest(formData)
     }
     else {
