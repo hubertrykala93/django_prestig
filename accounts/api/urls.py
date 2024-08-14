@@ -31,5 +31,10 @@ urlpatterns = [
         route="api/v1/profiles/update-profile",
         view=views.ProfileUpdateAPIView.as_view(),
         name="api-v1-profiles-update-profile"
-    )
+    ),
+    path(
+        route="api/v1/profiles/delete-profile-picture",
+        view=views.ProfileDeleteAPIView.as_view(),
+        name="api-v1-profiles-delete-profile-picture",
+    ),
 ]

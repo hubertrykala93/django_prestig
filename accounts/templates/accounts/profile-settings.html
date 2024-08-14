@@ -56,7 +56,7 @@
                   <span>Profile Picture Preview:</span>
                   <div class="form__upload-container__image-preview__image-wrapper">
                     <img src="{{ profile.profilepicture }}" class="form__upload-container__image-preview__image js-form-upload-preview-image" alt="user avatar">
-                    <button type="button" class="form__upload-container__image-preview__delete js-form-upload-delete-image active">
+                    <button type="button" class="form__upload-container__image-preview__delete js-form-upload-delete-image {% if profile.profilepicture_name != 'default_profile_image.png' %}active{% endif %}">
                       <span class="visually-hidden">Delete profile picture</span>
                       <i class="ri-close-line" aria-hidden="true"></i>
                     </button>

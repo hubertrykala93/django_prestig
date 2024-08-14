@@ -1,8 +1,9 @@
 from rest_framework.response import Response
 from accounts.models import User
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, UpdateAPIView
-from .serializers import UserRegisterSerializer, UserLoginSerializer, ProfileUpdateSerializer
+from rest_framework.generics import CreateAPIView, UpdateAPIView, DestroyAPIView
+from .serializers import UserRegisterSerializer, UserLoginSerializer, ProfileUpdateSerializer, \
+    ProfilePictureDeleteSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.utils.html import strip_tags
@@ -16,6 +17,7 @@ import os
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout, login
+from rest_framework.exceptions import ValidationError
 
 
 class UserRegisterAPIView(CreateAPIView):
@@ -217,25 +219,6 @@ class UserUpdateAPIView(UpdateAPIView):
                 data=serializer.errors,
             )
 
-    def put(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance=instance, data=request.data, partial=False)
-
-        if serializer.is_valid():
-            self.perform_update(serializer=serializer)
-
-            return Response(
-                data={
-                    "success": "Your user information has been successfully updated.",
-                },
-                status=status.HTTP_200_OK,
-            )
-
-        else:
-            return Response(
-                data=serializer.errors,
-            )
-
 
 class ProfileUpdateAPIView(UpdateAPIView):
     def get_object(self):
@@ -263,21 +246,45 @@ class ProfileUpdateAPIView(UpdateAPIView):
                 data=serializer.errors,
             )
 
-    def put(self, request, *args, **kwargs):
-        instance = self.get_serializer()
-        serializer = self.get_serializer(instance=instance, data=request.data, partial=False)
 
-        if serializer.is_valid():
-            self.perform_update(serializer=serializer)
+class ProfileDeleteAPIView(DestroyAPIView):
+    def get_object(self):
+        return self.request.user.profile
+
+    def get_serializer_class(self):
+        return ProfilePictureDeleteSerializer
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+
+            if instance.profilepicture.name.split(sep="/")[-1] == "default_profile_image.png":
+                return Response(
+                    data={},
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+
+            self.perform_destroy(instance=instance.profilepicture)
+            instance.profilepicture = "profile_images/default_profile_image.png"
+            instance.save()
 
             return Response(
                 data={
-                    "success": "Your profile information has been successfully updated.",
-                },
-                status=status.HTTP_200_OK
+                    "success": "Your profile picture has been successfully removed.",
+                }
             )
 
-        else:
+        except ValidationError as e:
             return Response(
-                data=serializer.errors,
+                data={
+                    "error": str(e),
+                },
+            )
+
+        except Exception as e:
+            return Response(
+                data={
+                    "error": "An error occurred while trying to delete your profile picture.",
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )

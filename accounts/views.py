@@ -58,13 +58,16 @@ def account_settings(request):
 
 @login_required(login_url="login")
 def profile_settings(request):
+    profile = ProfileSerializer(instance=request.user.profile).data
+    profile["profilepicture_name"] = profile["profilepicture"].split("/")[-1]
+
     return render(
         request=request,
         template_name="accounts/profile-settings.html",
         context={
             "title": "Profile Settings",
             "max": date.today().strftime("%Y-%m-%d"),
-            "profile": ProfileSerializer(instance=request.user.profile).data,
+            "profile": profile,
             "genders": [choice[0] for choice in Profile._meta.get_field("gender").choices],
         }
     )

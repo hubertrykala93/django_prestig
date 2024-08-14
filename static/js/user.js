@@ -280,11 +280,11 @@ const resetPreviewImage = () => {
 }
 
 const sendDeleteProfilePictureRequest = () => {
-    const url = 'delete-profile-picture'
+    const url = '/api/v1/profiles/delete-profile-picture'
     const formData = new FormData()
 
     fetch(url, {
-        method:'POST',
+        method:'DELETE',
         headers:{
          'X-CSRFToken':csrfToken,
         },

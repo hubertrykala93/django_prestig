@@ -31,22 +31,3 @@ class DeliveryDetailsUpdateAPIView(UpdateAPIView):
             return Response(
                 data=serializer.errors,
             )
-
-    def put(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance=instance, data=request.data, partial=True)
-
-        if serializer.is_valid():
-            self.perform_update(serializer=serializer)
-
-            return Response(
-                data={
-                    "success": "Your delivery information has been successfully updated.",
-                },
-                status=status.HTTP_200_OK,
-            )
-
-        else:
-            return Response(
-                data=serializer.errors,
-            )

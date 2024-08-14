@@ -169,7 +169,9 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
             image_io = BytesIO()
             image.save(fp=image_io, format="png")
 
-            instance.profilepicture.delete()
+            if self.instance.profilepicture.name.split(sep="/")[-1] != "default_profile_image.png":
+                instance.profilepicture.delete()
+
             instance.profilepicture.save(profilepicture.name, ContentFile(image_io.getvalue()), save=False)
 
         for attr, value in validated_data.items():
@@ -189,6 +191,12 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(detail=new_errors)
 
         return validated_data
+
+
+class ProfilePictureDeleteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ["profilepicture"]
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
