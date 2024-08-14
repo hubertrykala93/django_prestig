@@ -212,6 +212,9 @@ if ($loginForm) {
 // UPLOAD IMAGE
 const $uploadInputs = document.querySelectorAll('.js-form-upload-input')
 
+/**
+ * Shows button that deletes uploaded image.
+ */
 const showDeleteImageButton = () => {
     document.querySelector('.js-form-upload-delete-image').classList.add('active')
 }
@@ -266,19 +269,31 @@ if ($uploadInputs) {
 // DELETE IMAGE
 const $deleteImageButton = document.querySelector('.js-form-upload-delete-image')
 
+/**
+ * Hides button that deletes uploaded image.
+ */
 const hideDeleteImageButton = () => {
     document.querySelector('.js-form-upload-delete-image').classList.remove('active')
 }
 
+/**
+ * Restores file input to starting point.
+ */
 const resetFileInput = () => {
     document.querySelector('[name="profilepicture"]').value = null
     document.querySelector('.js-form-upload-filelabel').textContent = 'No File Selected'
 }
 
+/**
+ * Restores preview image source to default.
+ */
 const resetPreviewImage = () => {
     document.querySelector('.js-form-upload-preview-image').src = '/media/profile_images/default_profile_image.png'
 }
 
+/**
+ * Sends delete profile picture request and handles messages.
+ */
 const sendDeleteProfilePictureRequest = () => {
     const url = '/api/v1/profiles/delete-profile-picture'
     const formData = new FormData()
@@ -301,6 +316,9 @@ const sendDeleteProfilePictureRequest = () => {
     })
 }
 
+/**
+ * Handles delete profile picture button actions.
+ */
 const hadleDeleteImage = () => {
     resetFileInput()
     resetPreviewImage()
@@ -410,7 +428,7 @@ const handleAccountSettingsForm = (e) => {
     const errors = validateAccountSettingsForm(formData)
     clearFormErrors($form)
 
-    if (true) { //Object.keys(errors).length === 0 
+    if (Object.keys(errors).length === 0 ) {
         sendAccountSettingsRequest(formData)
     }
     else {
@@ -572,7 +590,7 @@ const handleProfileSettingsForm = (e) => {
     const errors = validateProfileSettingsForm(formData)
     clearFormErrors($form)
 
-    if (true) { //Object.keys(errors).length === 0 
+    if (Object.keys(errors).length === 0 ) {
         sendProfileSettingsRequest(formData)
     }
     else {
@@ -732,7 +750,7 @@ const handleDeliveryDetailsForm = (e) => {
     const errors = validateDeliveryDetailsForm(formData)
     clearFormErrors($form)
 
-    if (true) { //Object.keys(errors).length === 0 
+    if (Object.keys(errors).length === 0 ) {
         sendDeliveryDetailsRequest(formData)
     }
     else {
@@ -744,5 +762,87 @@ if ($deliveryDetailsForm) {
     $deliveryDetailsForm.addEventListener('submit', (e) => {
         e.preventDefault()
         handleDeliveryDetailsForm(e)
+    })
+}
+
+// FORGOT PASSWORD
+const $forgotPasswordForm = document.querySelector('.js-forgot-password-form')
+
+/**
+ * Sends forgot password post data and handles messages.
+ * @param {Object} formData - Forgot password formdata object.
+ */
+const sendForgotPasswordRequest = (formData) => {
+    const url = 'forgot-password'
+
+    fetch(url, {
+        method:'POST',
+        headers:{
+         'X-CSRFToken':csrfToken,
+        },
+        body: formData
+    }).then((response) => {
+         return response.json()
+    }).then((response) => {
+        clearFormErrors($forgotPasswordForm)
+
+        if (response.hasOwnProperty('success')) {
+            showAlert(response.error, 'success')
+            $forgotPasswordForm.reset()
+        }
+        else if (response.hasOwnProperty('error')) {
+            showAlert(response.error, 'error')
+            $forgotPasswordForm.reset()
+        }
+        else {
+            showFormErrors($forgotPasswordForm, response)
+        }
+    })
+}
+
+/**
+ * Validates forgot password form data.
+ * @returns {Object} Error messages with inpuut names as a key.
+ */
+const validateForgotPasswordForm = (formData) => {
+    const email = formData.get('email').trim()
+
+    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const result = {}
+
+    if (email === '') {
+        result.email = 'E-mail address is required.'
+    }
+    else if (!email.match(emailRegex)) {
+        result.email = 'The e-mail address format is invalid.'
+    }
+    else if (email.length > 255) {
+        result.email = 'The e-mail address cannot be longer than 255 characters.'
+    }
+
+    return result
+}
+
+/**
+ * Handles forgot password form actions.
+ */
+const handleForgotPasswordForm = (e) => {
+    const $form = e.target
+    const formData = new FormData($form)
+    const errors = validateForgotPasswordForm(formData)
+    clearFormErrors($form)
+
+    if (Object.keys(errors).length === 0) { //Object.keys(errors).length === 0
+        sendForgotPasswordRequest(formData)
+    }
+    else {
+       showFormErrors($form, errors)
+    }
+}
+
+if ($forgotPasswordForm) {
+    $forgotPasswordForm.addEventListener('submit', (e) => {
+        e.preventDefault()
+        handleForgotPasswordForm(e)
     })
 }

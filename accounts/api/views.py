@@ -261,7 +261,6 @@ class ProfileDeleteAPIView(DestroyAPIView):
             if instance.profilepicture.name.split(sep="/")[-1] == "default_profile_image.png":
                 return Response(
                     data={},
-                    status=status.HTTP_403_FORBIDDEN,
                 )
 
             self.perform_destroy(instance=instance.profilepicture)
