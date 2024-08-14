@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import User, Profile
-from .forms import UserForm, ProfileForm
+from .models import User, Profile, OneTimePassword
+from .forms import UserForm, ProfileForm, OneTimePasswordForm
 from django.contrib.sessions.models import Session
 
 
@@ -143,6 +143,24 @@ class AdminProfile(admin.ModelAdmin):
         return obj.profilepicture.name.split(sep="/")[-1]
 
     formatted_profile_picture.short_description = "Profile Picture"
+
+
+@admin.register(OneTimePassword)
+class AdminOneTimePassword(admin.ModelAdmin):
+    """
+    Admin options and functionalities for OneTimePassword model.
+    """
+    list_display = ["id", "user", "uuid"]
+    form = OneTimePasswordForm
+    fieldsets = (
+        (
+            "Basic Information", {
+                "fields": [
+                    "user",
+                ],
+            },
+        ),
+    )
 
 
 @admin.register(Session)

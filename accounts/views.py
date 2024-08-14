@@ -116,3 +116,23 @@ def product_reviews(request):
             "title": "Product Reviews",
         }
     )
+
+
+def forgot_password(request):
+    return render(
+        request=request,
+        template_name="accounts/forgot-password.html",
+        context={
+            "title": "Forgot Password",
+        },
+    )
+
+
+def change_password(request):
+    return render(
+        request=request,
+        template_name="accounts/change-password.html",
+        context={
+            "title": "Change Password",
+        },
+    )

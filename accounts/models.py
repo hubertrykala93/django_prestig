@@ -107,3 +107,12 @@ class Profile(models.Model):
 def create_profile(sender, instance=None, created=None, **kwargs):
     if created:
         Profile.objects.create(user=instance)
+
+
+class OneTimePassword(models.Model):
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
+    uuid = models.UUIDField(default=uuid4)
+
+    class Meta:
+        verbose_name = "One Time Password"
+        verbose_name_plural = "One Time Passwords"

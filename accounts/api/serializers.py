@@ -451,3 +451,63 @@ class UserLoginSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(detail=new_errors)
 
         return validated_data
+
+
+class PasswordResetSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(allow_blank=True)
+    password = serializers.CharField(write_only=True, style={
+        "input_type": "password",
+    })
+    repassword = serializers.CharField(write_only=True, style={
+        "input_type": "password",
+    })
+
+    class Meta:
+        model = User
+        fields = [
+            "email",
+            "password",
+            "repassword",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(PasswordResetSerializer, self).__init__(*args, **kwargs)
+
+        if self.context["request"].parser_context.get("view").__class__.__name__ == "ForgotPasswordAPIView":
+            self.fields.pop("password")
+            self.fields.pop("repassword")
+
+    def validate_email(self, email):
+        print("Validate Email")
+        if email == "":
+            raise serializers.ValidationError(
+                detail="E-mail address is required.",
+            )
+
+        if len(email) > 255:
+            raise serializers.ValidationError(
+                detail="The e-mail address cannot be longer than 255 characters.",
+            )
+
+        if not re.match(pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", string=email):
+            raise serializers.ValidationError(
+                detail="The e-mail address format is invalid.",
+            )
+
+        if not User.objects.filter(email=email).exists():
+            raise serializers.ValidationError(
+                detail=f"The user with the provided email address '{email}' does not exist.",
+            )
+
+        return email
+
+    def run_validation(self, data):
+        try:
+            validated_data = super().run_validation(data=data)
+
+        except serializers.ValidationError as exc:
+            new_errors = {field: value[0] if isinstance(value, list) else value for field, value in exc.detail.items()}
+
+            raise serializers.ValidationError(detail=new_errors)
+
+        return validated_data

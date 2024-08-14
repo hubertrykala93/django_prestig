@@ -773,7 +773,7 @@ const $forgotPasswordForm = document.querySelector('.js-forgot-password-form')
  * @param {Object} formData - Forgot password formdata object.
  */
 const sendForgotPasswordRequest = (formData) => {
-    const url = 'forgot-password'
+    const url = '/api/v1/accounts/forgot-password'
 
     fetch(url, {
         method:'POST',
@@ -787,7 +787,7 @@ const sendForgotPasswordRequest = (formData) => {
         clearFormErrors($forgotPasswordForm)
 
         if (response.hasOwnProperty('success')) {
-            showAlert(response.error, 'success')
+            showAlert(response.success, 'success')
             $forgotPasswordForm.reset()
         }
         else if (response.hasOwnProperty('error')) {

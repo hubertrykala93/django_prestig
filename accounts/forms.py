@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Profile
+from .models import User, Profile, OneTimePassword
 
 
 class UserForm(forms.ModelForm):
@@ -48,3 +48,17 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = "__all__"
+
+
+class OneTimePasswordForm(forms.ModelForm):
+    uuid = forms.UUIDField(required=False)
+
+    class Meta:
+        model = OneTimePassword
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(OneTimePasswordForm, self).__init__(*args, **kwargs)
+
+        self.fields["user"].help_text = "Select the user for whom a one-time code should be generated."
+        self.fields["user"].label = "User"

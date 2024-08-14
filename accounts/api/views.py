@@ -1,9 +1,9 @@
 from rest_framework.response import Response
-from accounts.models import User
+from accounts.models import User, OneTimePassword
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, UpdateAPIView, DestroyAPIView
 from .serializers import UserRegisterSerializer, UserLoginSerializer, ProfileUpdateSerializer, \
-    ProfilePictureDeleteSerializer
+    ProfilePictureDeleteSerializer, PasswordResetSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.utils.html import strip_tags
@@ -18,6 +18,7 @@ from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout, login
 from rest_framework.exceptions import ValidationError
+import random as rnd
 
 
 class UserRegisterAPIView(CreateAPIView):
@@ -46,7 +47,8 @@ class UserRegisterAPIView(CreateAPIView):
                         "domain": get_current_site(request=request),
                         "uid": urlsafe_base64_encode(s=force_bytes(s=user.pk)),
                         "token": token_generator.make_token(user=user)
-                    }
+                    },
+                    request=request,
                 )
 
                 plain_message = strip_tags(html_message)
@@ -287,3 +289,91 @@ class ProfileDeleteAPIView(DestroyAPIView):
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+
+class ForgotPasswordAPIView(APIView):
+    def get_serializer_class(self):
+        return PasswordResetSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = PasswordResetSerializer(data=request.data, context={
+            "request": request,
+        })
+
+        if serializer.is_valid():
+            user = User.objects.get(email=serializer.validated_data.get("email"))
+
+            if not user.is_verified:
+                return Response(
+                    data={
+                        "error": "To be able to change your password, you must be a verified user.",
+                    }
+                )
+
+            else:
+                try:
+                    if not OneTimePassword.objects.filter(user=user).exists():
+                        one_time_password = OneTimePassword(user=user)
+                        one_time_password.save()
+
+                    html_message = render_to_string(
+                        template_name="accounts/forgot-password-email.html",
+                        context={
+                            "user": user,
+                            "domain": get_current_site(request=request),
+                            "uuid": OneTimePassword.objects.get(user=user).uuid,
+                        },
+                        request=request
+                    )
+
+                    plain_message = strip_tags(html_message)
+
+                    message = EmailMultiAlternatives(
+                        subject="Account activation request.",
+                        body=plain_message,
+                        from_email=os.environ.get("EMAIL_HOST_USER"),
+                        to=[user.email],
+                    )
+
+                    message.attach_alternative(content=html_message, mimetype="text/html")
+                    message.send()
+
+                    return Response(
+                        data={
+                            "success": "Check your email inbox; we've sent you information about changing your password.",
+                        },
+                        status=status.HTTP_200_OK,
+                    )
+
+                except Exception as e:
+                    return Response(
+                        data={
+                            "error": "The message could not be sent.",
+                        },
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    )
+
+        else:
+            return Response(
+                data=serializer.errors,
+            )
+
+
+def reset_password(request, uuid):
+    try:
+        user = OneTimePassword.objects.get(uuid=uuid).user
+
+    except:
+        messages.info(
+            request=request,
+            message="Your account does not exist. Please create a new account to use our platform."
+        )
+        return redirect(to="register")
+
+    if user:
+        messages.success(
+            request=request,
+            message=f"Great, {user.profile.firstname if user.profile.firstname else user.username}! Now you can change your password."
+        )
+
+        return redirect(to="change-password")
