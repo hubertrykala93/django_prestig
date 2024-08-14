@@ -118,6 +118,7 @@ def product_reviews(request):
     )
 
 
+@user_passes_test(test_func=lambda u: not u.is_authenticated, login_url="index")
 def forgot_password(request):
     return render(
         request=request,
@@ -128,11 +129,13 @@ def forgot_password(request):
     )
 
 
-def change_password(request):
+@user_passes_test(test_func=lambda u: not u.is_authenticated, login_url="index")
+def change_password(request, uuid):
     return render(
         request=request,
         template_name="accounts/change-password.html",
         context={
             "title": "Change Password",
+            "uuid": uuid,
         },
     )

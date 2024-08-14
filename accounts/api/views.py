@@ -329,7 +329,7 @@ class ForgotPasswordAPIView(APIView):
                     plain_message = strip_tags(html_message)
 
                     message = EmailMultiAlternatives(
-                        subject="Account activation request.",
+                        subject="Password reset request.",
                         body=plain_message,
                         from_email=os.environ.get("EMAIL_HOST_USER"),
                         to=[user.email],
@@ -357,23 +357,3 @@ class ForgotPasswordAPIView(APIView):
             return Response(
                 data=serializer.errors,
             )
-
-
-def reset_password(request, uuid):
-    try:
-        user = OneTimePassword.objects.get(uuid=uuid).user
-
-    except:
-        messages.info(
-            request=request,
-            message="Your account does not exist. Please create a new account to use our platform."
-        )
-        return redirect(to="register")
-
-    if user:
-        messages.success(
-            request=request,
-            message=f"Great, {user.profile.firstname if user.profile.firstname else user.username}! Now you can change your password."
-        )
-
-        return redirect(to="change-password")

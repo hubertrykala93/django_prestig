@@ -28,11 +28,6 @@ urlpatterns = [
         name="api-v1-accounts-forgot-password",
     ),
     path(
-        route="reset-password/<uuid:uuid>",
-        view=views.reset_password,
-        name="reset-password",
-    ),
-    path(
         route="api/v1/accounts/update-account",
         view=views.UserUpdateAPIView.as_view(),
         name="api-v1-accounts-update-account",
