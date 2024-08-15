@@ -490,7 +490,8 @@ const validateProfileSettingsForm = (formData) => {
     const facebook = formData.get('facebook').trim()
     const instagram = formData.get('instagram').trim()
 
-    const onlyLettersRegex = /^[a-z]+$/i
+    // const onlyLettersRegex = /^[a-z]+$/i
+    const onlyLettersRegex = /^[a-zżźćńółęąś]+$/i
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/
     const usernameRegex = /^[\w.-]+$/
 
@@ -652,7 +653,7 @@ const validateDeliveryDetailsForm = (formData) => {
     const apartmentnumber = formData.get('apartmentnumber').trim()
     const postalcode = formData.get('postalcode').trim()
     const onlyDigitsRegex = /^[\d]+$/
-    const onlyLettersAndDigitsRegex = /^[a-z0-9]+$/i
+    const onlyLettersAndDigitsRegex = /^[a-zżźćńółęąś0-9]+$/i
 
     const result = {}
 
@@ -832,7 +833,7 @@ const handleForgotPasswordForm = (e) => {
     const errors = validateForgotPasswordForm(formData)
     clearFormErrors($form)
 
-    if (Object.keys(errors).length === 0) { //Object.keys(errors).length === 0
+    if (Object.keys(errors).length === 0) {
         sendForgotPasswordRequest(formData)
     }
     else {
@@ -919,7 +920,7 @@ const handleChangePasswordForm = (e) => {
     const errors = validateChangePasswordForm(formData)
     clearFormErrors($form)
 
-    if (true) { //Object.keys(errors).length === 0 
+    if (Object.keys(errors).length === 0 ) {
         sendChangePasswordRequest(formData)
     }
     else {
