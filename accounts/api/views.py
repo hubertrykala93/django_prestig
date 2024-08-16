@@ -337,16 +337,12 @@ class ForgotPasswordAPIView(APIView):
                     message.attach_alternative(content=html_message, mimetype="text/html")
                     message.send()
 
-                    response = Response(
+                    return Response(
                         data={
                             "success": "Check your email inbox; we've sent you information about changing your password.",
                         },
                         status=status.HTTP_200_OK,
                     )
-
-                    response.set_cookie(key="email", value=user.email)
-
-                    return response
 
                 except Exception as e:
                     return Response(
@@ -388,30 +384,61 @@ def reset_password(request, uidb64, uuid, email):
     return redirect(to=f"{reverse(viewname='change-password')}?email={email}&token={uuid}")
 
 
+# class ChangePasswordAPIView(RetrieveUpdateAPIView):
+#     def patch(self, request, *args, **kwargs):
+#         serializer = ChangePasswordSerializer(data=request.data, context={
+#             "password": request.data.get("password"),
+#         })
+#         print(f"request data -> {request.data}")
+#
+#         # user = OneTimePassword.objects.get(uuid=request.data.get("token"))
+#
+#         if serializer.is_valid():
+#             if User.objects.filter(email=request.COOKIES.get("email")).exists():
+#                 user = User.objects.get(email=request.COOKIES.get("email"))
+#
+#                 user.set_password(raw_password=serializer.validated_data.get("password"))
+#                 user.save()
+#
+#                 if OneTimePassword.objects.filter(user_id=user.id).exists():
+#                     one_time_password = OneTimePassword.objects.get(user_id=user.id)
+#                     one_time_password.delete()
+#
+#                 return Response(
+#                     data={
+#                         "success": f"Your password has been successfully changed. You can continue using our platform.",
+#                     },
+#                     status=status.HTTP_200_OK,
+#                 )
+#
+#         else:
+#             return Response(
+#                 data=serializer.errors,
+#             )
+
+
 class ChangePasswordAPIView(RetrieveUpdateAPIView):
     def patch(self, request, *args, **kwargs):
         serializer = ChangePasswordSerializer(data=request.data, context={
             "password": request.data.get("password"),
         })
-        print(f"request data -> {request.data}")
 
         if serializer.is_valid():
-            if User.objects.filter(email=request.COOKIES.get("email")).exists():
-                user = User.objects.get(email=request.COOKIES.get("email"))
+            user = User.objects.get(id=OneTimePassword.objects.get(uuid=request.data.get("token")).user_id)
 
-                user.set_password(raw_password=serializer.validated_data.get("password"))
-                user.save()
+            user.set_password(raw_password=serializer.validated_data.get("password"))
+            user.save()
 
-                if OneTimePassword.objects.filter(user_id=user.id).exists():
-                    one_time_password = OneTimePassword.objects.get(user_id=user.id)
-                    one_time_password.delete()
+            one_time_password = OneTimePassword.objects.get(user_id=user.id)
+            one_time_password.delete()
 
-                return Response(
-                    data={
-                        "success": f"Your password has been successfully changed. You can continue using our platform.",
-                    },
-                    status=status.HTTP_200_OK,
-                )
+            return Response(
+                data={
+                    "success": f"The password for the account '{user.email}' has been successfully changed. "
+                               f"You can continue using our platform.",
+                },
+                status=status.HTTP_200_OK,
+            )
 
         else:
             return Response(
