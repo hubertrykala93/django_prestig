@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import user_passes_test, login_required
-from accounts.models import Profile
+from accounts.models import Profile, OneTimePassword
 from accounts.api.serializers import DeliveryDetailsSerializer
 from .api.serializers import UserSerializer, ProfileSerializer
 from datetime import date
+from django.contrib import messages
 
 
 @user_passes_test(test_func=lambda u: not u.is_authenticated, login_url="index")
@@ -131,10 +132,23 @@ def forgot_password(request):
 
 @user_passes_test(test_func=lambda u: not u.is_authenticated, login_url="index")
 def change_password(request):
+    token = request.GET.get("token")
+
+    if not OneTimePassword.objects.filter(uuid=token).exists():
+        messages.info(
+            request=request,
+            message="Your password has already been changed, and you can log in. "
+                    "If you want to change your password again, "
+                    "go to 'Forgot your Password' to enter the email address where we should send the instructions.",
+        )
+
+        return redirect(to="login")
+
     return render(
         request=request,
         template_name="accounts/change-password.html",
         context={
             "title": "Change Password",
+            "token": token,
         },
     )

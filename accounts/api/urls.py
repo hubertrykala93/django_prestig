@@ -28,7 +28,7 @@ urlpatterns = [
         name="api-v1-accounts-forgot-password",
     ),
     path(
-        route="reset-password/<uidb64>/<uuid>",
+        route="reset-password/<uidb64>/<str:email>/<uuid>",
         view=views.reset_password,
         name="reset-password",
     ),

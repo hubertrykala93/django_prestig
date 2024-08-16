@@ -1,7 +1,8 @@
 from rest_framework.response import Response
+from django.http import HttpResponseRedirect
 from accounts.models import User, OneTimePassword, DeliveryDetails
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView, DestroyAPIView, RetrieveUpdateAPIView
 from .serializers import UserRegisterSerializer, UserLoginSerializer, ProfileUpdateSerializer, \
     ProfilePictureDeleteSerializer, PasswordResetSerializer, ChangePasswordSerializer, DeliveryDetailsSerializer
 from django.contrib.sites.shortcuts import get_current_site
@@ -318,6 +319,7 @@ class ForgotPasswordAPIView(APIView):
                             "user": user,
                             "domain": get_current_site(request=request),
                             "uid": urlsafe_base64_encode(s=force_bytes(s=user.pk)),
+                            "email": user.email,
                             "uuid": OneTimePassword.objects.get(user=user).uuid,
                         },
                         request=request
@@ -341,7 +343,8 @@ class ForgotPasswordAPIView(APIView):
                         },
                         status=status.HTTP_200_OK,
                     )
-                    response.set_cookie(key="email", value=serializer.validated_data.get("email"))
+
+                    response.set_cookie(key="email", value=user.email)
 
                     return response
 
@@ -359,7 +362,7 @@ class ForgotPasswordAPIView(APIView):
             )
 
 
-def reset_password(request, uidb64, uuid):
+def reset_password(request, uidb64, uuid, email):
     try:
         uid = force_str(s=urlsafe_base64_decode(s=uidb64))
         user = User.objects.get(id=uid)
@@ -382,14 +385,15 @@ def reset_password(request, uidb64, uuid):
 
         return redirect(to="forgot-password")
 
-    return redirect(to=f"{reverse(viewname='change-password')}?token={uuid}")
+    return redirect(to=f"{reverse(viewname='change-password')}?email={email}&token={uuid}")
 
 
-class ChangePasswordAPIView(UpdateAPIView):
+class ChangePasswordAPIView(RetrieveUpdateAPIView):
     def patch(self, request, *args, **kwargs):
         serializer = ChangePasswordSerializer(data=request.data, context={
             "password": request.data.get("password"),
         })
+        print(f"request data -> {request.data}")
 
         if serializer.is_valid():
             if User.objects.filter(email=request.COOKIES.get("email")).exists():
@@ -398,21 +402,16 @@ class ChangePasswordAPIView(UpdateAPIView):
                 user.set_password(raw_password=serializer.validated_data.get("password"))
                 user.save()
 
-                response = Response(
-                    data={
-                        "success": f"The password for the account '{request.COOKIES.get('email')}' has been successfully changed. "
-                                   "You can continue using our platform.",
-                    },
-                    status=status.HTTP_200_OK,
-                )
-
                 if OneTimePassword.objects.filter(user_id=user.id).exists():
                     one_time_password = OneTimePassword.objects.get(user_id=user.id)
                     one_time_password.delete()
 
-                response.delete_cookie(key="email")
-
-                return response
+                return Response(
+                    data={
+                        "success": f"Your password has been successfully changed. You can continue using our platform.",
+                    },
+                    status=status.HTTP_200_OK,
+                )
 
         else:
             return Response(
