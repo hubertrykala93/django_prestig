@@ -2212,6 +2212,30 @@ textarea::placeholder{
   color: var(--clr-accent-400);
 }
 
+/**
+* ERROR PAGE NOT FOUND
+*/
+
+.error-page {
+  padding: var(--block-space-800) 0;
+}
+
+.error-page .row {
+  display: grid;
+  justify-items: center;
+  gap: var(--column-gap);
+  text-align: center;
+}
+
+.error-page__heading {
+  margin-bottom: 1em;
+}
+
+.error-page__image {
+  width: 100%;
+  max-width: 25rem;
+}
+
 
 /**
 * BREAKPOINTS
@@ -2697,6 +2721,7 @@ textarea::placeholder{
   /**
   * FOOTER
   */
+
   .footer__bottom-row {
     display: flex;
     justify-content: space-between;
@@ -2710,6 +2735,22 @@ textarea::placeholder{
 
   .footer__bottom-row .footer__links li {
     margin: 0;
+  }
+
+  /**
+  * ERROR PAGE NOT FOUND
+  */
+
+  .error-page__image {
+    order: -1;
+  }
+
+  .error-page .row {
+    margin: 0 auto;
+    max-width: 60rem;
+    grid-template-columns: 50% auto;
+    align-items: center;
+    text-align: left;
   }
 }
 

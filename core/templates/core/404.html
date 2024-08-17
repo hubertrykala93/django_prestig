@@ -1,0 +1,20 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<section class="error-page">
+  <div class="container">
+    <div class="row">
+      <div class="error-page__content">
+        <h3 class="error-page__heading heading heading--h3">
+          Sorry, the page you were looking for was not found.
+        </h3>
+        <a class="btn btn--primary" href="/">Go to home page</a>
+      </div>
+      <img src="/media/404.jpg" alt="not found image" class="error-page__image">
+    </div>
+  </div>
+</section>
+{% endblock %}
