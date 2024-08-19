@@ -33,3 +33,5 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(prefix=settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(prefix=development_settings.MEDIA_URL, document_root=development_settings.MEDIA_ROOT)
+
+handler404 = "core.views.error404"
