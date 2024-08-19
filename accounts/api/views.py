@@ -1,5 +1,4 @@
 from rest_framework.response import Response
-from django.http import HttpResponseRedirect
 from accounts.models import User, OneTimePassword, DeliveryDetails
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, UpdateAPIView, DestroyAPIView, RetrieveUpdateAPIView
@@ -382,39 +381,6 @@ def reset_password(request, uidb64, uuid, email):
         return redirect(to="forgot-password")
 
     return redirect(to=f"{reverse(viewname='change-password')}?email={email}&token={uuid}")
-
-
-# class ChangePasswordAPIView(RetrieveUpdateAPIView):
-#     def patch(self, request, *args, **kwargs):
-#         serializer = ChangePasswordSerializer(data=request.data, context={
-#             "password": request.data.get("password"),
-#         })
-#         print(f"request data -> {request.data}")
-#
-#         # user = OneTimePassword.objects.get(uuid=request.data.get("token"))
-#
-#         if serializer.is_valid():
-#             if User.objects.filter(email=request.COOKIES.get("email")).exists():
-#                 user = User.objects.get(email=request.COOKIES.get("email"))
-#
-#                 user.set_password(raw_password=serializer.validated_data.get("password"))
-#                 user.save()
-#
-#                 if OneTimePassword.objects.filter(user_id=user.id).exists():
-#                     one_time_password = OneTimePassword.objects.get(user_id=user.id)
-#                     one_time_password.delete()
-#
-#                 return Response(
-#                     data={
-#                         "success": f"Your password has been successfully changed. You can continue using our platform.",
-#                     },
-#                     status=status.HTTP_200_OK,
-#                 )
-#
-#         else:
-#             return Response(
-#                 data=serializer.errors,
-#             )
 
 
 class ChangePasswordAPIView(RetrieveUpdateAPIView):

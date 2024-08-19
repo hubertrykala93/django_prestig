@@ -5,6 +5,7 @@ from accounts.api.serializers import DeliveryDetailsSerializer
 from .api.serializers import UserSerializer, ProfileSerializer
 from datetime import date
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 
 
 @user_passes_test(test_func=lambda u: not u.is_authenticated, login_url="index")
@@ -134,15 +135,11 @@ def forgot_password(request):
 def change_password(request):
     token = request.GET.get("token")
 
-    if not OneTimePassword.objects.filter(uuid=token).exists():
-        messages.info(
-            request=request,
-            message="Your password has already been changed, and you can log in. "
-                    "If you want to change your password again, "
-                    "go to 'Forgot your Password' to enter the email address where we should send the instructions.",
-        )
+    try:
+        one_time_password = OneTimePassword.objects.get(uuid=token)
 
-        return redirect(to="login")
+    except ValidationError:
+        return redirect(to="error-404")
 
     return render(
         request=request,

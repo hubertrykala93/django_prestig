@@ -50,3 +50,13 @@ def privacy_policy(request):
             "title": "Privacy Policy",
         }
     )
+
+
+def error404(request):
+    return render(
+        request=request,
+        template_name="core/404.html",
+        context={
+            "title": "Error 404",
+        }
+    )
