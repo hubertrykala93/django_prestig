@@ -46,10 +46,11 @@ class AdminArticle(admin.ModelAdmin):
         "formatted_created_at",
         "user",
         "title",
+        "get_image_name",
         "slug",
         "description",
         "get_category",
-        "article_tags"
+        "get_tags",
     ]
     prepopulated_fields = {
         "slug": ["title"],
@@ -60,6 +61,13 @@ class AdminArticle(admin.ModelAdmin):
             "Article Author", {
                 "fields": [
                     "user",
+                ],
+            },
+        ),
+        (
+            "Uploading", {
+                "fields": [
+                    "image",
                 ],
             },
         ),
@@ -75,21 +83,27 @@ class AdminArticle(admin.ModelAdmin):
             "Article Relations", {
                 "fields": [
                     "article_category",
-                    "article_tag",
+                    "article_tags",
                 ],
             },
         ),
     )
+
+    def get_image_name(self, obj):
+        if obj.image:
+            return obj.image.name.split("/")[-1]
+
+    get_image_name.short_description = "Image"
 
     def get_category(self, obj):
         return obj.article_category.name
 
     get_category.short_description = "Category"
 
-    def article_tags(self, obj):
-        return "\n".join([t.name for t in obj.article_tag.all()])
+    def get_tags(self, obj):
+        return "\n".join([t.name for t in obj.article_tags.all()])
 
-    article_tags.short_description = "Tags"
+    get_tags.short_description = "Tags"
 
     def formatted_created_at(self, obj):
         return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")

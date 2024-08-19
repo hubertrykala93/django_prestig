@@ -8,8 +8,8 @@ class UserForm(forms.ModelForm):
     password = forms.CharField(help_text="Provide the password", label="User Password", widget=forms.PasswordInput())
     is_verified = forms.BooleanField(help_text="Indicate whether the user is verified.")
     is_active = forms.BooleanField(help_text="Indicate whether the user is active.")
-    is_staff = forms.BooleanField(help_text="Indicate whether the user is staff.")
-    is_superuser = forms.BooleanField(help_text="Indicate whether the user is superuser.")
+    is_staff = forms.BooleanField(help_text="Indicate whether the user is staff.", required=False)
+    is_superuser = forms.BooleanField(help_text="Indicate whether the user is superuser.", required=False)
 
     class Meta:
         model = User

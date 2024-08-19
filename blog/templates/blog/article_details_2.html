@@ -10,28 +10,46 @@
       <div class="blog__content">
         <article class="article">
           <div class="article__top-info">
-            <span class="article__top-info__date">{{ article.created_at|date:"Y-m-d H:i" }}</span>
+            <span class="article__top-info__date">JANUARY 13, 2023</span>
             <span class="article__top-info__author">
-              By <a href="#">{% if article.user.profile.firstname and article.user.profile.lastname %}{{ article.user.profile.firstname }} {{ article.user.profile.lastname }}{% else %}{{ article.user.username }}{% endif %}</a>
+              By <a href="#">Jhon Bentham</a>
             </span>
           </div>
 
-          <h2 class="article__heading heading heading--h2">{{ article.title }}</h2>
+          <h2 class="article__heading heading heading--h2">Mastering the art of wardrobe manage essentials</h2>
 
-          <img src="{{ article.image.url }}" alt="Article main image" class="article__image">
+          <img src="https://industrym.com/wp-content/uploads/2019/10/shutterstock_270601706.jpg" alt="Article main image" class="article__image">
 
           <div class="article__content">
-            {{ article.description }}
+            <!-- ========== TEMPORARY ========== -->
+             <h4>Introduction</h4>
+             <p>In a world where our closets can overflow with clothes, finding a sense of style and simplicity can be a daunting task. That's where the concept of a capsule wardrobe comes to the rescue. This blog will guide you through the art of curating your own capsule wardrobe and mastering the essentials for a more effortless and sustainable approach to fashion.</p>
+             <h4>Chapter 1: What Is a Capsule Wardrobe?</h4>
+             <ul>
+              <li>Define the concept of a capsule wardrobe.</li>
+              <li>Understand the benefits of having a capsule wardrobe, including saving time and money.</li>
+              <li>Explore the history and origin of the term.</li>
+             </ul>
+             <h4>Chapter 2: Building Your Capsule Wardrobe</h4>
+             <ul>
+              <li>Define the concept of a capsule wardrobe.</li>
+              <li>Understand the benefits of having a capsule wardrobe, including saving time and money.</li>
+              <li>Explore the history and origin of the term.</li>
+             </ul>
+             <h4>Conclusion:</h4>
+             <p>Mastering the art of wardrobe essentials through a capsule wardrobe is not only a game-changer for your style but also a mindful approach to fashion. It's about curating a collection that truly reflects your personality and values while simplifying your daily decisions.</p>
+             <p>Join us on this journey of style and simplicity as we explore the world of capsule wardrobes. Your wardrobe will thank you, and you'll discover that less truly can be more when it comes to fashion.</p>
+             <!-- ========== TEMPORARY ========== -->
           </div>
 
           <div class="article__footer">
             <div class="article__footer__tags">
               <span>Tags:</span>
               <ul class="article__footer__tags__list">
-                {% for tag in article.article_tags.all %}
+                {% for i in '1234'|make_list %}
                   <li>
-                    <a href="{{ tag.get_absolute_url }}">
-                      {{ tag.name }}{% if not forloop.last %},{% endif %}
+                    <a href="#">
+                      Tag {{i}},
                     </a>
                   </li>
                 {% endfor %}
@@ -67,12 +85,12 @@
 
           <div class="article__bio">
             <div class="article__bio__image">
-              <img src="{{ article.user.profile.profilepicture.url }}" alt="Article author image">
+              <img src="https://facemusic.live/img/FACE-1300-3.jpg" alt="Article author image">
             </div>
 
             <div class="article__bio__content">
-              <h5 class="heading heading--h5">{% if article.user.profile.firstname and article.user.profile.lastname %}{{ article.user.profile.firstname }}  {{article.user.profile.lastname}}{% else %}{{ article.user.username }}{% endif %}</h5>
-              <p class="article__bio__content__text">{{ article.user.profile.bio }}</p>
+              <h5 class="heading heading--h5">Jhon Bentham</h5>
+              <p class="article__bio__content__text">Hi, my name is Anthony kuber. I am artist and fashion designer. I love to travel and writing blogging.</p>
 
               <ul class="article__bio__content__social-list">
                 <li>
@@ -143,30 +161,30 @@
 
           <div class="article__comments js-article-comments">
             <div class="article__comments__counter heading heading--h5">
-              <span>{{ total_comments }}</span>
-              {% if total_comments == 0 %}comments{% elif total_comments == 1 %}comment{% else %}comments{% endif %} on this article
+              <span>4</span>
+              comments on this article
             </div>
 
             <div class="article__comments__wrapper">
-              {% for comment in comments %}
-                <div class="article__comment js-article-comment" data-id="{{ comment.article.id }}">
+              {% for i in '1234'|make_list %}
+                <div class="article__comment js-article-comment" data-id="3">
                   <div class="article__comment__info">
                     <div class="article__comment__info__avatar">
-                      <img src="{{ comment.user.profile.profilepicture.url }}" alt="Comment's author avatar">
+                      <img src="https://img.grouponcdn.com/deal/3v1gUUNnostJNgxagsiDPqEk1Jnb/3v-960x576/v1/t440x300.jpg" alt="Comment's author avatar">
                     </div>
 
                     <div class="article__comment__info__content">
-                      <h6 class="heading heading--h6">{% if comment.user.profile.firstname and comment.user.profile.lastname %}{{ comment.user.profile.firstname }} {{ comment.user.profile.lastname }}{% else %}{{ comment.user.username }}{% endif %}</h6>
-                      <p class="article__comment__info__content__date">{{ comment.created_at|date:"Y-m-d H:i" }}</p>
+                      <h6 class="heading heading--h6">Name and Surname</h6>
+                      <p class="article__comment__info__content__date">18 2024 November</p>
                     </div>
                   </div>
 
                   <div class="article__comment__content">
-                      {{ comment.message }}
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
                   </div>
 
                   <form class="article__comment__delete-form js-delete-article-comment-form">
-                    <input type="hidden" name="commentid" value="{{ comment.id }}">
+                    <input type="hidden" name="commentid" value="3">
 
                     <button type="submit" class="article__comment__delete-form__button">
                       <span class="visually-hidden">Delete comment</span>

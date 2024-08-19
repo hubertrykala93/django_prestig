@@ -101,6 +101,7 @@ class AdminProfile(admin.ModelAdmin):
                     "firstname",
                     "lastname",
                     "bio",
+                    "gender",
                     "dateofbirth",
                 ],
             },

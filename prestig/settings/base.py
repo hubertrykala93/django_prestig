@@ -60,6 +60,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "core.context_processors.generate_token",
+                "blog.context_processors.blog_sidebar",
             ],
         },
     },

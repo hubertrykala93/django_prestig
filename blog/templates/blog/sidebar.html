@@ -1,0 +1,61 @@
+<aside class="blog__aside">
+    <h5 class="blog__aside__heading heading heading--h5">Blog Search</h5>
+
+    <form class="form blog__aside__search">
+        <input type="text" name="keyword" class="blog__aside__search__input" placeholder="Search...">
+        <button class="blog__aside__search__button">
+            <span class="visually-hidden">Search articles</span>
+            <i class="ri-search-line" aria-hidden="true"></i>
+        </button>
+    </form>
+
+    <h5 class="blog__aside__heading heading heading--h5">Categories</h5>
+
+    <ul class="blog__aside__categories">
+        {% for category in categories_with_counts %}
+        <li>
+            <a href="{{ category.get_absolute_url }}">
+                {{ category.name }} <span>({{ category.num_articles }})</span>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="blog__aside__divider"></div>
+
+    <h5 class="blog__aside__heading heading heading--h5">Latest articles</h5>
+
+    <ul class="blog__aside__latest">
+        {% for article in latest_articles %}
+        <li class="blog__aside__latest__item">
+            <a href="{{ article.get_absolute_url }}" class="blog__aside__latest__item__image">
+                <img src="{{ article.image.url }}" alt="Article thumnbail">
+            </a>
+
+            <div class="blog__aside__latest__item__content">
+                <h5 class="blog__aside__latest__item__content__heading heading heading--h5">
+                    <a href="{{ article.get_absolute_url }}">
+                        {{ article.title }}
+                    </a>
+                </h5>
+
+                <p>{{ article.created_at|date:"Y-m-d H:i" }}</p>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="blog__aside__divider"></div>
+
+    <h5 class="blog__aside__heading heading heading--h5">Tags</h5>
+
+    <ul class="blog__aside__tags">
+        {% for tag in article_tags %}
+        <li>
+            <a href="{{ tag.get_absolute_url }}">
+                {{ tag }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</aside>

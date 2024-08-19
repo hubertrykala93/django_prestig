@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Article, ArticleComment, ArticleTag, ArticleCategory
+from .models import Article, ArticleTag, ArticleCategory, ArticleComment
 
 
 def blog(request):
@@ -8,10 +8,7 @@ def blog(request):
         template_name="blog/blog.html",
         context={
             "title": "Blog",
-            "articles": Article.objects.all(),
-            "article_categories": ArticleCategory.objects.all(),
-            "article_tags": ArticleTag.objects.all(),
-            "comments": ArticleComment.objects.all(),
+            "articles": Article.objects.all().order_by("-created_at"),
         }
     )
 
@@ -39,7 +36,7 @@ def articles_by_tag(request, tag_slug):
         context={
             "title": tag.name,
             "tag": tag,
-            "articles": Article.objects.filter(article_tag=tag),
+            "articles": Article.objects.filter(article_tags=tag),
         }
     )
 
@@ -47,6 +44,7 @@ def articles_by_tag(request, tag_slug):
 def article_details(request, category_slug, article_slug):
     category = ArticleCategory.objects.get(slug=category_slug)
     article = Article.objects.get(slug=article_slug, article_category=category)
+    comments = ArticleComment.objects.filter(article=article, is_active=True).order_by("-created_at")
 
     return render(
         request=request,
@@ -54,6 +52,7 @@ def article_details(request, category_slug, article_slug):
         context={
             "title": article.title,
             "article": article,
-            "category": category,
+            "comments": comments,
+            "total_comments": len(comments),
         }
     )

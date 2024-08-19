@@ -22,8 +22,9 @@ class ArticleTagForm(forms.ModelForm):
 
 class ArticleForm(forms.ModelForm):
     title = forms.CharField(max_length=200, help_text="Provide the article title.", label="Title")
+    image = forms.ImageField(help_text="Upload an image of the article.", label="Image", required=True)
     description = forms.CharField(max_length=100000, help_text="Provide the article description.",
-                                  label="Article Description")
+                                  label="Description")
     slug = forms.SlugField(required=False)
 
     class Meta:
@@ -39,9 +40,9 @@ class ArticleForm(forms.ModelForm):
         self.fields["article_category"].help_text = "Provide the category of the article."
         self.fields["article_category"].help_text = "Category"
 
-        self.fields["article_tag"].help_text = "Provide the tag of the article."
-        self.fields["article_tag"].label = "Tag"
-        self.fields["article_tag"].required = False
+        self.fields["article_tags"].help_text = "Provide the tag of the article."
+        self.fields["article_tags"].label = "Tag"
+        self.fields["article_tags"].required = False
 
 
 class ArticleCommentForm(forms.ModelForm):
