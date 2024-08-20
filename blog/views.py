@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from .models import Article, ArticleTag, ArticleCategory, ArticleComment
 
 
@@ -14,7 +15,16 @@ def blog(request):
 
 
 def articles_by_category(request, category_slug):
-    category = ArticleCategory.objects.get(slug=category_slug)
+    try:
+        category = ArticleCategory.objects.get(slug=category_slug)
+
+    except ArticleCategory.DoesNotExist:
+        messages.info(
+            request=request,
+            message=f"The category named '{category_slug}' does not exist."
+        )
+        
+        return redirect(to="blog")
 
     return render(
         request=request,
@@ -28,7 +38,15 @@ def articles_by_category(request, category_slug):
 
 
 def articles_by_tag(request, tag_slug):
-    tag = ArticleTag.objects.get(slug=tag_slug)
+    try:
+        tag = ArticleTag.objects.get(slug=tag_slug)
+
+    except ArticleTag.DoesNotExist:
+        messages.info(
+            request=request,
+            message=f"The tag named '{tag_slug}' does not exist."
+        )
+        return redirect(to="blog")
 
     return render(
         request=request,

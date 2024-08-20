@@ -1,5 +1,6 @@
 from django import forms
 from .models import User, Profile, OneTimePassword, DeliveryDetails
+from django.contrib.auth.hashers import make_password
 
 
 class UserForm(forms.ModelForm):
@@ -14,6 +15,17 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = "__all__"
+
+    def save(self, commit=True):
+        user = super(UserForm, self).save(commit=False)
+
+        if self.cleaned_data["password"]:
+            user.password = make_password(password=self.cleaned_data["password"])
+
+        if commit:
+            user.save()
+
+        return user
 
 
 class OneTimePasswordForm(forms.ModelForm):

@@ -164,26 +164,6 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         return instagram
 
     def update(self, instance, validated_data):
-        profilepicture = validated_data.pop("profilepicture", None)
-
-        if profilepicture:
-            profilepicture.name = str(uuid4()) + "." + profilepicture.name.split(sep=".")[-1]
-
-            image = Image.open(fp=profilepicture)
-
-            if image.mode == "RGBA":
-                image.convert(mode="RGB")
-
-            image = image.resize(size=(300, 300))
-
-            image_io = BytesIO()
-            image.save(fp=image_io, format="png")
-
-            if self.instance.profilepicture.name.split(sep="/")[-1] != "default_profile_image.png":
-                instance.profilepicture.delete()
-
-            instance.profilepicture.save(profilepicture.name, ContentFile(image_io.getvalue()), save=False)
-
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 

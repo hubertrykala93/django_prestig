@@ -14,7 +14,7 @@
     <ul class="blog__aside__categories">
         {% for category in categories_with_counts %}
         <li>
-            <a href="{{ category.get_absolute_url }}">
+            <a {% if request.resolver_match.kwargs.category_slug == category.slug %}class="active"{% endif %} href="{{ category.get_absolute_url }}">
                 {{ category.name }} <span>({{ category.num_articles }})</span>
             </a>
         </li>
@@ -39,7 +39,7 @@
                     </a>
                 </h5>
 
-                <p>{{ article.created_at|date:"Y-m-d H:i" }}</p>
+                <p>{{ article.created_at|date:"F d, Y H:i"|lower|capfirst }}</p>
             </div>
         </li>
         {% endfor %}
@@ -52,7 +52,7 @@
     <ul class="blog__aside__tags">
         {% for tag in article_tags %}
         <li>
-            <a href="{{ tag.get_absolute_url }}">
+            <a {% if request.resolver_match.kwargs.tag_slug == tag.slug %}class="active"{% endif %} href="{{ tag.get_absolute_url }}">
                 {{ tag }}
             </a>
         </li>

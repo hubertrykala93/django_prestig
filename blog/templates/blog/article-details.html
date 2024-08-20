@@ -10,7 +10,7 @@
       <div class="blog__content">
         <article class="article">
           <div class="article__top-info">
-            <span class="article__top-info__date">{{ article.created_at|date:"Y-m-d H:i" }}</span>
+            <span class="article__top-info__date">{{ article.created_at|date:"F d, Y H:i"|lower|capfirst }}</span>
             <span class="article__top-info__author">
               By <a href="#">{% if article.user.profile.firstname and article.user.profile.lastname %}{{ article.user.profile.firstname }} {{ article.user.profile.lastname }}{% else %}{{ article.user.username }}{% endif %}</a>
             </span>

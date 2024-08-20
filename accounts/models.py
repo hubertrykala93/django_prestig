@@ -5,6 +5,9 @@ from uuid import uuid4
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from shop.models import Product
+from PIL import Image
+import os
+from django.conf import settings
 
 
 class CustomUserManager(UserManager):
@@ -67,6 +70,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class OneTimePassword(models.Model):
+    created_at = models.DateTimeField(default=now)
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     uuid = models.UUIDField(default=uuid4)
 
@@ -79,6 +83,7 @@ class OneTimePassword(models.Model):
 
 
 class DeliveryDetails(models.Model):
+    created_at = models.DateTimeField(default=now)
     uuid = models.UUIDField(default=uuid4)
     phone = models.CharField(max_length=20, null=True)
     country = models.CharField(max_length=56)
@@ -104,6 +109,7 @@ class Profile(models.Model):
         ("Female", "Female"),
         ("Undefined", "Undefined"),
     )
+    created_at = models.DateTimeField(default=now)
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
 
     # Basic Info
@@ -133,6 +139,25 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    def save(self, *args, **kwargs):
+        super(Profile, self).save(*args, **kwargs)
+
+        image = Image.open(fp=self.profilepicture.path)
+
+        if image.mode == "RGBA":
+            image = image.convert(mode="RGBA")
+
+        image.thumbnail(size=(300, 300))
+
+        file_extension = self.profilepicture.name.split(".")[-1]
+        new_name = str(uuid4()) + "." + file_extension
+        new_path = os.path.join(os.path.dirname(self.profilepicture.path), new_name)
+
+        image.save(fp=new_path)
+        self.profilepicture.name = os.path.relpath(new_path, start=settings.MEDIA_ROOT)
+
+        return super(Profile, self).save(*args, **kwargs)
 
 
 @receiver(signal=post_save, sender=User)

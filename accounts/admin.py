@@ -61,7 +61,12 @@ class AdminOneTimePassword(admin.ModelAdmin):
     """
     Admin options and functionalities for OneTimePassword model.
     """
-    list_display = ["id", "user", "uuid"]
+    list_display = [
+        "id",
+        "formatted_created_at",
+        "user",
+        "uuid"
+    ]
     form = OneTimePasswordForm
     fieldsets = (
         (
@@ -73,6 +78,11 @@ class AdminOneTimePassword(admin.ModelAdmin):
         ),
     )
 
+    def formatted_created_at(self, obj):
+        return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_created_at.short_description = "Created At"
+
 
 @admin.register(Profile)
 class AdminProfile(admin.ModelAdmin):
@@ -81,6 +91,7 @@ class AdminProfile(admin.ModelAdmin):
     """
     list_display = [
         "id",
+        "formatted_created_at",
         "user",
         "get_first_name",
         "get_last_name",
@@ -137,6 +148,11 @@ class AdminProfile(admin.ModelAdmin):
         ),
     )
 
+    def formatted_created_at(self, obj):
+        return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_created_at.short_description = "Created At"
+
     def get_first_name(self, obj):
         return obj.firstname
 
@@ -146,11 +162,6 @@ class AdminProfile(admin.ModelAdmin):
         return obj.lastname
 
     get_last_name.short_description = "Last Name"
-
-    def get_profile_picture(self, obj):
-        return obj.profilepicture
-
-    get_profile_picture.short_description = "Profile Picture"
 
     def formatted_date_of_birth(self, obj):
         if obj.dateofbirth:
@@ -171,6 +182,7 @@ class AdminDeliveryDetails(admin.ModelAdmin):
     """
     list_display = [
         "id",
+        "formatted_created_at",
         "uuid",
         "country",
         "state",
@@ -204,6 +216,11 @@ class AdminDeliveryDetails(admin.ModelAdmin):
             },
         ),
     )
+
+    def formatted_created_at(self, obj):
+        return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_created_at.short_description = "Created At"
 
     def get_house_number(self, obj):
         return obj.housenumber
