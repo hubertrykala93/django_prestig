@@ -1678,6 +1678,10 @@ textarea::placeholder{
   gap: var(--block-space-700) var(--column-gap);
 }
 
+.blog__content__heading {
+  margin-bottom: 1em;
+}
+
 .blog__cards {
   display: grid;
   gap: var(--block-space-500) var(--column-gap);
@@ -2267,7 +2271,6 @@ textarea::placeholder{
     margin-top: 0;
   }
 
-
   /**
   * HOME PAGE
   */
@@ -2333,6 +2336,14 @@ textarea::placeholder{
 
   .blog__cards {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .blog-card__image {
+    height: 15rem;
+  }
+
+  .blog-card__image img {
+    height: 100%;
   }
 
   /**
@@ -2687,6 +2698,10 @@ textarea::placeholder{
     grid-template-columns: auto 19.5rem;
   }
 
+  .blog__cards {
+    grid-template-columns: unset;
+  }
+
   /* ARTICLE */
   .article__footer {
     display: flex;
@@ -2843,6 +2858,14 @@ textarea::placeholder{
 
   .blog > .container > .row {
     gap: var(--block-space-700);
+  }
+
+  .blog__cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .blog-card__image {
+    height: 18rem;
   }
 
   /**
