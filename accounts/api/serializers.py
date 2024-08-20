@@ -2,34 +2,45 @@ from rest_framework import serializers
 from accounts.models import User, Profile, DeliveryDetails
 import re
 from datetime import date
-from PIL import Image
-from io import BytesIO
-from django.core.files.base import ContentFile
-from uuid import uuid4
 from django.contrib.auth import update_session_auth_hash
+import os
 
 
 class UserSerializer(serializers.ModelSerializer):
+    last_login = serializers.SerializerMethodField(method_name="get_last_login")
+
     class Meta:
         model = User
-        fields = [
-            "id",
-            "username",
-            "email",
+        exclude = [
+            "password",
+            "groups",
+            "user_permissions",
         ]
         extra_kwargs = {
             "date_joined": {
                 "format": "%Y-%m-%d %H:%M:%S",
-            }
+            },
         }
+
+    def get_last_login(self, obj):
+        if obj.last_login:
+            return obj.last_login.strftime("%Y-%m-%d %H:%M:%S")
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    profilepicture_name = serializers.SerializerMethodField(method_name="formatted_profile_picture")
     class Meta:
         model = Profile
-        exclude = [
-            "user",
-        ]
+        fields = "__all__"
+        extra_kwargs = {
+            "created_at": {
+                "format": "%Y-%m-%d %H:%M:%S",
+            },
+        }
+
+    def formatted_profile_picture(self, obj):
+        if obj.profilepicture:
+            return obj.profilepicture.name.split("/")[-1]
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
@@ -565,6 +576,17 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
 
 class DeliveryDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeliveryDetails
+        fields = "__all__"
+        extra_kwargs = {
+            "created_at": {
+                "format": "%Y-%m-%d %H:%M:%S",
+            },
+        }
+
+
+class DeliveryDetailsUpdateSerializer(serializers.ModelSerializer):
     phone = serializers.CharField(allow_blank=True)
     country = serializers.CharField(allow_blank=True)
     state = serializers.CharField(allow_blank=True)

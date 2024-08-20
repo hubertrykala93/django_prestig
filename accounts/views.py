@@ -1,11 +1,10 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import user_passes_test, login_required
 from accounts.models import Profile, OneTimePassword
-from accounts.api.serializers import DeliveryDetailsSerializer
-from .api.serializers import UserSerializer, ProfileSerializer
+from accounts.api.serializers import DeliveryDetailsUpdateSerializer
 from datetime import date
-from django.contrib import messages
 from django.core.exceptions import ValidationError
+import requests
 
 
 @user_passes_test(test_func=lambda u: not u.is_authenticated, login_url="index")
@@ -34,34 +33,48 @@ def login(request):
 
 @login_required(login_url="login")
 def my_account(request):
+    user_response = requests.get(
+        url=f"{'https' if request.is_secure() else 'http'}://{request.get_host()}/api/v1/accounts/account-details/{request.user.id}")
+
+    profile_response = requests.get(
+        url=f"{'https' if request.is_secure() else 'http'}://{request.get_host()}/api/v1/profiles/profile-details/{request.user.profile.id}")
+
+    delivery_details_response = requests.get(
+        url=f"{'https' if request.is_secure() else 'http'}://{request.get_host()}/api/v1/delivery-details/delivery-details-details/{request.user.profile.delivery_details.id}"
+    )
+
     return render(
         request=request,
         template_name="accounts/my-account.html",
         context={
             "title": "My Account",
-            "user": UserSerializer(instance=request.user).data,
-            "profile": ProfileSerializer(instance=request.user.profile).data,
-            "delivery_details": DeliveryDetailsSerializer(instance=request.user.profile.delivery_details).data,
+            "user": user_response.json(),
+            "profile": profile_response.json(),
+            "delivery_details": delivery_details_response.json(),
         }
     )
 
 
 @login_required(login_url="login")
 def account_settings(request):
+    response = requests.get(
+        url=f"{'https' if request.is_secure() else 'http'}://{request.get_host()}/api/v1/accounts/account-details/{request.user.id}")
+
     return render(
         request=request,
         template_name="accounts/account-settings.html",
         context={
             "title": "Account Settings",
-            "account": UserSerializer(instance=request.user).data,
+            "account": response.json(),
         }
     )
 
 
 @login_required(login_url="login")
 def profile_settings(request):
-    profile = ProfileSerializer(instance=request.user.profile).data
-    profile["profilepicture_name"] = profile["profilepicture"].split("/")[-1]
+    response = requests.get(
+        url=f"{'https' if request.is_secure() else 'http'}://{request.get_host()}/api/v1/profiles/profile-details/{request.user.profile.id}"
+    )
 
     return render(
         request=request,
@@ -69,7 +82,7 @@ def profile_settings(request):
         context={
             "title": "Profile Settings",
             "max": date.today().strftime("%Y-%m-%d"),
-            "profile": profile,
+            "profile": response.json(),
             "genders": [choice[0] for choice in Profile._meta.get_field("gender").choices],
         }
     )
@@ -77,12 +90,16 @@ def profile_settings(request):
 
 @login_required(login_url="login")
 def delivery_details(request):
+    response = requests.get(
+        url=f"{'https' if request.is_secure() else 'http'}://{request.get_host()}/api/v1/delivery-details/delivery-details-details/{request.user.profile.delivery_details.id}"
+    )
+
     return render(
         request=request,
         template_name="accounts/delivery-details.html",
         context={
             "title": "Delivery Details",
-            "delivery_details": DeliveryDetailsSerializer(instance=request.user.profile.delivery_details).data,
+            "delivery_details": response.json(),
         }
     )
 

@@ -23,7 +23,7 @@ def articles_by_category(request, category_slug):
             request=request,
             message=f"The category named '{category_slug}' does not exist."
         )
-        
+
         return redirect(to="blog")
 
     return render(

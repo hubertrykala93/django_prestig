@@ -1,9 +1,11 @@
 from rest_framework.response import Response
-from accounts.models import User, OneTimePassword, DeliveryDetails
+from accounts.models import User, OneTimePassword, DeliveryDetails, Profile
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, UpdateAPIView, DestroyAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, DestroyAPIView, RetrieveUpdateAPIView, \
+    RetrieveAPIView
 from .serializers import UserRegisterSerializer, UserLoginSerializer, ProfileUpdateSerializer, \
-    ProfilePictureDeleteSerializer, PasswordResetSerializer, ChangePasswordSerializer, DeliveryDetailsSerializer
+    ProfilePictureDeleteSerializer, PasswordResetSerializer, ChangePasswordSerializer, DeliveryDetailsUpdateSerializer, \
+    UserSerializer, ProfileSerializer, DeliveryDetailsSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.utils.html import strip_tags
@@ -17,7 +19,39 @@ import os
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout, login
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, NotFound
+
+
+class UsersAPIView(ListAPIView):
+    def get_serializer_class(self):
+        return UserSerializer
+
+    def get_queryset(self):
+        return User.objects.all()
+
+
+class UserDetailsAPIView(RetrieveAPIView):
+    def get_queryset(self):
+        return User.objects.all()
+
+    def get_serializer_class(self):
+        return UserSerializer
+
+
+class ProfileAPIView(ListAPIView):
+    def get_serializer_class(self):
+        return ProfileSerializer
+
+    def get_queryset(self):
+        return Profile.objects.all()
+
+
+class ProfileDetailsAPIView(RetrieveAPIView):
+    def get_queryset(self):
+        return Profile.objects.all()
+
+    def get_serializer_class(self):
+        return ProfileSerializer
 
 
 class UserRegisterAPIView(CreateAPIView):
@@ -412,12 +446,28 @@ class ChangePasswordAPIView(RetrieveUpdateAPIView):
             )
 
 
+class DeliveryDetailsAPIView(ListAPIView):
+    def get_queryset(self):
+        return DeliveryDetails.objects.all()
+
+    def get_serializer_class(self):
+        return DeliveryDetailsSerializer
+
+
+class DeliveryDetailsDetailsAPIView(RetrieveAPIView):
+    def get_queryset(self):
+        return DeliveryDetails.objects.all()
+
+    def get_serializer_class(self):
+        return DeliveryDetailsSerializer
+
+
 class DeliveryDetailsUpdateAPIView(UpdateAPIView):
     def get_object(self):
         return DeliveryDetails.objects.get(id=self.request.user.profile.delivery_details.id)
 
     def get_serializer_class(self):
-        return DeliveryDetailsSerializer
+        return DeliveryDetailsUpdateSerializer
 
     def patch(self, request, *args, **kwargs):
         instance = self.get_object()
