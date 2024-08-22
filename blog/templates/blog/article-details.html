@@ -150,7 +150,7 @@
 
             <div class="article__comments__wrapper">
               {% for comment in comments %}
-                <div class="article__comment js-article-comment" data-id="{{ comment.article.id }}">
+                <div class="article__comment js-article-comment" data-id="{{ comment.id }}">
                   <div class="article__comment__info">
                     <div class="article__comment__info__avatar">
                       <img src="{{ comment.user.profile.profilepicture.url }}" alt="Comment's author avatar">
@@ -162,18 +162,25 @@
                     </div>
                   </div>
 
-                  <div class="article__comment__content">
+                  <div class="article__comment__content js-article-comment-content">
                       {{ comment.message }}
                   </div>
 
-                  <form class="article__comment__delete-form js-delete-article-comment-form">
-                    <input type="hidden" name="commentid" value="{{ comment.id }}">
-
-                    <button type="submit" class="article__comment__delete-form__button">
-                      <span class="visually-hidden">Delete comment</span>
-                      <i class="ri-delete-bin-line" aria-hidden="true"></i>
+                  <div class="article__comment__controls">
+                    <button class="article__comment__controls__button article__comment__controls__button--edit js-edit-article-comment-button">
+                      <span class="visually-hidden">Edit comment</span>
+                      <i class="ri-edit-2-line" aria-hidden="true"></i>
                     </button>
-                  </form>
+
+                    <form class="article__comment__delete-form js-delete-article-comment-form">
+                      <input type="hidden" name="commentid" value="{{ comment.id }}">
+  
+                      <button type="submit" class="article__comment__controls__button article__comment__controls__button--delete">
+                        <span class="visually-hidden">Delete comment</span>
+                        <i class="ri-delete-bin-line" aria-hidden="true"></i>
+                      </button>
+                    </form>
+                  </div>
                 </div>
               {% endfor %}
             </div>

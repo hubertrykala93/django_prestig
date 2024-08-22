@@ -490,7 +490,6 @@ const validateProfileSettingsForm = (formData) => {
     const facebook = formData.get('facebook').trim()
     const instagram = formData.get('instagram').trim()
 
-    // const onlyLettersRegex = /^[a-z]+$/i
     const onlyLettersRegex = /^[a-zżźćńółęąś]+$/i
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/
     const usernameRegex = /^[\w.-]+$/

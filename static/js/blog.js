@@ -44,8 +44,11 @@ const validateCommentForm = (formData) => {
   if (comment === '') {
     result.comment = 'Comment is required.'
   }
-  else if (comment.length < 20) {
-    result.comment = 'The comment must be at least 20 characters long.'
+  else if (comment.length < 5) {
+    result.comment = 'The comment should consist of at least 5 characters long.'
+  }
+  else if (comment.length > 200) {
+    result.comment = 'The comment cannot be longer than 200 characters.'
   }
   
   if (formData.has('email')) {
@@ -57,15 +60,25 @@ const validateCommentForm = (formData) => {
     else if (!email.match(emailRegex)) {
         result.email = 'The e-mail address format is invalid.'
     }
+    else if (email.length > 255) {
+      result.email = 'The email cannot be longer than 255 characters.'
+    }
   }
 
   if (formData.has('name')) {
+    const onlyLettersRegex = /^[a-zżźćńółęąś]+$/i
     const name = formData.get('name').trim()
     if (name === '') {
       result.name = 'Name is required.'
     }
-    else if (name.length < 8) {
-        result.name = 'The name should consist of at least 8 characters.'
+    else if (!name.match(onlyLettersRegex)) {
+      result.name = 'The name should contain only letters.'
+    }
+    else if (name.length < 2) {
+      result.name = 'The name should consist of at least 2 characters long.'
+    }
+    else if (name.length > 35) {
+      result.name = 'The name cannot be longer than 35 characters.'
     }
   }
 
@@ -151,8 +164,42 @@ const handleCommentDeletion = ($form) => {
 if ($articleCommentsParent) {
   $articleCommentsParent.addEventListener('submit', e => {
     e.preventDefault()
+    
     if (e.target.classList.contains('js-delete-article-comment-form')) {
       handleCommentDeletion(e.target)
+    }
+  })
+}
+
+// EDIT COMMENT
+
+const createEditCommentForm = ($comment, content) => {
+  const formHTML = `
+    <form class="article__comment-form article__comment-form--edit form js-article-edit-comment-form">
+      <div class="form__row">
+        <div class="form__field js-form-field">
+            <div class="form__input-wrap">
+                <textarea type="text" id="comment" name="comment" placeholder="Write your comment *">${content}</textarea>
+            </div>
+        </div>
+      </div>
+
+      <div class="form__row form__row--submit">
+        <div class="form__field form__field--submit">
+            <button class="btn btn--primary" type="submit">Edit comment</button>
+        </div>
+      </div>
+    </form>
+  `
+  $comment.insertAdjacentHTML('beforeend', formHTML)
+}
+
+if ($articleCommentsParent) {
+  $articleCommentsParent.addEventListener('click', e => {
+    if (e.target.closest('.js-edit-article-comment-button')) {
+      const $comment = e.target.closest('.js-article-comment')
+      const content = $comment.querySelector('.js-article-comment-content').innerText
+      createEditCommentForm($comment, content)
     }
   })
 }

@@ -2045,6 +2045,10 @@ textarea::placeholder{
   border-color: var(--clr-accent-400);
 }
 
+.article__comment-form--edit {
+  margin-top: 1rem;
+}
+
 .article__comment-form__text {
   margin: 0.625rem 0 2.25rem;
 }
@@ -2098,20 +2102,30 @@ textarea::placeholder{
   color: var(--clr-black);
 }
 
-.article__comment__delete-form {
+.article__comment__controls {
   position: absolute;
+  display: grid;
+  grid-auto-flow: column;
+  column-gap: .8rem;
   right: var(--column-gap);
   top: var(--column-gap);
   z-index: 2;
 }
 
-.article__comment__delete-form__button {
-  color: var(--clr-error);
+.article__comment__controls__button {
   transition: color .3s;
 }
 
-.article__comment__delete-form__button:hover,
-.article__comment__delete-form__button:focus-visible {
+.article__comment__controls__button--delete {
+  color: var(--clr-error);
+}
+
+.article__comment__controls__button--edit {
+  color: var(--clr-black);
+}
+
+.article__comment__controls__button:hover,
+.article__comment__controls__button:focus-visible {
   color: var(--clr-accent-400);
 }
 
