@@ -29,6 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     profilepicture_name = serializers.SerializerMethodField(method_name="formatted_profile_picture")
+
     class Meta:
         model = Profile
         fields = "__all__"

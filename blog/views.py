@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import Article, ArticleTag, ArticleCategory, ArticleComment
+from .models import Article, ArticleCategory, ArticleComment, ArticleTag
+from django.db.models import Q
 
 
 def blog(request):
@@ -21,7 +22,7 @@ def articles_by_category(request, category_slug):
     except ArticleCategory.DoesNotExist:
         messages.info(
             request=request,
-            message=f"The category named '{category_slug}' does not exist."
+            message=f"The article category named '{category_slug.replace('-', ' ').title()}' does not exist."
         )
 
         return redirect(to="blog")
@@ -31,8 +32,7 @@ def articles_by_category(request, category_slug):
         template_name="blog/articles-by-category.html",
         context={
             "title": category.name,
-            "category": category,
-            "articles": Article.objects.filter(article_category=category)
+            "articles": Article.objects.filter(article_category=category).order_by("-created_at"),
         }
     )
 
@@ -44,7 +44,7 @@ def articles_by_tag(request, tag_slug):
     except ArticleTag.DoesNotExist:
         messages.info(
             request=request,
-            message=f"The tag named '{tag_slug}' does not exist."
+            message=f"The tag named '{tag_slug.replace('-', ' ').title()}' does not exist."
         )
         return redirect(to="blog")
 
@@ -53,8 +53,7 @@ def articles_by_tag(request, tag_slug):
         template_name="blog/articles-by-tag.html",
         context={
             "title": tag.name,
-            "tag": tag,
-            "articles": Article.objects.filter(article_tags=tag),
+            "articles": Article.objects.filter(article_tags=tag).order_by("-created_at"),
         }
     )
 
@@ -72,5 +71,35 @@ def article_details(request, category_slug, article_slug):
             "article": article,
             "comments": comments,
             "total_comments": len(comments),
+        }
+    )
+
+
+def search_by_keyword(request):
+    articles = []
+    keyword = request.GET.get("keyword", None)
+
+    if keyword:
+        words = keyword.split()
+        query = Q()
+
+        for word in words:
+            q = Q(title__icontains=word) | Q(description__icontains=word)
+            query |= q
+
+        articles = Article.objects.filter(query).order_by("-created_at")
+
+    if not articles:
+        messages.error(
+            request=request,
+            message=f"No articles found matching your search criteria.",
+        )
+
+    return render(
+        request=request,
+        template_name="blog/blog.html",
+        context={
+            "title": "Search Results",
+            "articles": articles,
         }
     )

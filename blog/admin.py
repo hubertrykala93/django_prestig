@@ -122,6 +122,7 @@ class AdminArticleComment(admin.ModelAdmin):
         "message",
         "is_active"
     ]
+    list_editable = ["is_active"]
     form = ArticleCommentForm
     fieldsets = (
         (

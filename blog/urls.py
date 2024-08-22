@@ -7,4 +7,5 @@ urlpatterns = [
     path(route="blog/tag/<slug:tag_slug>", view=blog_views.articles_by_tag, name="articles-by-tag"),
     path(route="blog/<slug:category_slug>/<slug:article_slug>", view=blog_views.article_details,
          name="article-details"),
+    path(route="blog-results", view=blog_views.search_by_keyword, name="blog-results"),
 ]

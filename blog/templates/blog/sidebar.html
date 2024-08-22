@@ -1,7 +1,8 @@
+{% load date_filters %}
 <aside class="blog__aside">
     <h5 class="blog__aside__heading heading heading--h5">Blog Search</h5>
 
-    <form class="form blog__aside__search">
+    <form class="form blog__aside__search" action="{% url 'blog-results' %}">
         <input type="text" name="keyword" class="blog__aside__search__input" placeholder="Search...">
         <button class="blog__aside__search__button">
             <span class="visually-hidden">Search articles</span>
@@ -12,9 +13,9 @@
     <h5 class="blog__aside__heading heading heading--h5">Categories</h5>
 
     <ul class="blog__aside__categories">
-        {% for category in categories_with_counts %}
+        {% for category in article_counts %}
         <li>
-            <a {% if request.resolver_match.kwargs.category_slug == category.slug %}class="active"{% endif %} href="{{ category.get_absolute_url }}">
+            <a {% if request.resolver_match.kwargs.category_slug == category.slug %}class="active"{% endif %} href="{% url 'articles-by-category' category.slug %}">
                 {{ category.name }} <span>({{ category.num_articles }})</span>
             </a>
         </li>
@@ -29,7 +30,7 @@
         {% for article in latest_articles %}
         <li class="blog__aside__latest__item">
             <a href="{{ article.get_absolute_url }}" class="blog__aside__latest__item__image">
-                <img src="{{ article.image.url }}" alt="Article thumnbail">
+                <img src="{{ article.image.url }}" alt="Article thumbnail">
             </a>
 
             <div class="blog__aside__latest__item__content">
@@ -39,7 +40,7 @@
                     </a>
                 </h5>
 
-                <p>{{ article.created_at|date:"F d, Y H:i"|lower|capfirst }}</p>
+                <p>{{ article.created_at|format_date }}</p>
             </div>
         </li>
         {% endfor %}
@@ -52,8 +53,8 @@
     <ul class="blog__aside__tags">
         {% for tag in article_tags %}
         <li>
-            <a {% if request.resolver_match.kwargs.tag_slug == tag.slug %}class="active"{% endif %} href="{{ tag.get_absolute_url }}">
-                {{ tag }}
+            <a {% if request.resolver_match.kwargs.tag_slug == tag.slug %}class="active"{% endif %} href="{% url 'articles-by-tag' tag.slug %}">
+                {{ tag.name }}
             </a>
         </li>
         {% endfor %}

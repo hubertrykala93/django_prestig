@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import user_passes_test, login_required
 from accounts.models import Profile, OneTimePassword
-from accounts.api.serializers import DeliveryDetailsUpdateSerializer
 from datetime import date
 from django.core.exceptions import ValidationError
 import requests
@@ -28,6 +27,13 @@ def login(request):
             "title": "Login",
             "img": "",
         }
+    )
+
+
+def profile_page(request):
+    return render(
+        request=request,
+        template_name="accounts/profile-page.html",
     )
 
 
