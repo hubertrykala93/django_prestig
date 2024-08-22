@@ -1804,8 +1804,13 @@ textarea::placeholder{
 }
 
 .blog__aside__categories li a:hover,
-.blog__aside__categories li a:focus-visible {
+.blog__aside__categories li a:focus-visible,
+.blog__aside__categories li a.active {
   color: var(--clr-accent-400);
+}
+
+.blog__aside__categories li a.active{
+  font-weight: 500;
 }
 
 .blog__aside__divider {
@@ -1871,8 +1876,13 @@ textarea::placeholder{
 }
 
 .blog__aside__tags li a:hover,
-.blog__aside__tags li a:focus-visible {
+.blog__aside__tags li a:focus-visible,
+.blog__aside__tags li a.active {
   color: var(--clr-accent-400);
+}
+
+.blog__aside__tags li a.active {
+  border-color: var(--clr-accent-400);
 }
 
 /* ARTICLE */
