@@ -8,6 +8,9 @@
   <div class="container container--narrow">
     <div class="row">
       <div class="blog__content">
+        {% if request.GET.keyword %}
+        <h4 class="blog__content__heading heading heading--h4">Searching keyword: {{ request.GET.keyword }}</h4>
+        {% endif %}
         <div class="blog__cards">
           {% for article in articles %}
             <div class="blog-card">

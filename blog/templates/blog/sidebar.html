@@ -3,7 +3,7 @@
     <h5 class="blog__aside__heading heading heading--h5">Blog Search</h5>
 
     <form class="form blog__aside__search" action="{% url 'blog-results' %}">
-        <input type="text" name="keyword" class="blog__aside__search__input" placeholder="Search...">
+        <input type="text" name="keyword" class="blog__aside__search__input" placeholder="Search..." {% if request.GET.keyword %}value="{{ request.GET.keyword }}"{% endif %}>
         <button class="blog__aside__search__button">
             <span class="visually-hidden">Search articles</span>
             <i class="ri-search-line" aria-hidden="true"></i>
