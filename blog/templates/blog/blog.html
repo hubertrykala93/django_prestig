@@ -14,7 +14,7 @@
         <div class="blog__cards">
           {% for page in pages %}
             <div class="blog-card">
-              <a href="{{ article.get_absolute_url }}" class="blog-card__image">
+              <a href="{{ page.get_absolute_url }}" class="blog-card__image">
                 <img src="{{ page.image.url }}" alt="Article thumbnail">
               </a>
 

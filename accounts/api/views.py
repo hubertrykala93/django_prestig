@@ -271,7 +271,8 @@ class ProfilePictureDeleteAPIView(DestroyAPIView):
             return Response(
                 data={
                     "success": "Your profile picture has been successfully removed.",
-                }
+                },
+                status=status.HTTP_404_NOT_FOUND,
             )
 
         except ValidationError as e:

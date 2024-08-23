@@ -104,6 +104,8 @@
             <h3 class="heading heading--h3">Write your opinion</h3>
             <p class="article__comment-form__text">Your email address will not be published. Required fields are marked *</p>
 
+            <input type="hidden" name="slug" value="{{ article.slug }}">
+
             <div class="form__row">
               <div class="form__field js-form-field">
                   <div class="form__input-wrap">
@@ -116,18 +118,19 @@
             <div class="form__row">
               <div class="form__field js-form-field">
                   <div class="form__input-wrap">
-                      <input type="text" id="name" name="name" placeholder="Your name *">
+                      <input type="text" id="fullname" name="fullname" {% if request.COOKIES.fullname %}value="{{ request.COOKIES.fullname }}"{% endif %} placeholder="Your name *">
                   </div>
               </div>
 
               <div class="form__field js-form-field">
                 <div class="form__input-wrap">
-                    <input type="text" id="email" name="email" placeholder="Your email *">
+                    <input type="text" id="email" name="email" {% if request.COOKIES.email %}value="{{ request.COOKIES.email }}"{% endif %} placeholder="Your email *">
                 </div>
               </div>
             </div>
             {% endif %}
 
+            {% if request.user.is_anonymous %}
             <div class="form__row">
               <div class="form__field js-form-field">
                 <div class="form__checkbox">
@@ -136,6 +139,7 @@
                 </div>
               </div>
             </div>
+            {% endif %}
 
             <div class="form__row form__row--submit">
               <div class="form__field form__field--submit">
@@ -155,11 +159,11 @@
                 <div class="article__comment js-article-comment" data-id="{{ comment.id }}">
                   <div class="article__comment__info">
                     <div class="article__comment__info__avatar">
-                      <img src="{{ comment.user.profile.profilepicture.url }}" alt="Comment's author avatar">
+                      <img src="{% if comment.user != None %}{{ comment.user.profile.profilepicture.url }}{% else %}/media/profile_images/default_profile_image.png{% endif %}" alt="Comment's author avatar">
                     </div>
 
                     <div class="article__comment__info__content">
-                      <h6 class="heading heading--h6">{% if comment.user.profile.firstname and comment.user.profile.lastname %}{{ comment.user.profile.firstname }} {{ comment.user.profile.lastname }}{% else %}{{ comment.user.username }}{% endif %}</h6>
+                      <h6 class="heading heading--h6">{% if comment.user != None %}{% if comment.user.profile.firstname and comment.user.profile.lastname %}{{ comment.user.profile.firstname }} {{ comment.user.profile.lastname }}{% else %}{{ comment.user.username }}{% endif %}{% else %}{{ comment.fullname }}{% endif %}</h6>
                       <p class="article__comment__info__content__date">{{ comment.created_at|date:"Y-m-d H:i" }}</p>
                     </div>
                   </div>

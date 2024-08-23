@@ -6,6 +6,7 @@ const $articleCommentForm = document.querySelector('.js-article-comment-form')
  * @param {Object} formData - Add comment formdata object.
  */
 const sendAddCommentRequest = (formData) => {
+//    const slug = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
     const url = '/api/v1/comments/create-comment'
 
     fetch(url, {
@@ -40,7 +41,7 @@ const sendAddCommentRequest = (formData) => {
 const validateCommentForm = (formData) => {
   const comment = formData.get('comment').trim()
   const result = {}
-  
+
   if (comment === '') {
     result.comment = 'Comment is required.'
   }
@@ -65,20 +66,20 @@ const validateCommentForm = (formData) => {
     }
   }
 
-  if (formData.has('name')) {
+  if (formData.has('fullname')) {
     const onlyLettersRegex = /^[a-zżźćńółęąś]+$/i
-    const name = formData.get('name').trim()
+    const name = formData.get('fullname').trim()
     if (name === '') {
-      result.name = 'Name is required.'
+      result.name = 'Fullname is required.'
     }
     else if (!name.match(onlyLettersRegex)) {
-      result.name = 'The name should contain only letters.'
+      result.name = 'The fullname should contain only letters.'
     }
     else if (name.length < 2) {
-      result.name = 'The name should consist of at least 2 characters long.'
+      result.name = 'The fullname should consist of at least 2 characters long.'
     }
     else if (name.length > 35) {
-      result.name = 'The name cannot be longer than 35 characters.'
+      result.name = 'The fullname cannot be longer than 35 characters.'
     }
   }
 

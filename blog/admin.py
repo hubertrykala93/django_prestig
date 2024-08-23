@@ -116,6 +116,7 @@ class AdminArticleComment(admin.ModelAdmin):
     list_display = [
         "id",
         "formatted_created_at",
+        "article",
         "user",
         "get_fullname",
         "email",
