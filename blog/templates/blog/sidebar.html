@@ -15,7 +15,7 @@
     <ul class="blog__aside__categories">
         {% for category in article_counts %}
         <li>
-            <a {% if request.resolver_match.kwargs.category_slug == category.slug %}class="active"{% endif %} href="{% url 'articles-by-category' category.slug %}">
+            <a {% if request.resolver_match.kwargs.category_slug == category.slug and request.resolver_match.url_name == 'articles-by-category' %}class="active"{% endif %} href="{% url 'articles-by-category' category.slug %}">
                 {{ category.name }} <span>({{ category.num_articles }})</span>
             </a>
         </li>

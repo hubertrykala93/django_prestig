@@ -1,7 +1,20 @@
-from rest_framework.generics import DestroyAPIView
+from rest_framework.generics import DestroyAPIView, CreateAPIView
 from blog.models import ArticleComment
 from rest_framework.response import Response
 from rest_framework import status
+from .serializers import CommentSerializer
+
+
+class CommentCreateAPIView(CreateAPIView):
+    def get_serializer_class(self):
+        return CommentSerializer
+
+    def post(self, request, *args, **kwargs):
+        return Response(
+            data={
+                "success": "Created",
+            }
+        )
 
 
 class CommentDeleteAPIView(DestroyAPIView):

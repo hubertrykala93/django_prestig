@@ -6,7 +6,7 @@ const $articleCommentForm = document.querySelector('.js-article-comment-form')
  * @param {Object} formData - Add comment formdata object.
  */
 const sendAddCommentRequest = (formData) => {
-    const url = 'add-comment'
+    const url = '/api/v1/comments/create-comment'
 
     fetch(url, {
         method:'POST',

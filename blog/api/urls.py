@@ -3,8 +3,13 @@ from . import views
 
 urlpatterns = [
     path(
+        route="api/v1/comments/create-comment",
+        view=views.CommentCreateAPIView.as_view(),
+        name="api-v1-comments-create-comment",
+    ),
+    path(
         route="api/v1/comments/delete-comment",
         view=views.CommentDeleteAPIView.as_view(),
-        name="api-v1-comment-delete-comment",
+        name="api-v1-comments-delete-comment",
     ),
 ]

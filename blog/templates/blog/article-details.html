@@ -112,6 +112,7 @@
               </div>
             </div>
 
+            {% if request.user.is_anonymous %}
             <div class="form__row">
               <div class="form__field js-form-field">
                   <div class="form__input-wrap">
@@ -125,6 +126,7 @@
                 </div>
               </div>
             </div>
+            {% endif %}
 
             <div class="form__row">
               <div class="form__field js-form-field">

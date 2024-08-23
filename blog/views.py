@@ -134,10 +134,9 @@ def search_by_keyword(request):
         template_name="blog/blog.html",
         context={
             "title": "Search Results",
-            "articles": articles,
             "pages": pagination(
                 request=request,
-                object_list=Article.objects.all().order_by("-created_at"),
+                object_list=articles,
                 per_page=6,
             ),
         }
