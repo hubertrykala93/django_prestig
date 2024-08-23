@@ -110,7 +110,7 @@ if ($articleCommentForm) {
     })
 }
 
-// DELETE COMMENT
+// DELETE & EDIT COMMENT
 const $articleCommentsParent = document.querySelector('.js-article-comments')
 
 /**
@@ -132,6 +132,22 @@ const deleteComment = (commentId) => {
   $comments.forEach($comment => {
     if ($comment.dataset.id == commentId) {
       $comment.remove()
+    }
+  })
+}
+
+/**
+ * Updates particular comment content on blog article.
+ * @param {Number} commentId - Id of comment to delete.
+ * @param {String} content - Content of comment to update.
+*/
+const updateCommentContent = (commentId, content) => {
+  const $comments = document.querySelectorAll('.js-article-comment')
+  if (!$comments) { return }
+
+  $comments.forEach($comment => {
+    if ($comment.dataset.id == commentId) {
+      $comment.querySelector('.js-article-comment-content').innerText = content
     }
   })
 }
@@ -164,11 +180,53 @@ const sendCommentDeletionRequest = (formData) => {
 }
 
 /**
+ * Sends edit comment post data and handles messages and comment replace.
+ * @param {Object} formData - Edit comment formdata object.
+ */
+const sendCommentEditRequest = (formData) => {
+  const url = '/api/v1/comments/edit-comment'
+
+  fetch(url, {
+      method:'PUT',
+      headers:{
+       'X-CSRFToken':csrfToken,
+      },
+      body: formData
+  }).then((response) => {
+       return response.json()
+  }).then((response) => {
+      if (response.hasOwnProperty('success')) {
+          showAlert(response.success, 'success')
+          updateCommentContent(response.id, response.content)
+      }
+      else if (response.hasOwnProperty('error')) {
+          showAlert(response.error, 'error')
+      }
+  })
+}
+
+/**
  * Handles delete comment form actions.
  */
 const handleCommentDeletion = ($form) => {
   const formData = new FormData($form)
   sendCommentDeletionRequest(formData)
+}
+
+/**
+ * Handles edit comment form actions.
+ */
+const handleCommentEdit = ($form) => {
+  const formData = new FormData($form)
+  const errors = validateCommentForm(formData)
+  clearFormErrors($form)
+
+  if (true) { // Object.keys(errors).length === 0
+      sendCommentEditRequest(formData)
+  }
+  else {
+      showFormErrors($form, errors)
+  }
 }
 
 if ($articleCommentsParent) {
@@ -178,16 +236,24 @@ if ($articleCommentsParent) {
     if (e.target.classList.contains('js-delete-article-comment-form')) {
       handleCommentDeletion(e.target)
     }
+    else if (e.target.classList.contains('js-edit-article-comment-form')) {
+      handleCommentEdit(e.target)
+    }
   })
 }
 
-// EDIT COMMENT
-
+/**
+ * Apends edit comment form with filled value.
+ * @param {HTMLElement} $comment - Html comment element to edit.
+ * @param {String} content - Content of comment.
+ */
 const createEditCommentForm = ($comment, content) => {
-  if ($comment.querySelector('.js-article-edit-comment-form')) { return false }
-  
+  if ($comment.querySelector('.js-edit-article-comment-form')) { return false }
+
+  const id = $comment.dataset.id
   const formHTML = `
-    <form class="article__comment-form article__comment-form--edit form js-article-edit-comment-form">
+    <form class="article__comment-form article__comment-form--edit form js-edit-article-comment-form">
+      <input type="hidden" name="id" value="${id}">
       <div class="form__row">
         <div class="form__field js-form-field">
             <div class="form__input-wrap">
