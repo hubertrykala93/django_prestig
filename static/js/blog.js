@@ -132,10 +132,10 @@ const deleteComment = (commentId) => {
  * @param {Object} formData - Delete comment formdata object.
  */
 const sendCommentDeletionRequest = (formData) => {
-  const url = 'delete-comment'
+  const url = '/api/v1/comments/delete-comment'
 
   fetch(url, {
-      method:'POST',
+      method:'DELETE',
       headers:{
        'X-CSRFToken':csrfToken,
       },
@@ -143,6 +143,7 @@ const sendCommentDeletionRequest = (formData) => {
   }).then((response) => {
        return response.json()
   }).then((response) => {
+      console.log(response)
       if (response.hasOwnProperty('success')) {
           showAlert(response.success, 'success')
           deleteComment(response.id)

@@ -282,7 +282,6 @@ class ProfilePictureDeleteAPIView(DestroyAPIView):
             )
 
         except Exception as e:
-            print(e)
             return Response(
                 data={
                     "error": "An error occurred while trying to delete your profile picture.",

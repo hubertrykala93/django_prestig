@@ -166,6 +166,7 @@
                       {{ comment.message }}
                   </div>
 
+                  {% if request.user == comment.user %}
                   <div class="article__comment__controls">
                     <button class="article__comment__controls__button article__comment__controls__button--edit js-edit-article-comment-button">
                       <span class="visually-hidden">Edit comment</span>
@@ -181,6 +182,7 @@
                       </button>
                     </form>
                   </div>
+                  {% endif %}
                 </div>
               {% endfor %}
             </div>
