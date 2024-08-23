@@ -3,6 +3,7 @@ from blog.models import ArticleComment, Article
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import CommentSerializer
+import urllib.parse
 
 
 class CommentCreateAPIView(CreateAPIView):
@@ -11,8 +12,6 @@ class CommentCreateAPIView(CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        print(request.data)
-        print(request.data.get("save") == "1")
 
         try:
             article = Article.objects.get(slug=request.data.get("slug"))
@@ -41,8 +40,16 @@ class CommentCreateAPIView(CreateAPIView):
             )
 
             if request.data.get("save") == "1":
-                response.set_cookie(key="fullname", value=request.data.get("fullname"), max_age=60 * 60 * 24 * 365)
-                response.set_cookie(key="email", value=request.data.get("email"), max_age=60 * 60 * 24 * 365)
+                response.set_cookie(
+                    key="fullname",
+                    value=urllib.parse.quote(string=request.data.get("fullname")),
+                    max_age=60 * 60 * 24 * 365
+                )
+                response.set_cookie(
+                    key="email",
+                    value=urllib.parse.quote(string=request.data.get("email")),
+                    max_age=60 * 60 * 24 * 365
+                )
 
             return response
 
