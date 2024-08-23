@@ -110,6 +110,7 @@ def article_details(request, category_slug, article_slug):
 
 
 def search_by_keyword(request):
+    print(request.GET.urlencode)
     articles = []
     keyword = request.GET.get("keyword", None)
 
