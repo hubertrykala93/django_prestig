@@ -119,7 +119,7 @@ class AdminArticleComment(admin.ModelAdmin):
         "user",
         "get_fullname",
         "email",
-        "message",
+        "comment",
         "is_active"
     ]
     list_editable = ["is_active"]
@@ -144,7 +144,7 @@ class AdminArticleComment(admin.ModelAdmin):
         (
             "Comment Content", {
                 "fields": [
-                    "message",
+                    "comment",
                 ],
             },
         ),

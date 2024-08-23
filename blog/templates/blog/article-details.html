@@ -146,7 +146,7 @@
 
           <div class="article__comments js-article-comments">
             <div class="article__comments__counter heading heading--h5">
-              <span>{{ total_comments }}</span>
+              <span class="js-article-comments-total">{{ total_comments }}</span>
               {% if total_comments == 0 %}comments{% elif total_comments == 1 %}comment{% else %}comments{% endif %} on this article
             </div>
 
@@ -165,7 +165,7 @@
                   </div>
 
                   <div class="article__comment__content js-article-comment-content">
-                      {{ comment.message }}
+                      {{ comment.comment }}
                   </div>
 
                   {% if request.user == comment.user %}

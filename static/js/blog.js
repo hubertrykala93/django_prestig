@@ -113,6 +113,14 @@ if ($articleCommentForm) {
 const $articleCommentsParent = document.querySelector('.js-article-comments')
 
 /**
+ * Updates total number of comments to article.
+ * @param {Number} number - New number of total comments.
+ */
+const updateCommentsTotal = (number) => {
+  document.querySelector('.js-article-comments-total').innerText = number
+}
+
+/**
  * Deletes particular comment on blog article.
  * @param {Number} commentId - Id of comment to delete.
  */
@@ -143,10 +151,10 @@ const sendCommentDeletionRequest = (formData) => {
   }).then((response) => {
        return response.json()
   }).then((response) => {
-      console.log(response)
       if (response.hasOwnProperty('success')) {
           showAlert(response.success, 'success')
           deleteComment(response.id)
+          updateCommentsTotal(response.total)
       }
       else if (response.hasOwnProperty('error')) {
           showAlert(response.error, 'error')
@@ -175,6 +183,8 @@ if ($articleCommentsParent) {
 // EDIT COMMENT
 
 const createEditCommentForm = ($comment, content) => {
+  if ($comment.querySelector('.js-article-edit-comment-form')) { return false }
+  
   const formHTML = `
     <form class="article__comment-form article__comment-form--edit form js-article-edit-comment-form">
       <div class="form__row">

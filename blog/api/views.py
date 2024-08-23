@@ -49,7 +49,7 @@ class CommentDeleteAPIView(DestroyAPIView):
             data={
                 "success": "Your comment has been successfully deleted.",
                 "id": temp_id,
-                "summary": len(comments),
+                "total": len(comments),
             },
             status=status.HTTP_200_OK,
         )
