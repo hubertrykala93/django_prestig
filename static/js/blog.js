@@ -18,6 +18,7 @@ const sendAddCommentRequest = (formData) => {
          return response.json()
     }).then((response) => {
         clearFormErrors($articleCommentForm)
+        console.log(response)
 
         if (response.hasOwnProperty('success')) {
             showAlert(response.success, 'success')
@@ -65,20 +66,20 @@ const validateCommentForm = (formData) => {
     }
   }
 
-  if (formData.has('name')) {
+  if (formData.has('fullname')) {
     const onlyLettersRegex = /^[a-zżźćńółęąś]+$/i
-    const name = formData.get('name').trim()
+    const name = formData.get('fullname').trim()
     if (name === '') {
-      result.name = 'Name is required.'
+      result.name = 'Fullname is required.'
     }
     else if (!name.match(onlyLettersRegex)) {
-      result.name = 'The name should contain only letters.'
+      result.name = 'The fullname should contain only letters.'
     }
     else if (name.length < 2) {
-      result.name = 'The name should consist of at least 2 characters long.'
+      result.name = 'The fullname should consist of at least 2 characters long.'
     }
     else if (name.length > 35) {
-      result.name = 'The name cannot be longer than 35 characters.'
+      result.name = 'The fullname cannot be longer than 35 characters.'
     }
   }
 

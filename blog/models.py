@@ -113,7 +113,7 @@ class ArticleComment(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, null=True)
     fullname = models.CharField(max_length=100, blank=True)
     email = models.EmailField(max_length=100, blank=True)
-    message = models.TextField(max_length=20000)
+    comment = models.TextField(max_length=20000)
     is_active = models.BooleanField(default=False)
 
     class Meta:

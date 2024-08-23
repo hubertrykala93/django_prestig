@@ -49,7 +49,7 @@ class ArticleCommentForm(forms.ModelForm):
     fullname = forms.CharField(help_text="Provide the full name of the comment author.", label="Guest Author",
                                required=False)
     email = forms.EmailField(help_text="Provide the e-mail address of the comment author.", label="E-mail Address")
-    message = forms.CharField(help_text="Provide the comment.", label="Comment Content")
+    comment = forms.CharField(help_text="Provide the comment.", label="Comment Content")
     is_active = forms.BooleanField(help_text="Indicate whether the category is active.", required=False)
 
     class Meta:

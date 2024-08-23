@@ -1,5 +1,5 @@
 from rest_framework.generics import DestroyAPIView, CreateAPIView
-from blog.models import ArticleComment
+from blog.models import ArticleComment, Article
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import CommentSerializer
@@ -10,11 +10,27 @@ class CommentCreateAPIView(CreateAPIView):
         return CommentSerializer
 
     def post(self, request, *args, **kwargs):
-        return Response(
-            data={
-                "success": "Created",
-            }
-        )
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            if request.user.is_authenticated:
+                serializer.save(article=Article.objects.get(slug="the-influence-of-minimalism-on-contemporary-fashion"),
+                                user=request.user, email=request.user.email)
+
+            else:
+                serializer.save(article=Article.objects.get(slug="the-influence-of-minimalism-on-contemporary-fashion"))
+
+            return Response(
+                data={
+                    "success": "Your comment must be approved by the administrator.",
+                },
+                status=status.HTTP_201_CREATED,
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+            )
 
 
 class CommentDeleteAPIView(DestroyAPIView):
