@@ -187,7 +187,7 @@ const sendCommentEditRequest = (formData) => {
   const url = '/api/v1/comments/edit-comment'
 
   fetch(url, {
-      method:'PUT',
+      method:'PATCH',
       headers:{
        'X-CSRFToken':csrfToken,
       },
@@ -195,6 +195,7 @@ const sendCommentEditRequest = (formData) => {
   }).then((response) => {
        return response.json()
   }).then((response) => {
+      console.log(response)
       if (response.hasOwnProperty('success')) {
           showAlert(response.success, 'success')
           updateCommentContent(response.id, response.content)

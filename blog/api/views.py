@@ -1,4 +1,4 @@
-from rest_framework.generics import DestroyAPIView, CreateAPIView
+from rest_framework.generics import DestroyAPIView, CreateAPIView, UpdateAPIView
 from blog.models import ArticleComment, Article
 from rest_framework.response import Response
 from rest_framework import status
@@ -26,11 +26,14 @@ class CommentCreateAPIView(CreateAPIView):
 
         if serializer.is_valid():
             if request.user.is_authenticated:
-                serializer.save(article=Article.objects.get(slug="the-influence-of-minimalism-on-contemporary-fashion"),
-                                user=request.user, email=request.user.email)
+                serializer.save(
+                    article=article,
+                    user=request.user,
+                    email=request.user.email
+                )
 
             else:
-                serializer.save(article=Article.objects.get(slug="the-influence-of-minimalism-on-contemporary-fashion"))
+                serializer.save(article=article)
 
             response = Response(
                 data={
@@ -52,6 +55,45 @@ class CommentCreateAPIView(CreateAPIView):
                 )
 
             return response
+
+        else:
+            return Response(
+                data=serializer.errors,
+            )
+
+
+class CommentUpdateAPIView(UpdateAPIView):
+    def get_serializer_class(self):
+        return CommentSerializer
+
+    def patch(self, request, *args, **kwargs):
+        comment_id = request.data.get("id")
+
+        try:
+            comment = ArticleComment.objects.get(id=comment_id)
+
+        except ArticleComment.DoesNotExist:
+            return Response(
+                data={
+                    "error": "The comment you want to edit does not exist.",
+                }
+            )
+
+        serializer = self.get_serializer(instance=comment, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save(
+                article=comment.article,
+                user=comment.user
+            )
+            return Response(
+                data={
+                    "success": "Comment updated successfully.",
+                    "id": comment_id,
+                    "comment": request.data.get("comment"),
+                },
+                status=status.HTTP_200_OK,
+            )
 
         else:
             return Response(

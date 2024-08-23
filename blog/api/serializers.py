@@ -83,11 +83,17 @@ class CommentSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         comment = ArticleComment(**validated_data)
-
-        comment.is_active = True
         comment.save()
 
         return validated_data
+
+    def update(self, instance, validated_data):
+        comment = validated_data.get("comment")
+
+        instance.comment = comment
+        instance.save()
+
+        return instance
 
     def run_validation(self, data):
         try:
