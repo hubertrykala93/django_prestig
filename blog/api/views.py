@@ -86,11 +86,12 @@ class CommentUpdateAPIView(UpdateAPIView):
                 article=comment.article,
                 user=comment.user
             )
+            
             return Response(
                 data={
                     "success": "Comment updated successfully.",
                     "id": comment_id,
-                    "comment": request.data.get("comment"),
+                    "content": request.data.get("comment"),
                 },
                 status=status.HTTP_200_OK,
             )
