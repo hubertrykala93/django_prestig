@@ -11,6 +11,19 @@ class CommentCreateAPIView(CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+        print(request.data)
+        print(request.data.get("save") == "1")
+
+        try:
+            article = Article.objects.get(slug=request.data.get("slug"))
+
+        except Article.DoesNotExist:
+            return Response(
+                data={
+                    "error": "The article you want to comment on does not exist.",
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
         if serializer.is_valid():
             if request.user.is_authenticated:
@@ -20,12 +33,18 @@ class CommentCreateAPIView(CreateAPIView):
             else:
                 serializer.save(article=Article.objects.get(slug="the-influence-of-minimalism-on-contemporary-fashion"))
 
-            return Response(
+            response = Response(
                 data={
                     "success": "Your comment must be approved by the administrator.",
                 },
                 status=status.HTTP_201_CREATED,
             )
+
+            if request.data.get("save") == "1":
+                response.set_cookie(key="fullname", value=request.data.get("fullname"), max_age=60 * 60 * 24 * 365)
+                response.set_cookie(key="email", value=request.data.get("email"), max_age=60 * 60 * 24 * 365)
+
+            return response
 
         else:
             return Response(

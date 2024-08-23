@@ -104,6 +104,8 @@
             <h3 class="heading heading--h3">Write your opinion</h3>
             <p class="article__comment-form__text">Your email address will not be published. Required fields are marked *</p>
 
+            <input type="hidden" name="slug" value="{{ article.slug }}">
+
             <div class="form__row">
               <div class="form__field js-form-field">
                   <div class="form__input-wrap">
@@ -116,13 +118,13 @@
             <div class="form__row">
               <div class="form__field js-form-field">
                   <div class="form__input-wrap">
-                      <input type="text" id="fullname" name="fullname" placeholder="Your name *">
+                      <input type="text" id="fullname" name="fullname" {% if request.COOKIES.fullname %}value="{{ request.COOKIES.fullname }}"{% endif %} placeholder="Your name *">
                   </div>
               </div>
 
               <div class="form__field js-form-field">
                 <div class="form__input-wrap">
-                    <input type="text" id="email" name="email" placeholder="Your email *">
+                    <input type="text" id="email" name="email" {% if request.COOKIES.email %}value="{{ request.COOKIES.email }}"{% endif %} placeholder="Your email *">
                 </div>
               </div>
             </div>

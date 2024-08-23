@@ -6,6 +6,7 @@ const $articleCommentForm = document.querySelector('.js-article-comment-form')
  * @param {Object} formData - Add comment formdata object.
  */
 const sendAddCommentRequest = (formData) => {
+//    const slug = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
     const url = '/api/v1/comments/create-comment'
 
     fetch(url, {
@@ -18,7 +19,6 @@ const sendAddCommentRequest = (formData) => {
          return response.json()
     }).then((response) => {
         clearFormErrors($articleCommentForm)
-        console.log(response)
 
         if (response.hasOwnProperty('success')) {
             showAlert(response.success, 'success')
@@ -41,7 +41,7 @@ const sendAddCommentRequest = (formData) => {
 const validateCommentForm = (formData) => {
   const comment = formData.get('comment').trim()
   const result = {}
-  
+
   if (comment === '') {
     result.comment = 'Comment is required.'
   }
@@ -144,7 +144,6 @@ const sendCommentDeletionRequest = (formData) => {
   }).then((response) => {
        return response.json()
   }).then((response) => {
-      console.log(response)
       if (response.hasOwnProperty('success')) {
           showAlert(response.success, 'success')
           deleteComment(response.id)

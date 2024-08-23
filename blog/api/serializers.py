@@ -83,6 +83,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         comment = ArticleComment(**validated_data)
+
+        comment.is_active = True
         comment.save()
 
         return validated_data
