@@ -12,25 +12,25 @@
         <h4 class="blog__content__heading heading heading--h4">Searching keyword: {{ request.GET.keyword }}</h4>
         {% endif %}
         <div class="blog__cards">
-          {% for article in articles %}
+          {% for page in pages %}
             <div class="blog-card">
               <a href="{{ article.get_absolute_url }}" class="blog-card__image">
-                <img src="{{ article.image.url }}" alt="Article thumbnail">
+                <img src="{{ page.image.url }}" alt="Article thumbnail">
               </a>
 
-              <div class="blog-card__date">{{ article.created_at|format_date }}</div>
+              <div class="blog-card__date">{{ page.created_at|format_date }}</div>
 
               <h4 class="blog-card__heading heading heading--h4">
-                <a href="{{ article.get_absolute_url }}">
-                  {{ article.title }}
+                <a href="{{ page.get_absolute_url }}">
+                  {{ page.title }}
                 </a>
               </h4>
 
               <p class="blog-card__intro">
-                {{ article.description|truncatechars:100 }}
+                {{ page.description|truncatechars:100 }}
               </p>
 
-              <a href="{% url 'article-details' article.article_category.slug article.slug %}" class="blog-card__more-btn">
+              <a href="{% url 'article-details' page.article_category.slug page.slug %}" class="blog-card__more-btn">
                 <span>Read more</span>
                 <i class="ri-arrow-right-up-line" aria-hidden="true"></i>
               </a>
@@ -38,7 +38,7 @@
           {% endfor %} 
         </div>
 
-        {% if articles|length > 6 %}
+        {% if pages.paginator.count > 6 %}
         {% include 'blog/pagination.html' %}
         {% endif %}
       </div>

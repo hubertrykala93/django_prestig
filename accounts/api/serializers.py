@@ -3,7 +3,6 @@ from accounts.models import User, Profile, DeliveryDetails
 import re
 from datetime import date
 from django.contrib.auth import update_session_auth_hash
-import os
 
 
 class UserSerializer(serializers.ModelSerializer):

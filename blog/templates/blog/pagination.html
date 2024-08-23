@@ -1,17 +1,37 @@
 <ul class="pagination">
+    {% if pages.has_previous %}
     <li>
-        <a class="active" href="#">01</a>
+        <a href="?page=1">First</a>
     </li>
     <li>
-        <a href="#">02</a>
+        <a href="?page={{ pages.previous_page_number }}">
+            <span class="visually-hidden">Previous page</span>
+            <i class="ri-arrow-left-line" aria-hidden="true"></i>
+        </a>
     </li>
+    {% endif %}
+
+    {% for num in pages.paginator.page_range %}
+    {% if pages.number == num %}
     <li>
-        <a href="#">03</a>
+        <a class="active" href="?page={{ num }}">{{ num }}</a>
     </li>
+    {% elif num > pages.number|add:'-2' and num < pages.number|add:'2' %}
     <li>
-        <a href="#">
+        <a href="?page={{ num }}">{{ num }}</a>
+    </li>
+    {% endif %}
+    {% endfor %}
+
+    {% if pages.has_next %}
+    <li>
+        <a href="?page={{ pages.next_page_number }}">
             <span class="visually-hidden">Last page</span>
             <i class="ri-arrow-right-line" aria-hidden="true"></i>
         </a>
     </li>
+    <li>
+        <a href="?page={{ pages.paginator.num_pages }}">Last</a>
+    </li>
+    {% endif %}
 </ul>

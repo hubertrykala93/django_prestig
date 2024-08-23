@@ -34,7 +34,7 @@
             <div class="form__field js-form-field">
               <label for="dateofbirth" class="form__label">date of birth</label>
               <div class="form__input-wrap">
-                  <input type="date" id="dateofbirth" name="dateofbirth" value="{% if profile.dateofbirth %}{{ profile.dateofbirth }}{% endif %}" max="{{ max }}">
+                  <input type="date" id="dateofbirth" name="dateofbirth" value="{% if profile.dateofbirth %}{{ profile.dateofbirth|date:'Y-m-d' }}{% endif %}" max="{{ max }}">
               </div>
             </div>
           </div>
@@ -55,7 +55,7 @@
                 <div class="form__upload-container__image-preview">
                   <span>Profile Picture Preview:</span>
                   <div class="form__upload-container__image-preview__image-wrapper">
-                    <img src="{{ profile.profilepicture }}" class="form__upload-container__image-preview__image js-form-upload-preview-image" alt="user avatar">
+                    <img src="{{ profile.profilepicture.url }}" class="form__upload-container__image-preview__image js-form-upload-preview-image" alt="user avatar">
                     <button type="button" class="form__upload-container__image-preview__delete js-form-upload-delete-image {% if profile.profilepicture_name != 'default_profile_image.png' %}active{% endif %}">
                       <span class="visually-hidden">Delete profile picture</span>
                       <i class="ri-close-line" aria-hidden="true"></i>

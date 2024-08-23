@@ -2,6 +2,28 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Article, ArticleCategory, ArticleComment, ArticleTag
 from django.db.models import Q
+from django.core.paginator import Paginator
+
+
+def pagination(request, object_list, per_page=6):
+    paginator = Paginator(object_list=object_list, per_page=per_page)
+    page = request.GET.get("page")
+
+    try:
+        page = int(page)
+
+        if page < 1:
+            page = 1
+
+        elif page > paginator.num_pages:
+            page = paginator.num_pages
+
+    except (TypeError, ValueError):
+        page = 1
+
+    pages = paginator.get_page(number=page)
+
+    return pages
 
 
 def blog(request):
@@ -10,7 +32,11 @@ def blog(request):
         template_name="blog/blog.html",
         context={
             "title": "Blog",
-            "articles": Article.objects.all().order_by("-created_at"),
+            "pages": pagination(
+                request=request,
+                object_list=Article.objects.all().order_by("-created_at"),
+                per_page=6,
+            ),
         }
     )
 
@@ -32,7 +58,11 @@ def articles_by_category(request, category_slug):
         template_name="blog/articles-by-category.html",
         context={
             "title": category.name,
-            "articles": Article.objects.filter(article_category=category).order_by("-created_at"),
+            "pages": pagination(
+                request=request,
+                object_list=Article.objects.filter(article_category=category).order_by("-created_at"),
+                per_page=6,
+            ),
         }
     )
 
@@ -53,7 +83,11 @@ def articles_by_tag(request, tag_slug):
         template_name="blog/articles-by-tag.html",
         context={
             "title": tag.name,
-            "articles": Article.objects.filter(article_tags=tag).order_by("-created_at"),
+            "pages": pagination(
+                request=request,
+                object_list=Article.objects.filter(article_tags=tag).order_by("-created_at"),
+                per_page=6,
+            ),
         }
     )
 
@@ -101,5 +135,10 @@ def search_by_keyword(request):
         context={
             "title": "Search Results",
             "articles": articles,
+            "pages": pagination(
+                request=request,
+                object_list=Article.objects.all().order_by("-created_at"),
+                per_page=6,
+            ),
         }
     )
