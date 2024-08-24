@@ -3,6 +3,7 @@ from django.contrib import messages
 from .models import Article, ArticleCategory, ArticleComment, ArticleTag
 from django.db.models import Q
 from django.core.paginator import Paginator
+from accounts.models import User
 
 
 def pagination(request, object_list, per_page=6):

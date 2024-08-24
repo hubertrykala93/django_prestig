@@ -122,3 +122,9 @@ class ArticleComment(models.Model):
 
     def __str__(self):
         return f"{self.created_at}, {self.fullname if self.fullname else self.user.username}"
+
+    def save(self, *args, **kwargs):
+        if not self.email:
+            self.email = self.user.email
+
+        return super(ArticleComment, self).save(*args, **kwargs)

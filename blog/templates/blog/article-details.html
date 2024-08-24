@@ -22,7 +22,7 @@
           <img src="{{ article.image.url }}" alt="Article main image" class="article__image">
 
           <div class="article__content">
-            {{ article.description }}
+            {{ article.description|safe }}
           </div>
 
           <div class="article__footer">
