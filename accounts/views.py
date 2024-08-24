@@ -77,6 +77,16 @@ def profile_settings(request):
     )
 
 
+def comments_summary(request):
+    return render(
+        request=request,
+        template_name="accounts/comments-summary.html",
+        context={
+            "title": "Comments Summary",
+        }
+    )
+
+
 @login_required(login_url="login")
 def delivery_details(request):
     return render(

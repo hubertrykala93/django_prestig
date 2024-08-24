@@ -9,6 +9,7 @@ urlpatterns = [
     path(route="profile-page", view=accounts_views.profile_page, name="profile-page"),
     path(route="my-account", view=accounts_views.my_account, name="my-account"),
     path(route="my-account/account-settings", view=accounts_views.account_settings, name="account-settings"),
+    path(route="comment-summary", view=accounts_views.comments_summary, name="comment-summary"),
     path(route="my-account/profile-settings", view=accounts_views.profile_settings, name="profile-settings"),
     path(route="my-account/delivery-details", view=accounts_views.delivery_details, name="delivery-details"),
     path(route="my-account/purchased-products", view=accounts_views.purchased_products, name="purchased-products"),
