@@ -120,7 +120,7 @@ class Profile(models.Model):
         choices=GENDER_CHOICES,
         default="Undefined")
     dateofbirth = models.DateField(null=True)
-    profilepicture = models.ImageField(default="profile_images/default_profile_image.png", upload_to="profile_images",
+    profilepicture = models.ImageField(default="profile_images/default_profile_image.png", upload_to="profile_images/",
                                        null=True)
 
     # Social Media
@@ -141,23 +141,40 @@ class Profile(models.Model):
         return self.user.username
 
     def save(self, *args, **kwargs):
-        super(Profile, self).save(*args, **kwargs)
+        # super(Profile, self).save(*args, **kwargs)
 
-        image = Image.open(fp=self.profilepicture.path)
+        if self.profilepicture:
+            print("If profile picture.")
+            super(Profile, self).save(*args, **kwargs)
 
-        if image.mode == "RGBA":
-            image = image.convert(mode="RGBA")
+            original_path = self.profilepicture.path
+            print(f"Original path -> {original_path}")
 
-        image.thumbnail(size=(300, 300))
+            image = Image.open(fp=self.profilepicture.path)
+            image.thumbnail(size=(300, 300))
+            print(f"Picture lower.")
 
-        file_extension = self.profilepicture.name.split(".")[-1]
-        new_name = str(uuid4()) + "." + file_extension
-        new_path = os.path.join(os.path.dirname(self.profilepicture.path), new_name)
+            file_extension = self.profilepicture.name.split(".")[-1]
+            print(f"File Extension -> {file_extension}")
+            new_name = str(uuid4()) + "." + file_extension
+            print(f"New name -> {new_name}")
+            new_path = os.path.join(os.path.dirname(self.profilepicture.path), new_name)
+            print(f"New path -> {new_path}")
 
-        image.save(fp=new_path)
-        self.profilepicture.name = os.path.relpath(new_path, start=settings.MEDIA_ROOT)
+            image.save(fp=new_path)
+            print(f"Image saved.")
+            self.profilepicture.name = os.path.relpath(new_path, start=settings.MEDIA_ROOT)
 
-        return super(Profile, self).save(*args, **kwargs)
+            if original_path != new_path:
+                print("Original Path != New Path")
+                if os.path.exists(path=original_path):
+                    print("Exist")
+                    os.remove(path=original_path)
+
+            super(Profile, self).save(*args, **kwargs)
+
+        else:
+            super(Profile, self).save(*args, **kwargs)
 
 
 @receiver(signal=post_save, sender=User)
