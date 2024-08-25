@@ -51,7 +51,7 @@ class ProfileForm(forms.ModelForm):
         ("Female", "Female"),
         ("Undefined", "Undefined"),
     ), widget=forms.RadioSelect, required=False)
-    dateofbirth = forms.DateField(help_text="Provide your date of birth", label="Date of Birth", required=False)
+    dateofbirth = forms.DateField(help_text="Provide your date of birth (YYYY-MM-DD).", label="Date of Birth", required=False)
     profilepicture = forms.ImageField(help_text="Upload your profile picture.", label="Profile Picture", required=False)
     facebook = forms.CharField(help_text="Provide your Facebook username.", label="Facebook Username", required=False)
     instagram = forms.CharField(help_text="Provide your Instagram username.", label="Instagram Username",
