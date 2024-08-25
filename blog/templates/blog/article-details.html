@@ -1,6 +1,7 @@
 {% extends 'core/base.html' %}
 {% load static %}
 {% load date_filters %}
+{% load decode_filters %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -118,13 +119,13 @@
             <div class="form__row">
               <div class="form__field js-form-field">
                   <div class="form__input-wrap">
-                      <input type="text" id="fullname" name="fullname" {% if request.COOKIES.fullname %}value="{{ request.COOKIES.fullname }}"{% endif %} placeholder="Your name *">
+                      <input type="text" id="fullname" name="fullname" {% if request.COOKIES.fullname %}value="{{ request.COOKIES.fullname|decode }}"{% endif %} placeholder="Your name *">
                   </div>
               </div>
 
               <div class="form__field js-form-field">
                 <div class="form__input-wrap">
-                    <input type="text" id="email" name="email" {% if request.COOKIES.email %}value="{{ request.COOKIES.email }}"{% endif %} placeholder="Your email *">
+                    <input type="text" id="email" name="email" {% if request.COOKIES.email %}value="{{ request.COOKIES.email|decode }}"{% endif %} placeholder="Your email *">
                 </div>
               </div>
             </div>
