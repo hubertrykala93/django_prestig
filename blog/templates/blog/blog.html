@@ -27,7 +27,7 @@
               </h4>
 
               <p class="blog-card__intro">
-                {{ page.description|truncatechars:100 }}
+                {{ page.description|truncatechars:100|safe }}
               </p>
 
               <a href="{% url 'article-details' page.article_category.slug page.slug %}" class="blog-card__more-btn">
