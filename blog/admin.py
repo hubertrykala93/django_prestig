@@ -50,7 +50,6 @@ class AdminArticle(SummernoteModelAdmin):
         "title",
         "get_image_name",
         "slug",
-        "description",
         "get_category",
         "get_tags",
     ]
