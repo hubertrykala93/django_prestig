@@ -132,7 +132,7 @@ class Profile(models.Model):
     wishlist = models.ManyToManyField(to=Product)
 
     # Delivery Details
-    delivery_details = models.OneToOneField(to=DeliveryDetails, on_delete=models.SET_NULL, null=True)
+    delivery_details = models.OneToOneField(to=DeliveryDetails, on_delete=models.CASCADE, null=True)
 
     class Meta:
         verbose_name = "Profile"

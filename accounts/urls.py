@@ -6,7 +6,7 @@ urlpatterns = [
     path(route="login", view=accounts_views.login, name="login"),
     path(route="change-password", view=accounts_views.change_password, name="change-password"),
     path(route="forgot-password", view=accounts_views.forgot_password, name="forgot-password"),
-    path(route="profile-page", view=accounts_views.profile_page, name="profile-page"),
+    path(route="profile-page/<int:pk>", view=accounts_views.profile_page, name="profile-page"),
     path(route="my-account", view=accounts_views.my_account, name="my-account"),
     path(route="my-account/account-settings", view=accounts_views.account_settings, name="account-settings"),
     path(route="my-account/profile-settings", view=accounts_views.profile_settings, name="profile-settings"),

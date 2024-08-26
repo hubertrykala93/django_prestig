@@ -160,11 +160,15 @@
                 <div class="article__comment js-article-comment" data-id="{{ comment.id }}">
                   <div class="article__comment__info">
                     <div class="article__comment__info__avatar">
-                      <img src="{% if comment.user != None %}{{ comment.user.profile.profilepicture.url }}{% else %}/media/profile_images/default_profile_image.png{% endif %}" alt="Comment's author avatar">
+                      <a href="{% url 'profile-page' comment.user.id %}">
+                        <img src="{% if comment.user != None %}{{ comment.user.profile.profilepicture.url }}{% else %}/media/profile_images/default_profile_image.png{% endif %}" alt="Comment's author avatar">
+                      </a>
                     </div>
 
                     <div class="article__comment__info__content">
-                      <h6 class="heading heading--h6">{% if comment.user != None %}{% if comment.user.profile.firstname and comment.user.profile.lastname %}{{ comment.user.profile.firstname }} {{ comment.user.profile.lastname }}{% else %}{{ comment.user.username }}{% endif %}{% else %}{{ comment.fullname }}{% endif %}</h6>
+                      <a href="{% url 'profile-page' comment.user.id %}">
+                        <h6 class="heading heading--h6">{% if comment.user != None %}{% if comment.user.profile.firstname and comment.user.profile.lastname %}{{ comment.user.profile.firstname }} {{ comment.user.profile.lastname }}{% else %}{{ comment.user.username }}{% endif %}{% else %}{{ comment.fullname }}{% endif %}</h6>
+                      </a>
                       <p class="article__comment__info__content__date">{{ comment.created_at|date:"Y-m-d H:i" }}</p>
                     </div>
                   </div>

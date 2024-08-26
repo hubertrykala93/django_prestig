@@ -191,7 +191,8 @@ class AdminDeliveryDetails(admin.ModelAdmin):
         "get_house_number",
         "get_apartment_number",
         "get_postal_code",
-        "phone"
+        "phone",
+        "get_username",
     ]
     form = DeliveryDetailsForm
     fieldsets = (
@@ -236,6 +237,11 @@ class AdminDeliveryDetails(admin.ModelAdmin):
         return obj.postalcode
 
     get_postal_code.short_description = "Postal Code"
+
+    def get_username(self, obj):
+        return obj.profile
+
+    get_username.short_description = "Username"
 
 
 @admin.register(Session)

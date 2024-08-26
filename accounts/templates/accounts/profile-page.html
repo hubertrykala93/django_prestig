@@ -7,20 +7,20 @@
   <div class="container container--narrow">
     <div class="row">
       <aside class="profile__aside">
-        <img class="profile__avatar" src="https://acapa.com.br/wp-content/uploads/2018/09/831027.jpg" alt="user avatar">
-        <h4 class="heading heading--h4">Szymon69xx</h4>
-        <p>szymon.levy123@gmail.com</p>
+        <img class="profile__avatar" src="{{ profile.profilepicture.url }}" alt="user avatar">
+        <h4 class="heading heading--h4">{{ user.username }}</h4>
+        <p>{{ user.email }}</p>
         <h5 class="profile__social-heading heading heading--h5">Social media</h5>
 
         <ul class="profile__social-list">
           <li>
-            <a href="#" class="profile__social-list__link profile__social-list__link--facebook" target="_blank">
+            <a href="https://www.facebook.com/{{ profile.facebook }}" class="profile__social-list__link profile__social-list__link--facebook" target="_blank">
               <span class="visually-hidden">Facebook link</span>
               <i class="ri-facebook-box-fill" aria-hidden="true"></i>
             </a>
           </li>
           <li>
-            <a href="#" class="profile__social-list__link profile__social-list__link--instagram" target="_blank">
+            <a href="https://www.instagram.com/{{ profile.instagram }}" class="profile__social-list__link profile__social-list__link--instagram" target="_blank">
               <span class="visually-hidden">Instagram link</span>
               <i class="ri-instagram-fill" aria-hidden="true"></i>
             </a>
@@ -50,38 +50,38 @@
           <div class="tabs__contents__item js-tab-contents-item active">
             <div class="profile__info">
               <div class="profile__info__block">
-                <h6 class="profile__info__block__heading heading heading--h6">First name</h6>
-                <p>Imię</p>
+                <h6 class="profile__info__block__heading heading heading--h6">First Name</h6>
+                <p>{% if profile.firstname %}{{ profile.firstname }}{% else %}-{% endif %}</p>
               </div>
 
               <div class="profile__info__block">
                 <h6 class="profile__info__block__heading heading heading--h6">Last name</h6>
-                <p>Nazwisko</p>
+                <p>{% if profile.lastname %}{{ profile.lastname }}{% else %}-{% endif %}</p>
               </div>
 
               <div class="profile__info__block">
                 <h6 class="profile__info__block__heading heading heading--h6">About me</h6>
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsam cupiditate quae esse beatae! Voluptatibus sequi maxime, similique rem aperiam animi.</p>
+                <p>{% if profile.bio %}{{ profile.bio }}{% else %}-{% endif %}</p>
               </div>
 
               <div class="profile__info__block">
                 <h6 class="profile__info__block__heading heading heading--h6">Date of birth</h6>
-                <p>septmeber 10, 2024</p>
+                <p>{% if profile.dateofbirth %}{{ profile.dateofbirth }}{% else %}-{% endif %}</p>
               </div>
 
               <div class="profile__info__block">
                 <h6 class="profile__info__block__heading heading heading--h6">Gender</h6>
-                <p>male</p>
+                <p>{% if profile.gender %}{{ profile.gender }}{% else %}-{% endif %}</p>
               </div>
 
               <div class="profile__info__block">
                 <h6 class="profile__info__block__heading heading heading--h6">Country</h6>
-                <p>Poland</p>
+                <p>{% if delivery_details.country %}{{ delivery_details.country }}{% else %}-{% endif %}</p>
               </div>
 
               <div class="profile__info__block">
                 <h6 class="profile__info__block__heading heading heading--h6">City</h6>
-                <p>Warszawa</p>
+                <p>{% if delivery_details.city %}{{ delivery_details.city }}{% else %}-{% endif %}</p>
               </div>
             </div>
           </div>
@@ -112,28 +112,20 @@
           </div>
 
           <div class="tabs__contents__item js-tab-contents-item">
-            No comments.
-            <!-- warunek to wyżej lub to niżej -->
+            {% if comments %}
              <ul class="profile__info-list">
+               {% for comment in comments %}
               <li>
-                <a href="#">
+                <a href="{{ comment.article.get_absolute_url }}">
                   <i class="ri-chat-4-line" aria-hidden="true"></i>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias sed et deleniti, ipsa officiis eius?
+                  {{ comment.comment }}
                 </a>
               </li>
-              <li>
-                <a href="#">
-                  <i class="ri-chat-4-line" aria-hidden="true"></i>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Impedit repellendus molestias aliquam delectus, unde cumque esse provident beatae? Tempora, corrupti excepturi dolore aliquam voluptatem ex?
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <i class="ri-chat-4-line" aria-hidden="true"></i>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias sed et deleniti, ipsa officiis eius?
-                </a>
-              </li>
+               {% endfor %}
              </ul>
+            {% else %}
+            No Comments
+            {% endif %}
           </div>
 
           <div class="tabs__contents__item js-tab-contents-item">

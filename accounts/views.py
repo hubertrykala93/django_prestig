@@ -1,14 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import user_passes_test, login_required
 from accounts.models import Profile, OneTimePassword, User, DeliveryDetails
 from datetime import date
 from django.core.exceptions import ValidationError
-import requests
+from blog.models import ArticleComment
 
 
 @user_passes_test(test_func=lambda u: not u.is_authenticated, login_url="index")
 def register(request):
-    print(Profile.objects.get(user=User.objects.get(username="hubert.rykala")).profilepicture)
     return render(
         request=request,
         template_name="accounts/register.html",
@@ -31,10 +30,35 @@ def login(request):
     )
 
 
-def profile_page(request):
+# @login_required(login_url="login")
+# def profile_page(request, pk):
+#     return render(
+#         request=request,
+#         template_name="accounts/profile-page.html",
+#         context={
+#             "user": User.objects.get(id=pk),
+#             "profile": Profile.objects.get(user_id=User.objects.get(id=pk)),
+#             "delivery_details": DeliveryDetails.objects.get(
+#                 id=Profile.objects.get(user_id=User.objects.get(id=pk)).delivery_details_id),
+#             "comments": ArticleComment.objects.filter(user=User.objects.get(id=pk)),
+#         }
+#     )
+
+@login_required(login_url="login")
+def profile_page(request, pk):
+    user = get_object_or_404(klass=User, id=pk)
+    profile = get_object_or_404(klass=Profile, user=user)
+    delivery_details = profile.delivery_details
+
     return render(
         request=request,
         template_name="accounts/profile-page.html",
+        context={
+            "user": user,
+            "profile": profile,
+            "delivery_details": delivery_details,
+            "comments": ArticleComment.objects.filter(user=user, is_active=True),
+        }
     )
 
 
