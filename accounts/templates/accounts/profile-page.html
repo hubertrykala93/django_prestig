@@ -40,9 +40,6 @@
             <li>
               <button class="tabs__nav__button js-tabs-nav-button">Blog comments</button>
             </li>
-            <li>
-              <button class="tabs__nav__button js-tabs-nav-button">Articles</button>
-            </li>
           </ul>
         </div>
 
@@ -88,27 +85,6 @@
 
           <div class="tabs__contents__item js-tab-contents-item">
             No reviews.
-            <!-- warunek to wyżej lub to niżej -->
-             <ul class="profile__info-list">
-              <li>
-                <a href="#">
-                  <i class="ri-user-star-line" aria-hidden="true"></i>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias sed et deleniti, ipsa officiis eius?
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <i class="ri-user-star-line" aria-hidden="true"></i>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Impedit repellendus molestias aliquam delectus, unde cumque esse provident beatae? Tempora, corrupti excepturi dolore aliquam voluptatem ex?
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <i class="ri-user-star-line" aria-hidden="true"></i>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias sed et deleniti, ipsa officiis eius?
-                </a>
-              </li>
-             </ul>
           </div>
 
           <div class="tabs__contents__item js-tab-contents-item">
@@ -116,41 +92,24 @@
              <ul class="profile__info-list">
                {% for comment in comments %}
               <li>
-                <a href="{{ comment.article.get_absolute_url }}">
-                  <i class="ri-chat-4-line" aria-hidden="true"></i>
+                <h5 class="profile__info-list__heading heading heading--h5">
+                  <a href="{{ comment.article.get_absolute_url }}#comments">
+                    {{ comment.article.title }}
+                  </a>
+                </h5>
+                <p>
                   {{ comment.comment }}
-                </a>
+                </p>
+                <div class="profile__info-list__date">
+                  <i class="ri-calendar-2-line" aria-hidden="true"></i>
+                  January 34, 1234
+                </div>
               </li>
                {% endfor %}
              </ul>
             {% else %}
             No Comments
             {% endif %}
-          </div>
-
-          <div class="tabs__contents__item js-tab-contents-item">
-            No articles.
-            <!-- warunek to wyżej lub to niżej -->
-             <ul class="profile__info-list">
-              <li>
-                <a href="#">
-                  <i class="ri-article-line" aria-hidden="true"></i>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias sed et deleniti, ipsa officiis eius?
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <i class="ri-article-line" aria-hidden="true"></i>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Impedit repellendus molestias aliquam delectus, unde cumque esse provident beatae? Tempora, corrupti excepturi dolore aliquam voluptatem ex?
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <i class="ri-article-line" aria-hidden="true"></i>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias sed et deleniti, ipsa officiis eius?
-                </a>
-              </li>
-             </ul>
           </div>
         </div>
       </div>

@@ -1782,6 +1782,21 @@ textarea::placeholder{
   border: .0625rem solid var(--clr-gray-200);
 }
 
+.profile__info-list__heading {
+  margin-bottom: .3em;
+}
+
+.profile__info-list__date {
+  margin-top: .625rem;
+  font-size: var(--fs-300);
+  text-transform: uppercase;
+}
+
+.profile__info-list__date i {
+  margin-right: .2em;
+  color: var(--clr-accent-400);
+}
+
 
 /**
 * BLOG
