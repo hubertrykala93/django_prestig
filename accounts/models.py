@@ -8,6 +8,7 @@ from shop.models import Product
 from PIL import Image
 import os
 from django.conf import settings
+from django.db import transaction
 
 
 class CustomUserManager(UserManager):
@@ -46,7 +47,7 @@ class CustomUserManager(UserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    uuid = models.UUIDField(default=uuid4)
+    uuid = models.UUIDField(default=uuid4, unique=True)
     date_joined = models.DateTimeField(default=now)
     username = models.CharField(max_length=35, unique=True)
     email = models.EmailField(max_length=255, unique=True)
@@ -72,7 +73,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class OneTimePassword(models.Model):
     created_at = models.DateTimeField(default=now)
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
-    uuid = models.UUIDField(default=uuid4)
+    uuid = models.UUIDField(default=uuid4, unique=True)
 
     class Meta:
         verbose_name = "One Time Password"
@@ -84,7 +85,7 @@ class OneTimePassword(models.Model):
 
 class DeliveryDetails(models.Model):
     created_at = models.DateTimeField(default=now)
-    uuid = models.UUIDField(default=uuid4)
+    uuid = models.UUIDField(default=uuid4, unique=True)
     phone = models.CharField(max_length=20, null=True)
     country = models.CharField(max_length=56)
     state = models.CharField(max_length=50)
@@ -141,37 +142,45 @@ class Profile(models.Model):
         return self.user.username
 
     def save(self, *args, **kwargs):
-        # super(Profile, self).save(*args, **kwargs)
+        if not getattr(self, "_is_saving", False):
+            self._is_saving = True
 
-        if self.profilepicture:
-            print("If profile picture.")
-            super(Profile, self).save(*args, **kwargs)
+            if self.profilepicture:
+                if Profile.objects.filter(pk=self.pk).exists():
+                    instance = Profile.objects.get(pk=self.pk)
 
-            original_path = self.profilepicture.path
-            print(f"Original path -> {original_path}")
+                    if instance.profilepicture.path.split("/")[-1] != "default_profile_image.png":
+                        try:
+                            os.remove(path=instance.profilepicture.path)
 
-            image = Image.open(fp=self.profilepicture.path)
-            image.thumbnail(size=(300, 300))
-            print(f"Picture lower.")
+                        except FileNotFoundError:
+                            instance.profilepicture = "profile_images/default_profile_image.png"
+                            super(Profile, self).save(*args, **kwargs)
 
-            file_extension = self.profilepicture.name.split(".")[-1]
-            print(f"File Extension -> {file_extension}")
-            new_name = str(uuid4()) + "." + file_extension
-            print(f"New name -> {new_name}")
-            new_path = os.path.join(os.path.dirname(self.profilepicture.path), new_name)
-            print(f"New path -> {new_path}")
+                super(Profile, self).save(*args, **kwargs)
 
-            image.save(fp=new_path)
-            print(f"Image saved.")
-            self.profilepicture.name = os.path.relpath(new_path, start=settings.MEDIA_ROOT)
+                original_path = self.profilepicture.path
 
-            if original_path != new_path:
-                print("Original Path != New Path")
-                if os.path.exists(path=original_path):
-                    print("Exist")
+                image = Image.open(fp=original_path)
+                image.thumbnail(size=(300, 300))
+
+                file_extension = original_path.split(".")[-1]
+                new_name = str(uuid4()) + "." + file_extension
+                new_path = os.path.join(os.path.dirname(original_path), new_name)
+
+                if original_path.split("/")[-1] != "default_profile_image.png":
+                    image.save(fp=new_path)
+
+                    self.profilepicture.name = os.path.relpath(path=new_path, start=settings.MEDIA_ROOT)
+
                     os.remove(path=original_path)
 
-            super(Profile, self).save(*args, **kwargs)
+                super(Profile, self).save(update_fields=["profilepicture"])
+
+            else:
+                super(Profile, self).save(*args, **kwargs)
+
+            self._is_saving = True
 
         else:
             super(Profile, self).save(*args, **kwargs)
@@ -180,12 +189,12 @@ class Profile(models.Model):
 @receiver(signal=post_save, sender=User)
 def create_profile(sender, instance=None, created=None, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+        Profile.objects.get_or_create(user=instance)
 
 
 @receiver(signal=post_save, sender=Profile)
 def create_delivery_details(sender, instance=None, created=None, **kwargs):
-    if created:
+    if created and not instance.delivery_details:
         delivery_details = DeliveryDetails.objects.create()
         instance.delivery_details = delivery_details
         instance.save()

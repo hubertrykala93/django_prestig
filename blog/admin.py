@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import ArticleCategory, ArticleTag, Article, ArticleComment
 from .forms import ArticleCategoryForm, ArticleTagForm, ArticleForm, ArticleCommentForm
+from django_summernote.admin import SummernoteModelAdmin
 
 
 @admin.register(ArticleCategory)
@@ -40,7 +41,8 @@ class AdminArticleTag(admin.ModelAdmin):
 
 
 @admin.register(Article)
-class AdminArticle(admin.ModelAdmin):
+class AdminArticle(SummernoteModelAdmin):
+    summernote_fields = ["description"]
     list_display = [
         "id",
         "formatted_created_at",

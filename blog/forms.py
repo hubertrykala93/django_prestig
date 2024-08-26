@@ -1,6 +1,6 @@
 from django import forms
 from .models import ArticleCategory, ArticleTag, Article, ArticleComment
-from tinymce.widgets import TinyMCE
+from django_summernote.widgets import SummernoteWidget
 
 
 class ArticleCategoryForm(forms.ModelForm):
@@ -24,12 +24,8 @@ class ArticleTagForm(forms.ModelForm):
 class ArticleForm(forms.ModelForm):
     title = forms.CharField(max_length=200, help_text="Provide the article title.", label="Title")
     image = forms.ImageField(help_text="Upload an image of the article.", label="Image", required=True)
-    # description = forms.CharField(max_length=100000, help_text="Provide the article description.",
-    #                               label="Description")
-    description = forms.CharField(widget=TinyMCE(attrs={
-        "cols": 80,
-        "rows": 30,
-    }))
+    description = forms.CharField(max_length=100000, help_text="Provide the article description.", label="Description",
+                                  widget=SummernoteWidget())
     slug = forms.SlugField(required=False)
 
     class Meta:

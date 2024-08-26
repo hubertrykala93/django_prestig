@@ -8,6 +8,7 @@ import requests
 
 @user_passes_test(test_func=lambda u: not u.is_authenticated, login_url="index")
 def register(request):
+    print(Profile.objects.get(user=User.objects.get(username="hubert.rykala")).profilepicture)
     return render(
         request=request,
         template_name="accounts/register.html",

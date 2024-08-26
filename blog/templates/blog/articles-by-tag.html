@@ -26,7 +26,7 @@
               </h4>
 
               <p class="blog-card__intro">
-                {{ page.description|truncatechars:100 }}
+                {{ page.description|truncatechars:100|safe }}
               </p>
 
               <a href="{{ page.get_absolute_url }}" class="blog-card__more-btn">
