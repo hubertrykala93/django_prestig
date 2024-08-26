@@ -134,35 +134,40 @@ font-family: var(--ff-heading);
 }
 
 .heading--h1,
-.article__content h1 {
+.article__content h1,
+.terms h1 {
   font-size: var(--fs-900);
   line-height: 1.2;
   font-weight: 700;
 }
 
 .heading--h2,
-.article__content h2 {
+.article__content h2,
+.terms h2 {
   font-size: var(--fs-800);
   line-height: 1.4;
   font-weight: 700;
 }
 
 .heading--h3,
-.article__content h3 {
+.article__content h3,
+.terms h3 {
   font-size: var(--fs-700);
   line-height: 1.35;
   font-weight: 600;
 }
 
 .heading--h4,
-.article__content h4 {
+.article__content h4,
+.terms h4 {
   font-size: var(--fs-600);
   line-height: 1.4;
   font-weight: 600;
 }
 
 .heading--h5,
-.article__content h5 {
+.article__content h5,
+.terms h5 {
   font-size: var(--fs-500);
   line-height: 1.6;
   font-weight: 600;
@@ -1797,7 +1802,6 @@ textarea::placeholder{
   color: var(--clr-accent-400);
 }
 
-
 /**
 * BLOG
 */
@@ -2262,6 +2266,32 @@ textarea::placeholder{
   color: var(--clr-accent-400);
 }
 
+/**
+* TERMS
+*/
+
+.terms {
+  padding: var(--block-space-500) 0 var(--block-space-800);
+}
+
+.terms h1,
+.terms h2,
+.terms h3,
+.terms h4,
+.terms h5,
+.terms h6 {
+  margin-bottom: .3em;
+}
+
+.terms ul {
+  padding-left: 1.8em;
+  list-style: disc;
+}
+
+.terms p:not(:last-child),
+.terms ul {
+  margin-bottom: 1.6em;
+}
 
 /**
 * FOOTER
