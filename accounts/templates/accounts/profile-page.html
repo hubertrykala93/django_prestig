@@ -3,4 +3,166 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
+<section class="profile">
+  <div class="container container--narrow">
+    <div class="row">
+      <aside class="profile__aside">
+        <img class="profile__avatar" src="https://acapa.com.br/wp-content/uploads/2018/09/831027.jpg" alt="user avatar">
+        <h4 class="heading heading--h4">Szymon69xx</h4>
+        <p>szymon.levy123@gmail.com</p>
+        <h5 class="profile__social-heading heading heading--h5">Social media</h5>
+
+        <ul class="profile__social-list">
+          <li>
+            <a href="#" class="profile__social-list__link profile__social-list__link--facebook" target="_blank">
+              <span class="visually-hidden">Facebook link</span>
+              <i class="ri-facebook-box-fill" aria-hidden="true"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="profile__social-list__link profile__social-list__link--instagram" target="_blank">
+              <span class="visually-hidden">Instagram link</span>
+              <i class="ri-instagram-fill" aria-hidden="true"></i>
+            </a>
+          </li>
+        </ul>
+      </aside>
+
+      <div class="profile__content">
+        <div class="tabs">
+          <ul class="tabs__nav">
+            <li class="active">
+              <button class="tabs__nav__button js-tabs-nav-button active">Basic information</button>
+            </li>
+            <li>
+              <button class="tabs__nav__button js-tabs-nav-button">Product reviews</button>
+            </li>
+            <li>
+              <button class="tabs__nav__button js-tabs-nav-button">Blog comments</button>
+            </li>
+            <li>
+              <button class="tabs__nav__button js-tabs-nav-button">Articles</button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="tabs__contents">
+          <div class="tabs__contents__item js-tab-contents-item active">
+            <div class="profile__info">
+              <div class="profile__info__block">
+                <h6 class="profile__info__block__heading heading heading--h6">First name</h6>
+                <p>Imię</p>
+              </div>
+
+              <div class="profile__info__block">
+                <h6 class="profile__info__block__heading heading heading--h6">Last name</h6>
+                <p>Nazwisko</p>
+              </div>
+
+              <div class="profile__info__block">
+                <h6 class="profile__info__block__heading heading heading--h6">About me</h6>
+                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsam cupiditate quae esse beatae! Voluptatibus sequi maxime, similique rem aperiam animi.</p>
+              </div>
+
+              <div class="profile__info__block">
+                <h6 class="profile__info__block__heading heading heading--h6">Date of birth</h6>
+                <p>septmeber 10, 2024</p>
+              </div>
+
+              <div class="profile__info__block">
+                <h6 class="profile__info__block__heading heading heading--h6">Gender</h6>
+                <p>male</p>
+              </div>
+
+              <div class="profile__info__block">
+                <h6 class="profile__info__block__heading heading heading--h6">Country</h6>
+                <p>Poland</p>
+              </div>
+
+              <div class="profile__info__block">
+                <h6 class="profile__info__block__heading heading heading--h6">City</h6>
+                <p>Warszawa</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="tabs__contents__item js-tab-contents-item">
+            No reviews.
+            <!-- warunek to wyżej lub to niżej -->
+             <ul class="profile__info-list">
+              <li>
+                <a href="#">
+                  <i class="ri-user-star-line" aria-hidden="true"></i>
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias sed et deleniti, ipsa officiis eius?
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="ri-user-star-line" aria-hidden="true"></i>
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Impedit repellendus molestias aliquam delectus, unde cumque esse provident beatae? Tempora, corrupti excepturi dolore aliquam voluptatem ex?
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="ri-user-star-line" aria-hidden="true"></i>
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias sed et deleniti, ipsa officiis eius?
+                </a>
+              </li>
+             </ul>
+          </div>
+
+          <div class="tabs__contents__item js-tab-contents-item">
+            No comments.
+            <!-- warunek to wyżej lub to niżej -->
+             <ul class="profile__info-list">
+              <li>
+                <a href="#">
+                  <i class="ri-chat-4-line" aria-hidden="true"></i>
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias sed et deleniti, ipsa officiis eius?
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="ri-chat-4-line" aria-hidden="true"></i>
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Impedit repellendus molestias aliquam delectus, unde cumque esse provident beatae? Tempora, corrupti excepturi dolore aliquam voluptatem ex?
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="ri-chat-4-line" aria-hidden="true"></i>
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias sed et deleniti, ipsa officiis eius?
+                </a>
+              </li>
+             </ul>
+          </div>
+
+          <div class="tabs__contents__item js-tab-contents-item">
+            No articles.
+            <!-- warunek to wyżej lub to niżej -->
+             <ul class="profile__info-list">
+              <li>
+                <a href="#">
+                  <i class="ri-article-line" aria-hidden="true"></i>
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias sed et deleniti, ipsa officiis eius?
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="ri-article-line" aria-hidden="true"></i>
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Impedit repellendus molestias aliquam delectus, unde cumque esse provident beatae? Tempora, corrupti excepturi dolore aliquam voluptatem ex?
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <i class="ri-article-line" aria-hidden="true"></i>
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias sed et deleniti, ipsa officiis eius?
+                </a>
+              </li>
+             </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock %}

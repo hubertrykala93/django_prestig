@@ -553,3 +553,73 @@ if ($contactForm) {
         handleContactForm(e)
     })
 }
+
+/**
+* TABS
+*/
+const $tabsButtons = document.querySelectorAll('.js-tabs-nav-button')
+
+/**
+ * Hides currently open tab content.
+ */
+const hideActiveTabContent = () => {
+    document.querySelectorAll('.js-tab-contents-item').forEach($content => {
+        if ($content.classList.contains('active')) {
+            $content.classList.remove('active')
+        }
+    })
+}
+
+/**
+ * Removes active state from currently active one.
+ */
+const removeTabNavActivity = () => {
+    document.querySelectorAll('.js-tabs-nav-button').forEach($button => {
+        if ($button.classList.contains('active')) {
+            $button.classList.remove('active')
+        }
+    })
+}
+
+/**
+ * Shows tab content of clicked tab nav button.
+ * @param {number} showIndex - Index of tab content to show.
+ */
+const showTabContent = (showIndex) => {
+    document.querySelectorAll('.js-tab-contents-item').forEach(($content, index) => {
+        if (showIndex == index) {
+            $content.classList.add('active')
+        }
+    })
+}
+
+/**
+ * Activate tab nav button of clicked one.
+ * @param {number} showIndex - Index of tab nav button to activate.
+ */
+const addTabNavActivity = (showIndex) => {
+    document.querySelectorAll('.js-tabs-nav-button').forEach(($button, index) => {
+        if (showIndex == index) {
+            $button.classList.add('active')
+        }
+    })
+}
+
+/**
+ * Handles tabs changing.
+ * @param {number} index - Index of clicked tab.
+ */
+const handleTabsNav = (index) => {
+    removeTabNavActivity()
+    addTabNavActivity(index)
+    hideActiveTabContent()
+    showTabContent(index)
+}
+
+if ($tabsButtons) {
+    $tabsButtons.forEach(($button, index) => {
+        $button.addEventListener('click', () => {
+            handleTabsNav(index)
+        })
+    })
+}
