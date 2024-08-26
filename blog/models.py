@@ -7,7 +7,6 @@ from PIL import Image
 import os
 from django.conf import settings
 from django.shortcuts import reverse
-from django_quill.fields import QuillField
 
 
 class ArticleCategory(models.Model):

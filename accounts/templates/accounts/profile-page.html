@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load date_filters %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -63,7 +64,7 @@
 
               <div class="profile__info__block">
                 <h6 class="profile__info__block__heading heading heading--h6">Date of birth</h6>
-                <p>{% if profile.dateofbirth %}{{ profile.dateofbirth }}{% else %}-{% endif %}</p>
+                <p>{% if profile.dateofbirth %}{{ profile.dateofbirth|format_date }}{% else %}-{% endif %}</p>
               </div>
 
               <div class="profile__info__block">
@@ -93,16 +94,16 @@
                {% for comment in comments %}
               <li>
                 <h5 class="profile__info-list__heading heading heading--h5">
-                  <a href="{{ comment.article.get_absolute_url }}#comments">
+                  <a href="{{ comment.article.get_absolute_url }}">
                     {{ comment.article.title }}
                   </a>
                 </h5>
                 <p>
-                  {{ comment.comment }}
+                  {{ comment.comment|truncatechars:100 }}
                 </p>
                 <div class="profile__info-list__date">
                   <i class="ri-calendar-2-line" aria-hidden="true"></i>
-                  January 34, 1234
+                  {{ comment.created_at|format_date }}
                 </div>
               </li>
                {% endfor %}
