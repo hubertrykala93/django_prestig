@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import user_passes_test, login_required
-from accounts.models import Profile, OneTimePassword, User, DeliveryDetails
+from accounts.models import Profile, OneTimePassword, User
 from datetime import date
 from django.core.exceptions import ValidationError
 from blog.models import ArticleComment

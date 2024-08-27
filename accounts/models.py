@@ -8,7 +8,6 @@ from shop.models import Product
 from PIL import Image
 import os
 from django.conf import settings
-from django.db import transaction
 
 
 class CustomUserManager(UserManager):

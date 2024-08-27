@@ -79,32 +79,55 @@ class Article(models.Model):
         })
 
     def save(self, *args, **kwargs):
-        super(Article, self).save(*args, **kwargs)
+        if not getattr(self, "_is_saving", False):
+            self._is_saving = True
 
-        image = Image.open(fp=self.image.path)
+            if self.image:
+                if Article.objects.filter(pk=self.pk).exists():
+                    instance = Article.objects.get(pk=self.pk)
 
-        if image.mode == "RGBA":
-            image = image.convert(mode="RGB")
+                    try:
+                        os.remove(path=instance.image.path)
 
-        img_width = image.width
-        img_height = image.height
+                    except FileNotFoundError:
+                        super(Article, self).save(*args, **kwargs)
 
-        output_width = 1100
-        output_height = img_height * output_width / img_width
+                super(Article, self).save(*args, **kwargs)
 
-        image.thumbnail(size=(output_width, output_height))
+                original_path = self.image.path
 
-        file_extension = self.image.name.split(".")[-1]
-        new_name = str(uuid4()) + "." + file_extension
-        new_path = os.path.join(os.path.dirname(self.image.path), new_name)
+                image = Image.open(fp=self.image.path)
 
-        image.save(fp=new_path)
-        self.image.name = os.path.relpath(new_path, start=settings.MEDIA_ROOT)
+                img_width = image.width
+                img_height = image.height
 
-        if not self.slug:
-            self.slug = slugify(self.title)
+                output_width = 1100
+                output_height = img_height * output_width / img_width
 
-        return super(Article, self).save(*args, **kwargs)
+                image.thumbnail(size=(output_width, output_height))
+
+                file_extension = original_path.split(".")[-1]
+                new_name = str(uuid4()) + "." + file_extension
+                new_path = os.path.join(os.path.dirname(original_path), new_name)
+
+                os.remove(path=original_path)
+
+                image.save(fp=new_path)
+
+                self.image.name = os.path.relpath(path=new_path, start=settings.MEDIA_ROOT)
+
+                if not self.slug:
+                    self.slug = slugify(self.title)
+
+                super(Article, self).save(update_fields=["image", "slug"])
+
+            else:
+                super(Article, self).save(*args, **kwargs)
+
+            self._is_saving = True
+
+        else:
+            super(Article, self).save(*args, **kwargs)
 
 
 class ArticleComment(models.Model):
