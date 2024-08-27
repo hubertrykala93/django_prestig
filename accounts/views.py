@@ -30,23 +30,8 @@ def login(request):
     )
 
 
-# @login_required(login_url="login")
-# def profile_page(request, pk):
-#     return render(
-#         request=request,
-#         template_name="accounts/profile-page.html",
-#         context={
-#             "user": User.objects.get(id=pk),
-#             "profile": Profile.objects.get(user_id=User.objects.get(id=pk)),
-#             "delivery_details": DeliveryDetails.objects.get(
-#                 id=Profile.objects.get(user_id=User.objects.get(id=pk)).delivery_details_id),
-#             "comments": ArticleComment.objects.filter(user=User.objects.get(id=pk)),
-#         }
-#     )
-
-@login_required(login_url="login")
-def profile_page(request, pk):
-    user = get_object_or_404(klass=User, id=pk)
+def profile_page(request, username):
+    user = get_object_or_404(klass=User, username=username)
     profile = get_object_or_404(klass=Profile, user=user)
     delivery_details = profile.delivery_details
 
