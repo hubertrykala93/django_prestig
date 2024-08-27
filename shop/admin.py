@@ -76,7 +76,7 @@ class AdminProductCategory(admin.ModelAdmin):
     """
     Admin options and functionalities for ProductCategory model.
     """
-    list_display = ["id", "name", "slug", "image", "get_subcategories", "is_active"]
+    list_display = ["id", "name", "slug", "formatted_image", "get_subcategories", "is_active"]
     prepopulated_fields = {"slug": ["name"]}
     form = ProductCategoryForm
     fieldsets = (
@@ -110,8 +110,15 @@ class AdminProductCategory(admin.ModelAdmin):
         ),
     )
 
+    def formatted_image(self, obj):
+        return obj.image.name.split("/")[-1]
+
+    formatted_image.short_description = "Image"
+
     def get_subcategories(self, obj):
         return "\n".join([s.name for s in obj.subcategory.all()])
+
+    get_subcategories.short_description = "SubCategories"
 
 
 @admin.register(ProductSubCategory)
