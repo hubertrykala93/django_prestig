@@ -110,7 +110,6 @@ class ProfilePicture(SaveMixin, models.Model):
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
     format = models.CharField(null=True)
-    alt = models.CharField(default="Default profile picture", max_length=1000, unique=True)
 
     class Meta:
         verbose_name = "Profile Picture"
