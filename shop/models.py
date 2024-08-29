@@ -125,6 +125,10 @@ class Stock(models.Model):
 class ProductGallery(models.Model):
     image = models.ImageField(upload_to="shop/products/gallery", null=True)
 
+    class Meta:
+        verbose_name = "Product Gallery"
+        verbose_name_plural = "Products Gallery"
+
     def __str__(self):
         return f"{self.image.name}"
 

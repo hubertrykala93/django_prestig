@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import User, Profile, OneTimePassword, DeliveryDetails, ProfilePicture
 from .forms import UserForm, ProfileForm, OneTimePasswordForm, DeliveryDetailsForm, ProfilePictureForm
 from django.contrib.sessions.models import Session
+from django.utils.html import format_html
 
 
 @admin.register(User)
@@ -139,11 +140,11 @@ class AdminProfile(admin.ModelAdmin):
         "user",
         "get_first_name",
         "get_last_name",
+        "get_profilepicture_id",
+        "get_profilepicture",
         "bio",
         "gender",
         "formatted_date_of_birth",
-        "get_profilepicture_id",
-        "get_profilepicture_name",
         "facebook",
         "instagram",
         "delivery_details"
@@ -213,23 +214,29 @@ class AdminProfile(admin.ModelAdmin):
 
     get_last_name.short_description = "Last Name"
 
+    def get_profilepicture_id(self, obj):
+        if obj.profilepicture:
+            return obj.profilepicture
+
+        else:
+            return "No Profile Picture"
+
+    get_profilepicture_id.short_description = "Profile Picture ID"
+
+    def get_profilepicture(self, obj):
+        if obj.profilepicture:
+            return obj.profilepicture.image
+
+        else:
+            return "No Profile Picture"
+
+    get_profilepicture.short_description = "Profile Picture"
+
     def formatted_date_of_birth(self, obj):
         if obj.dateofbirth:
             return obj.dateofbirth.strftime("%Y-%m-%d")
 
     formatted_date_of_birth.short_description = "Date of Birth"
-
-    def get_profilepicture_id(self, obj):
-        if obj.profilepicture:
-            return obj.profilepicture.id
-
-    get_profilepicture_id.short_description = "Profile Picture ID"
-
-    def get_profilepicture_name(self, obj):
-        if obj.profilepicture:
-            return obj.profilepicture.image.name.split("/")[-1]
-
-    get_profilepicture_name.short_description = "Profile Picture Name"
 
 
 @admin.register(DeliveryDetails)

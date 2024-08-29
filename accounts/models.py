@@ -118,9 +118,6 @@ class ProfilePicture(SaveMixin, models.Model):
     def __str__(self):
         return f"{self.id}"
 
-    def get_alt_default(self):
-        return f"{self.alt.default}"
-
 
 class Profile(models.Model):
     GENDER_CHOICES = (
@@ -158,9 +155,6 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
-
-    def get_firstname_and_lastname(self):
-        return f"{self.firstname} {self.lastname}"
 
 
 @receiver(signal=post_save, sender=User)

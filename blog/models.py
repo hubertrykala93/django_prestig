@@ -2,12 +2,7 @@ from django.db import models
 from django.utils.timezone import now
 from accounts.models import User
 from django.utils.text import slugify
-from uuid import uuid4
-from PIL import Image
-import os
-from django.conf import settings
 from django.shortcuts import reverse
-from .mixins import SaveMixin
 
 
 class ArticleCategory(models.Model):
@@ -56,9 +51,7 @@ class ArticleTag(models.Model):
         return super(ArticleTag, self).save(*args, **kwargs)
 
 
-class Article(SaveMixin, models.Model):
-    slug_source = "title"
-
+class Article(models.Model):
     created_at = models.DateTimeField(default=now)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
