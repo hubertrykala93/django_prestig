@@ -1,46 +1,8 @@
 from rest_framework import serializers
-from accounts.models import User, Profile, DeliveryDetails, ProfilePicture
+from accounts.models import User, Profile, DeliveryDetails
 import re
 from datetime import date
 from django.contrib.auth import update_session_auth_hash
-
-
-class UserSerializer(serializers.ModelSerializer):
-    last_login = serializers.SerializerMethodField(method_name="get_last_login")
-
-    class Meta:
-        model = User
-        exclude = [
-            "password",
-            "groups",
-            "user_permissions",
-        ]
-        extra_kwargs = {
-            "date_joined": {
-                "format": "%Y-%m-%d %H:%M:%S",
-            },
-        }
-
-    def get_last_login(self, obj):
-        if obj.last_login:
-            return obj.last_login.strftime("%Y-%m-%d %H:%M:%S")
-
-
-class ProfileSerializer(serializers.ModelSerializer):
-    # profilepicture_name = serializers.SerializerMethodField(method_name="formatted_profile_picture")
-
-    class Meta:
-        model = Profile
-        fields = "__all__"
-        extra_kwargs = {
-            "created_at": {
-                "format": "%Y-%m-%d %H:%M:%S",
-            },
-        }
-
-    # def formatted_profile_picture(self, obj):
-    #     if obj.profilepicture:
-    #         return obj.profilepicture.name.split("/")[-1]
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
@@ -206,7 +168,6 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
 class ProfilePictureDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        # fields = "__all__"
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -582,17 +543,6 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(detail=new_errors)
 
         return validated_data
-
-
-class DeliveryDetailsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DeliveryDetails
-        fields = "__all__"
-        extra_kwargs = {
-            "created_at": {
-                "format": "%Y-%m-%d %H:%M:%S",
-            },
-        }
 
 
 class DeliveryDetailsUpdateSerializer(serializers.ModelSerializer):
