@@ -7,5 +7,6 @@ def shop(request):
         template_name="shop/shop.html",
         context={
             "title": "Shop",
+            "img": "/media/page-title/shop.jpg",
         }
     )

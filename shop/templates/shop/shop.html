@@ -1,6 +1,80 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}{{ title }}{% endblock %}
 
+
 {% block content %}
+{% include 'core/page-title.html' %}
+
+<section class="shop">
+  <div class="container">
+    <div class="row">
+      <aside class="shop__aside">
+        <div class="shop__line-head">
+          <button class="shop__line-head__filter-button js-open-filter-btn">
+            <i class="ri-equalizer-2-line" aria-hidden="true"></i>
+            Filter
+          </button>
+
+          <span class="shop__line-head__filter-text">
+            <i class="ri-equalizer-2-line" aria-hidden="true"></i>
+            Filter
+          </span>
+        </div>
+
+        <div class="shop__aside__filter js-filter">
+          <button class="shop__aside__filter__close-button js-close-filter-btn">
+            <span class="visually-hidden">Close filter</span>
+            <i class="ri-close-line" aria-hidden="true"></i>
+          </button>
+
+        </div>
+      </aside>
+
+      <div class="shop__content">
+        <div class="shop__line-head">
+          <div class="shop__line-head__counter">Showing 1–12 of 15 results</div>
+        </div>
+
+        <div class="shop__cards">
+          {% for i in '123456'|make_list %}
+            <div class="product-card" data-id="1">
+              <div class="product-card__top">
+                  <img class="product-card__top__image" src="https://i.pinimg.com/736x/e4/64/f6/e464f67ced879835b32e4c84318bf7a2.jpg" alt="Product image">
+
+                  <div class="product-card__top__elements">
+                      <div class="product-card__top__elements__buttons">
+                          <button class="product-card__top__elements__buttons__btn">
+                              <span class="visually-hidden">Add to favourities</span>
+                              <i class="ri-heart-line" aria-hidden="true"></i>
+                          </button>
+
+                          <a href="#" class="product-card__top__elements__buttons__btn">
+                              <span class="visually-hidden">See more details</span>
+                              <i class="ri-eye-line" aria-hidden="true"></i>
+                          </a>
+                      </div>
+
+                      <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
+                  </div>
+              </div>
+
+              <div class="product-card__bottom">
+                  <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
+                  <div class="product-card__price">
+                      $<span class="product-card__price__figure">250.00</span>
+                  </div>
+              </div>
+            </div>
+          {% endfor %} 
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block page_scripts_last %}
+<script src="{% static 'js/shop.js' %}"></script>
 {% endblock %}

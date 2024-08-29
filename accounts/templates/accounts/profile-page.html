@@ -94,7 +94,7 @@
                {% for comment in comments %}
               <li>
                 <h5 class="profile__info-list__heading heading heading--h5">
-                  <a href="{{ comment.article.get_absolute_url }}">
+                  <a href="{{ comment.article.get_absolute_url }}#comments">
                     {{ comment.article.title }}
                   </a>
                 </h5>
