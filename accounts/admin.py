@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import User, Profile, OneTimePassword, DeliveryDetails
-from .forms import UserForm, ProfileForm, OneTimePasswordForm, DeliveryDetailsForm
+from .models import User, Profile, OneTimePassword, DeliveryDetails, ProfilePicture
+from .forms import UserForm, ProfileForm, OneTimePasswordForm, DeliveryDetailsForm, ProfilePictureForm
 from django.contrib.sessions.models import Session
 
 
@@ -84,6 +84,27 @@ class AdminOneTimePassword(admin.ModelAdmin):
     formatted_created_at.short_description = "Created At"
 
 
+@admin.register(ProfilePicture)
+class AdminProfilePicture(admin.ModelAdmin):
+    """
+    Admin options and functionalities for ProfilePicture model.
+    """
+    list_display = [
+        "id",
+        "image"
+    ]
+    form = ProfilePictureForm
+    fieldsets = (
+        (
+            "Uploading", {
+                "fields": [
+                    "image",
+                ],
+            },
+        ),
+    )
+
+
 @admin.register(Profile)
 class AdminProfile(admin.ModelAdmin):
     """
@@ -98,7 +119,7 @@ class AdminProfile(admin.ModelAdmin):
         "bio",
         "gender",
         "formatted_date_of_birth",
-        "formatted_profile_picture",
+        "formatted_profilepicture",
         "facebook",
         "instagram",
         "delivery_details"
@@ -169,10 +190,11 @@ class AdminProfile(admin.ModelAdmin):
 
     formatted_date_of_birth.short_description = "Date of Birth"
 
-    def formatted_profile_picture(self, obj):
-        return obj.profilepicture.name.split(sep="/")[-1]
+    def formatted_profilepicture(self, obj):
+        if obj.profilepicture:
+            return obj.profilepicture
 
-    formatted_profile_picture.short_description = "Profile Picture"
+    formatted_profilepicture.short_description = "Profile Picture"
 
 
 @admin.register(DeliveryDetails)

@@ -69,7 +69,7 @@
 
           <div class="article__bio">
             <div class="article__bio__image">
-              <img src="{{ article.user.profile.profilepicture.url }}" alt="Article author image">
+              <img src="{{ article.user.profile.profilepicture.image.url }}" alt="Article author image">
             </div>
 
             <div class="article__bio__content">
@@ -161,7 +161,7 @@
                   <div class="article__comment__info">
                     <div class="article__comment__info__avatar">
                       <a href="{% url 'profile' comment.user.username %}">
-                        <img src="{% if comment.user != None %}{{ comment.user.profile.profilepicture.url }}{% else %}/media/profile_images/default_profile_image.png{% endif %}" alt="Comment's author avatar">
+                        <img src="{% if comment.user != None %}{{ comment.user.profile.profilepicture.image.url }}{% else %}/media/profile_images/default_profile_image.png{% endif %}" alt="Comment's author avatar">
                       </a>
                     </div>
 

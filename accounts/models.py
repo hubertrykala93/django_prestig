@@ -3,7 +3,7 @@ from django.contrib.auth.models import UserManager, AbstractBaseUser, Permission
 from django.utils.timezone import now
 from uuid import uuid4
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from shop.models import Product
 from PIL import Image
 import os
@@ -100,7 +100,19 @@ class DeliveryDetails(models.Model):
         verbose_name_plural = "Delivery Details"
 
     def __str__(self):
-        return str(self.uuid)
+        return f"{self.id}"
+
+
+class ProfilePicture(models.Model):
+    image = models.ImageField(default="accounts/profile_images/default_profile_image.png",
+                              upload_to="accounts/profile_images", null=True)
+
+    class Meta:
+        verbose_name = "Profile Picture"
+        verbose_name_plural = "Profile Pictures"
+
+    def __str__(self):
+        return f"({self.id}, {self.image.name})"
 
 
 class Profile(models.Model):
@@ -120,8 +132,7 @@ class Profile(models.Model):
         choices=GENDER_CHOICES,
         default="Undefined")
     dateofbirth = models.DateField(null=True)
-    profilepicture = models.ImageField(default="profile_images/default_profile_image.png", upload_to="profile_images/",
-                                       null=True)
+    profilepicture = models.OneToOneField(to=ProfilePicture, on_delete=models.CASCADE, null=True)
 
     # Social Media
     facebook = models.CharField(max_length=50, null=True)
@@ -140,49 +151,49 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
-    def save(self, *args, **kwargs):
-        if not getattr(self, "_is_saving", False):
-            self._is_saving = True
-
-            if self.profilepicture:
-                if Profile.objects.filter(pk=self.pk).exists():
-                    instance = Profile.objects.get(pk=self.pk)
-
-                    if instance.profilepicture.path.split("/")[-1] != "default_profile_image.png":
-                        try:
-                            os.remove(path=instance.profilepicture.path)
-
-                        except FileNotFoundError:
-                            instance.profilepicture = "profile_images/default_profile_image.png"
-                            super(Profile, self).save(*args, **kwargs)
-
-                super(Profile, self).save(*args, **kwargs)
-
-                original_path = self.profilepicture.path
-
-                image = Image.open(fp=original_path)
-                image.thumbnail(size=(300, 300))
-
-                file_extension = original_path.split(".")[-1]
-                new_name = str(uuid4()) + "." + file_extension
-                new_path = os.path.join(os.path.dirname(original_path), new_name)
-
-                if original_path.split("/")[-1] != "default_profile_image.png":
-                    image.save(fp=new_path)
-
-                    self.profilepicture.name = os.path.relpath(path=new_path, start=settings.MEDIA_ROOT)
-
-                    os.remove(path=original_path)
-
-                super(Profile, self).save(update_fields=["profilepicture"])
-
-            else:
-                super(Profile, self).save(*args, **kwargs)
-
-            self._is_saving = True
-
-        else:
-            super(Profile, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if not getattr(self, "_is_saving", False):
+    #         self._is_saving = True
+    #
+    #         if self.profilepicture:
+    #             if Profile.objects.filter(pk=self.pk).exists():
+    #                 instance = Profile.objects.get(pk=self.pk)
+    #
+    #                 if instance.profilepicture.image.path.split("/")[-1] != "default_profile_image.png":
+    #                     try:
+    #                         os.remove(path=instance.profilepicture.image.path)
+    #
+    #                     except FileNotFoundError:
+    #                         instance.profilepicture = "profile_images/default_profile_image.png"
+    #                         super(Profile, self).save(*args, **kwargs)
+    #
+    #             super(Profile, self).save(*args, **kwargs)
+    #
+    #             original_path = self.profilepicture.image.path
+    #
+    #             image = Image.open(fp=original_path)
+    #             image.thumbnail(size=(300, 300))
+    #
+    #             file_extension = original_path.split(".")[-1]
+    #             new_name = str(uuid4()) + "." + file_extension
+    #             new_path = os.path.join(os.path.dirname(original_path), new_name)
+    #
+    #             if original_path.split("/")[-1] != "default_profile_image.png":
+    #                 image.save(fp=new_path)
+    #
+    #                 self.profilepicture.image.name = os.path.relpath(path=new_path, start=settings.MEDIA_ROOT)
+    #
+    #                 os.remove(path=original_path)
+    #
+    #             super(Profile, self).save(update_fields=["profilepicture"])
+    #
+    #         else:
+    #             super(Profile, self).save(*args, **kwargs)
+    #
+    #         self._is_saving = True
+    #
+    #     else:
+    #         super(Profile, self).save(*args, **kwargs)
 
 
 @receiver(signal=post_save, sender=User)
@@ -197,3 +208,23 @@ def create_delivery_details(sender, instance=None, created=None, **kwargs):
         delivery_details = DeliveryDetails.objects.create()
         instance.delivery_details = delivery_details
         instance.save()
+
+
+@receiver(signal=post_save, sender=Profile)
+def create_profilepicture(sender, instance=None, created=None, **kwargs):
+    if created and not instance.profilepicture:
+        profilepicture = ProfilePicture.objects.create()
+        instance.profilepicture = profilepicture
+        instance.save()
+
+
+@receiver(signal=post_delete, sender=Profile)
+def delete_delivery_details(sender, instance, **kwargs):
+    if instance.delivery_details:
+        instance.delivery_details.delete()
+
+
+@receiver(signal=post_delete, sender=Profile)
+def delete_profilepicture(sender, instance, **kwargs):
+    if instance.profilepicture:
+        instance.profilepicture.delete()

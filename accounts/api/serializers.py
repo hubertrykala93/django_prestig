@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from accounts.models import User, Profile, DeliveryDetails
+from accounts.models import User, Profile, DeliveryDetails, ProfilePicture
 import re
 from datetime import date
 from django.contrib.auth import update_session_auth_hash
@@ -27,7 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    profilepicture_name = serializers.SerializerMethodField(method_name="formatted_profile_picture")
+    # profilepicture_name = serializers.SerializerMethodField(method_name="formatted_profile_picture")
 
     class Meta:
         model = Profile
@@ -38,9 +38,9 @@ class ProfileSerializer(serializers.ModelSerializer):
             },
         }
 
-    def formatted_profile_picture(self, obj):
-        if obj.profilepicture:
-            return obj.profilepicture.name.split("/")[-1]
+    # def formatted_profile_picture(self, obj):
+    #     if obj.profilepicture:
+    #         return obj.profilepicture.name.split("/")[-1]
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
@@ -175,8 +175,17 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         return instagram
 
     def update(self, instance, validated_data):
+        profilepicture = validated_data.pop("profilepicture", None)
+
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
+
+        if profilepicture is not None:
+            profilepicture_instance = self.context["request"].user.profile.profilepicture
+
+            if profilepicture_instance:
+                profilepicture_instance.image = profilepicture
+                profilepicture_instance.save()
 
         instance.save()
 
@@ -197,7 +206,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
 class ProfilePictureDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ["profilepicture"]
+        # fields = "__all__"
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):

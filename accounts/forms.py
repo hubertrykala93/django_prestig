@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Profile, OneTimePassword, DeliveryDetails
+from .models import User, Profile, OneTimePassword, DeliveryDetails, ProfilePicture
 from django.contrib.auth.hashers import make_password
 
 
@@ -42,6 +42,19 @@ class OneTimePasswordForm(forms.ModelForm):
         self.fields["user"].label = "User"
 
 
+class ProfilePictureForm(forms.ModelForm):
+    class Meta:
+        model = ProfilePicture
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(ProfilePictureForm, self).__init__(*args, **kwargs)
+
+        self.fields["image"].help_text = "Upload your profile picture."
+        self.fields["image"].label = "Profile Picture"
+        self.fields["image"].required = True
+
+
 class ProfileForm(forms.ModelForm):
     firstname = forms.CharField(help_text="Provide the first name.", label="First Name", required=False)
     lastname = forms.CharField(help_text="Provide the last name", label="Last Name", required=False)
@@ -51,8 +64,8 @@ class ProfileForm(forms.ModelForm):
         ("Female", "Female"),
         ("Undefined", "Undefined"),
     ), widget=forms.RadioSelect, required=False)
-    dateofbirth = forms.DateField(help_text="Provide your date of birth (YYYY-MM-DD).", label="Date of Birth", required=False)
-    profilepicture = forms.ImageField(help_text="Upload your profile picture.", label="Profile Picture", required=False)
+    dateofbirth = forms.DateField(help_text="Provide your date of birth (YYYY-MM-DD).", label="Date of Birth",
+                                  required=False)
     facebook = forms.CharField(help_text="Provide your Facebook username.", label="Facebook Username", required=False)
     instagram = forms.CharField(help_text="Provide your Instagram username.", label="Instagram Username",
                                 required=False)
@@ -62,6 +75,10 @@ class ProfileForm(forms.ModelForm):
 
         self.fields["user"].help_text = "Select a user."
         self.fields["user"].label = "User"
+
+        self.fields["profilepicture"].help_text = "Choose a profile picture."
+        self.fields["profilepicture"].label = "Profile Picture"
+        self.fields["profilepicture"].required = False
 
         self.fields["wishlist"].help_text = "Add products to favourites."
         self.fields["wishlist"].label = "Wishlist"

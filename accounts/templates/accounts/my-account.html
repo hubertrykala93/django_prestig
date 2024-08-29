@@ -9,7 +9,7 @@
       <div class="my-account__col">
         <h4 class="my-account__col__heading heading heading--h4">My Account</h4>
 
-        <img src="{{ profile.profilepicture.url }}" class="my-account__avatar" alt="user avatar">
+        <img src="{{ profile.profilepicture.image.url }}" class="my-account__avatar" alt="user avatar">
         <h5 class="my-account__username__heading heading heading--h5">{{ user.username }}</h5>
         <p class="my-account__email">{{ user.email }}</p>
         <a href="{% url 'account-settings' %}" class="btn btn--primary">Edit Account Info</a>

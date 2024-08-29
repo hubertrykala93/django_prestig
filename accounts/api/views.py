@@ -249,24 +249,29 @@ class ProfileUpdateAPIView(UpdateAPIView):
 
 
 class ProfilePictureDeleteAPIView(DestroyAPIView):
-    def get_object(self):
-        return self.request.user.profile
-
     def get_serializer_class(self):
         return ProfilePictureDeleteSerializer
 
     def delete(self, request, *args, **kwargs):
         try:
-            instance = self.get_object()
+            instance = self.request.user.profile
+            print(instance)
 
-            if instance.profilepicture.name.split(sep="/")[-1] == "default_profile_image.png":
+            print(instance.profilepicture.image.name)
+
+            if instance.profilepicture.image.name.split(sep="/")[-1] == "default_profile_image.png":
+                print("Instance Profile Picture Image Name == default_profile_image.png")
                 return Response(
                     data={},
                 )
 
-            instance.profilepicture.delete(save=False)
-            instance.profilepicture = "profile_images/default_profile_image.png"
-            instance.save()
+            print("Instance Profile Picture Image Name != default_profile_image.png")
+
+            profilepicture_instance = self.request.user.profile.profilepicture
+
+            profilepicture_instance.image.delete(save=False)
+            profilepicture_instance.image = "accounts/profile_images/default_profile_image.png"
+            profilepicture_instance.save()
 
             return Response(
                 data={
