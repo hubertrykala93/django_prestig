@@ -16,8 +16,8 @@ class BrandForm(forms.ModelForm):
     name = forms.CharField(help_text="Provide the brand name.", label="Name")
     slug = forms.SlugField(required=False)
     description = forms.CharField(max_length=10000, help_text="Provide a brief description of the brand.",
-                                  label="Description")
-    logo = forms.ImageField(help_text="Upload the brand logo.", label="Logo")
+                                  label="Description", widget=forms.Textarea)
+    image = forms.ImageField(help_text="Upload the brand logo.", label="Logo")
 
     class Meta:
         model = Brand
@@ -39,13 +39,6 @@ class ProductCategoryForm(forms.ModelForm):
     image = forms.ImageField(help_text="Upload an image for this category.", label="Image")
     is_active = forms.BooleanField(help_text="Indicate whether the category is active.", required=False)
 
-    def __init__(self, *args, **kwargs):
-        super(ProductCategoryForm, self).__init__(*args, **kwargs)
-
-        self.fields["subcategory"].help_text = "Add a subcategory for this category."
-        self.fields["subcategory"].label = "SubCategory"
-        self.fields["subcategory"].required = False
-
     class Meta:
         model = ProductCategory
         fields = "__all__"
@@ -55,14 +48,22 @@ class ProductSubCategoryForm(forms.ModelForm):
     name = forms.CharField(help_text="Provide the subcategory name.", label="Name")
     slug = forms.SlugField(required=False)
     image = forms.ImageField(help_text="Upload an image for this subcategory.", label="Image")
+    is_active = forms.BooleanField(help_text="Indicate whether the category is active.", required=False)
 
     class Meta:
         model = ProductSubCategory
         fields = "__all__"
 
+    def __init__(self, *args, **kwargs):
+        super(ProductSubCategoryForm, self).__init__(*args, **kwargs)
+
+        self.fields["categories"].help_text = "Add a category for this subcategory."
+        self.fields["categories"].label = "Category"
+        self.fields["categories"].required = False
+
 
 class SizeForm(forms.ModelForm):
-    size = forms.CharField(help_text="Provide the size.", label="Size")
+    name = forms.CharField(help_text="Provide the size.", label="Size")
 
     class Meta:
         model = Size
@@ -70,7 +71,7 @@ class SizeForm(forms.ModelForm):
 
 
 class ColorForm(forms.ModelForm):
-    color = forms.CharField(help_text="Provide the color.", label="Color")
+    name = forms.CharField(help_text="Provide the color name.", label="Name")
     hex = forms.CharField(help_text="Provide the hex.", label="Hex")
 
     class Meta:
@@ -109,7 +110,7 @@ class ProductForm(forms.ModelForm):
     short_description = forms.CharField(help_text="Provide a short description of the product.",
                                         label="Short Description")
     price = forms.FloatField(help_text="Provide the product price.", label="Price")
-    thumbnail = forms.ImageField(help_text="Upload a product thumbnail.", label="Thumbnail")
+    image = forms.ImageField(help_text="Upload a product thumbnail.", label="Thumbnail")
     full_description = forms.CharField(max_length=100000, help_text="Provide a full description of the product.",
                                        label="Full Description")
     is_active = forms.BooleanField(help_text="Indicate if the product is active for sale.", required=False)

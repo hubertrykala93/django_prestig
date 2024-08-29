@@ -28,7 +28,7 @@ class AdminBrand(admin.ModelAdmin):
     """
     Admin options and functionalities for Brand model.
     """
-    list_display = ["id", "name", "slug", "description", "logo"]
+    list_display = ["id", "name", "slug", "description", "image"]
     list_editable = ["slug"]
     prepopulated_fields = {"slug": ["name"]}
     form = BrandForm
@@ -44,7 +44,7 @@ class AdminBrand(admin.ModelAdmin):
         (
             "Uploading", {
                 "fields": [
-                    "logo",
+                    "image",
                 ],
             },
         ),
@@ -76,7 +76,7 @@ class AdminProductCategory(admin.ModelAdmin):
     """
     Admin options and functionalities for ProductCategory model.
     """
-    list_display = ["id", "name", "slug", "formatted_image", "get_subcategories", "is_active"]
+    list_display = ["id", "name", "slug", "formatted_image", "is_active"]
     prepopulated_fields = {"slug": ["name"]}
     form = ProductCategoryForm
     fieldsets = (
@@ -95,13 +95,6 @@ class AdminProductCategory(admin.ModelAdmin):
             },
         ),
         (
-            "Related SubCategory", {
-                "fields": [
-                    "subcategory",
-                ],
-            },
-        ),
-        (
             "Permissions", {
                 "fields": [
                     "is_active",
@@ -115,18 +108,13 @@ class AdminProductCategory(admin.ModelAdmin):
 
     formatted_image.short_description = "Image"
 
-    def get_subcategories(self, obj):
-        return "\n".join([s.name for s in obj.subcategory.all()])
-
-    get_subcategories.short_description = "SubCategories"
-
 
 @admin.register(ProductSubCategory)
 class AdminProductSubCategory(admin.ModelAdmin):
     """
     Admin options and functionalities for ProductSubCategory model.
     """
-    list_display = ["id", "name", "slug", "image"]
+    list_display = ["id", "name", "slug", "image", "is_active"]
     prepopulated_fields = {"slug": ["name"]}
     form = ProductSubCategoryForm
     fieldsets = (
@@ -144,6 +132,20 @@ class AdminProductSubCategory(admin.ModelAdmin):
                 ],
             },
         ),
+        (
+            "Related Category", {
+                "fields": [
+                    "categories",
+                ],
+            },
+        ),
+        (
+            "Permissions", {
+                "fields": [
+                    "is_active",
+                ],
+            },
+        ),
     )
 
 
@@ -152,13 +154,13 @@ class AdminSize(admin.ModelAdmin):
     """
     Admin options and functionalities for Size model.
     """
-    list_display = ["id", "size"]
+    list_display = ["id", "name"]
     form = SizeForm
     fieldsets = (
         (
             "Basic Information", {
                 "fields": [
-                    "size",
+                    "name",
                 ],
             },
         ),
@@ -170,13 +172,13 @@ class AdminColor(admin.ModelAdmin):
     """
     Admin options and functionalities for Color model.
     """
-    list_display = ["id", "color", "hex"]
+    list_display = ["id", "name", "hex"]
     form = ColorForm
     fieldsets = (
         (
             "Basic Information", {
                 "fields": [
-                    "color",
+                    "name",
                     "hex",
                 ],
             },
@@ -244,7 +246,7 @@ class AdminProduct(admin.ModelAdmin):
         "short_description",
         "price",
         "get_quantity",
-        "thumbnail",
+        "image",
         "get_gallery",
         "rate",
         "get_tags",
@@ -273,7 +275,7 @@ class AdminProduct(admin.ModelAdmin):
         (
             "Uploading", {
                 "fields": [
-                    "thumbnail",
+                    "image",
                     "gallery",
                 ],
             },

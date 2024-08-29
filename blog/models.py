@@ -7,6 +7,7 @@ from PIL import Image
 import os
 from django.conf import settings
 from django.shortcuts import reverse
+from .mixins import SaveMixin
 
 
 class ArticleCategory(models.Model):
@@ -55,7 +56,9 @@ class ArticleTag(models.Model):
         return super(ArticleTag, self).save(*args, **kwargs)
 
 
-class Article(models.Model):
+class Article(SaveMixin, models.Model):
+    slug_source = "title"
+
     created_at = models.DateTimeField(default=now)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
@@ -77,57 +80,6 @@ class Article(models.Model):
             "category_slug": self.article_category.slug,
             "article_slug": self.slug,
         })
-
-    def save(self, *args, **kwargs):
-        if not getattr(self, "_is_saving", False):
-            self._is_saving = True
-
-            if self.image:
-                if Article.objects.filter(pk=self.pk).exists():
-                    instance = Article.objects.get(pk=self.pk)
-
-                    try:
-                        os.remove(path=instance.image.path)
-
-                    except FileNotFoundError:
-                        super(Article, self).save(*args, **kwargs)
-
-                super(Article, self).save(*args, **kwargs)
-
-                original_path = self.image.path
-
-                image = Image.open(fp=self.image.path)
-
-                img_width = image.width
-                img_height = image.height
-
-                output_width = 1100
-                output_height = img_height * output_width / img_width
-
-                image.thumbnail(size=(output_width, output_height))
-
-                file_extension = original_path.split(".")[-1]
-                new_name = str(uuid4()) + "." + file_extension
-                new_path = os.path.join(os.path.dirname(original_path), new_name)
-
-                os.remove(path=original_path)
-
-                image.save(fp=new_path)
-
-                self.image.name = os.path.relpath(path=new_path, start=settings.MEDIA_ROOT)
-
-                if not self.slug:
-                    self.slug = slugify(self.title)
-
-                super(Article, self).save(update_fields=["image", "slug"])
-
-            else:
-                super(Article, self).save(*args, **kwargs)
-
-            self._is_saving = True
-
-        else:
-            super(Article, self).save(*args, **kwargs)
 
 
 class ArticleComment(models.Model):
