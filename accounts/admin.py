@@ -119,7 +119,8 @@ class AdminProfile(admin.ModelAdmin):
         "bio",
         "gender",
         "formatted_date_of_birth",
-        "formatted_profilepicture",
+        "get_profilepicture_id",
+        "get_profilepicture_name",
         "facebook",
         "instagram",
         "delivery_details"
@@ -190,11 +191,17 @@ class AdminProfile(admin.ModelAdmin):
 
     formatted_date_of_birth.short_description = "Date of Birth"
 
-    def formatted_profilepicture(self, obj):
+    def get_profilepicture_id(self, obj):
         if obj.profilepicture:
-            return obj.profilepicture
+            return obj.profilepicture.id
 
-    formatted_profilepicture.short_description = "Profile Picture"
+    get_profilepicture_id.short_description = "Profile Picture ID"
+
+    def get_profilepicture_name(self, obj):
+        if obj.profilepicture:
+            return obj.profilepicture.image.name.split("/")[-1]
+
+    get_profilepicture_name.short_description = "Profile Picture Name"
 
 
 @admin.register(DeliveryDetails)

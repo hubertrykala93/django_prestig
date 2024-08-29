@@ -5,9 +5,7 @@ from uuid import uuid4
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 from shop.models import Product
-from PIL import Image
-import os
-from django.conf import settings
+from .mixins import ImageSaveMixin
 
 
 class CustomUserManager(UserManager):
@@ -103,7 +101,7 @@ class DeliveryDetails(models.Model):
         return f"{self.id}"
 
 
-class ProfilePicture(models.Model):
+class ProfilePicture(ImageSaveMixin, models.Model):
     image = models.ImageField(default="accounts/profile_images/default_profile_image.png",
                               upload_to="accounts/profile_images", null=True)
 
@@ -112,7 +110,7 @@ class ProfilePicture(models.Model):
         verbose_name_plural = "Profile Pictures"
 
     def __str__(self):
-        return f"({self.id}, {self.image.name})"
+        return f"{self.id}"
 
 
 class Profile(models.Model):
@@ -150,50 +148,6 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
-
-    # def save(self, *args, **kwargs):
-    #     if not getattr(self, "_is_saving", False):
-    #         self._is_saving = True
-    #
-    #         if self.profilepicture:
-    #             if Profile.objects.filter(pk=self.pk).exists():
-    #                 instance = Profile.objects.get(pk=self.pk)
-    #
-    #                 if instance.profilepicture.image.path.split("/")[-1] != "default_profile_image.png":
-    #                     try:
-    #                         os.remove(path=instance.profilepicture.image.path)
-    #
-    #                     except FileNotFoundError:
-    #                         instance.profilepicture = "profile_images/default_profile_image.png"
-    #                         super(Profile, self).save(*args, **kwargs)
-    #
-    #             super(Profile, self).save(*args, **kwargs)
-    #
-    #             original_path = self.profilepicture.image.path
-    #
-    #             image = Image.open(fp=original_path)
-    #             image.thumbnail(size=(300, 300))
-    #
-    #             file_extension = original_path.split(".")[-1]
-    #             new_name = str(uuid4()) + "." + file_extension
-    #             new_path = os.path.join(os.path.dirname(original_path), new_name)
-    #
-    #             if original_path.split("/")[-1] != "default_profile_image.png":
-    #                 image.save(fp=new_path)
-    #
-    #                 self.profilepicture.image.name = os.path.relpath(path=new_path, start=settings.MEDIA_ROOT)
-    #
-    #                 os.remove(path=original_path)
-    #
-    #             super(Profile, self).save(update_fields=["profilepicture"])
-    #
-    #         else:
-    #             super(Profile, self).save(*args, **kwargs)
-    #
-    #         self._is_saving = True
-    #
-    #     else:
-    #         super(Profile, self).save(*args, **kwargs)
 
 
 @receiver(signal=post_save, sender=User)
