@@ -91,7 +91,14 @@ class AdminProfilePicture(admin.ModelAdmin):
     """
     list_display = [
         "id",
-        "image"
+        "created_at",
+        "updated_at",
+        "image",
+        "size",
+        "width",
+        "height",
+        "format",
+        "alt",
     ]
     form = ProfilePictureForm
     fieldsets = (
@@ -99,6 +106,13 @@ class AdminProfilePicture(admin.ModelAdmin):
             "Uploading", {
                 "fields": [
                     "image",
+                ],
+            },
+        ),
+        (
+            "Alt Text", {
+                "fields": [
+                    "alt",
                 ],
             },
         ),

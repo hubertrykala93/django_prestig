@@ -2,7 +2,7 @@ import os
 from PIL import Image
 
 
-class ImageSaveMixin:
+class SaveMixin:
     def save(self, *args, **kwargs):
         if not getattr(self, "_is_saving", False):
             print("If not Get Attribute '_is_saving'.")
@@ -31,26 +31,40 @@ class ImageSaveMixin:
                                         os.remove(path=instance.image.path)
 
                                 except FileNotFoundError:
-                                    super(ImageSaveMixin, self).save(*args, **kwargs)
+                                    super(SaveMixin, self).save(*args, **kwargs)
 
 
                             else:
                                 print("Instance Image Name == Image Name")
-                                super(ImageSaveMixin, self).save(*args, **kwargs)
+                                super(SaveMixin, self).save(*args, **kwargs)
 
-                                self.resize_image(path=self.image.path)
+                                self.resize_image()
+                                self.update_attributes()
 
                         else:
                             print("Instance Image Name == default_profile_image.png.")
-                            super(ImageSaveMixin, self).save(*args, **kwargs)
+                            super(SaveMixin, self).save(*args, **kwargs)
 
-                            self.resize_image(path=self.image.path)
+                            self.resize_image()
+                            self.update_attributes()
+
+                            if instance.profile.firstname and instance.profile.lastname:
+                                print("Is Firstname and Lastname.")
+                                self.alt = f"{instance.profile.firstname.capitalize()} {instance.profile.lastname.capitalize()} profile picture"
+
+                            else:
+                                print("Not is Firstname and Lastname.")
+                                self.alt = f"{instance.profile.user.username} profile picture"
+
+                            super(SaveMixin, self).save(update_fields=["size", "format", "alt"])
 
                     else:
                         print("Instance Does Not Exists.")
-                        super(ImageSaveMixin, self).save(*args, **kwargs)
+                        super(SaveMixin, self).save(*args, **kwargs)
+                        self.resize_image()
+                        self.update_attributes()
 
-                        self.resize_image(path=self.image.path)
+                        super(SaveMixin, self).save(update_fields=["size", "width", "height", "format"])
 
                 else:
                     print("Class Name is not ProfilePicture.")
@@ -61,8 +75,8 @@ class ImageSaveMixin:
         else:
             print("If Get Attribute '_is_saving'.")
 
-    def resize_image(self, path):
-        image = Image.open(fp=path)
+    def resize_image(self):
+        image = Image.open(fp=self.image.path)
 
         if image.mode == "RGBA":
             image = image.convert(mode="RGB")
@@ -76,4 +90,11 @@ class ImageSaveMixin:
         else:
             image.thumbnail(size=(300, 300))
 
-        image.save(fp=path)
+        image.save(fp=self.image.path)
+
+    def update_attributes(self):
+        image = Image.open(fp=self.image.path)
+
+        self.size = os.path.getsize(filename=self.image.path)
+        self.width, self.height = image.size
+        self.format = image.format

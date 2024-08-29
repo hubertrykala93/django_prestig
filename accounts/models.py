@@ -5,7 +5,7 @@ from uuid import uuid4
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 from shop.models import Product
-from .mixins import ImageSaveMixin
+from .mixins import SaveMixin
 
 
 class CustomUserManager(UserManager):
@@ -101,9 +101,16 @@ class DeliveryDetails(models.Model):
         return f"{self.id}"
 
 
-class ProfilePicture(ImageSaveMixin, models.Model):
+class ProfilePicture(SaveMixin, models.Model):
+    created_at = models.DateTimeField(default=now)
+    updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(default="accounts/profile_images/default_profile_image.png",
                               upload_to="accounts/profile_images", null=True)
+    size = models.IntegerField(null=True)
+    width = models.IntegerField(null=True)
+    height = models.IntegerField(null=True)
+    format = models.CharField(null=True)
+    alt = models.CharField(default="Default profile picture", max_length=1000, unique=True)
 
     class Meta:
         verbose_name = "Profile Picture"
@@ -111,6 +118,9 @@ class ProfilePicture(ImageSaveMixin, models.Model):
 
     def __str__(self):
         return f"{self.id}"
+
+    def get_alt_default(self):
+        return f"{self.alt.default}"
 
 
 class Profile(models.Model):
@@ -130,7 +140,8 @@ class Profile(models.Model):
         choices=GENDER_CHOICES,
         default="Undefined")
     dateofbirth = models.DateField(null=True)
-    profilepicture = models.OneToOneField(to=ProfilePicture, on_delete=models.CASCADE, null=True)
+    profilepicture = models.OneToOneField(to=ProfilePicture, on_delete=models.CASCADE, null=True,
+                                          related_name="profile")
 
     # Social Media
     facebook = models.CharField(max_length=50, null=True)
@@ -148,6 +159,9 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    def get_firstname_and_lastname(self):
+        return f"{self.firstname} {self.lastname}"
 
 
 @receiver(signal=post_save, sender=User)

@@ -43,6 +43,12 @@ class OneTimePasswordForm(forms.ModelForm):
 
 
 class ProfilePictureForm(forms.ModelForm):
+    size = forms.IntegerField(required=False)
+    width = forms.IntegerField(required=False)
+    height = forms.IntegerField(required=False)
+    format = forms.CharField(required=False)
+    alt = forms.CharField(help_text="Provide alt text.", label="Alt", required=True)
+
     class Meta:
         model = ProfilePicture
         fields = "__all__"
