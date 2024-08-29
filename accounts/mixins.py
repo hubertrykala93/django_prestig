@@ -25,7 +25,44 @@ class SaveMixin:
                             print("Instance Image Name != default_profile_image.png.")
 
                             if instance.image.name.split(sep="/")[-1] != self.image.name:
-                                print("Instange Image Name != Image Name")
+                                super(SaveMixin, self).save(*args, **kwargs)
+                                print("Instance Image Name != Image Name")
+
+                                if not self.image.name.split(sep="/")[-1] == instance.image.name.split(sep="/")[-1]:
+                                    try:
+                                        print("Try.")
+                                        print(self.image.name)
+                                        print(instance.image.path.split("/")[-1])
+                                        if os.path.exists(path=instance.image.path):
+                                            os.remove(path=instance.image.path)
+
+                                    except FileNotFoundError:
+                                        print("Except.")
+                                        super(SaveMixin, self).save(*args, **kwargs)
+
+                                if hasattr(self, "alt"):
+                                    print("If has Attribute Alt.")
+                                    if self.alt == getattr(self._meta.get_field("alt"), "default"):
+                                        print("Alt Attribute == Default.")
+                                        if instance.profile.firstname and instance.profile.lastname:
+                                            print("Is Firstname and Lastname.")
+                                            self.alt = f"{instance.profile.firstname.capitalize()} {instance.profile.lastname.capitalize()} profile picture"
+
+                                        else:
+                                            print("Not is Firstname and Lastname.")
+                                            if self.alt != getattr(self._meta.get_field("alt"), "default"):
+                                                self.alt = f"{instance.profile.user.username} profile picture"
+
+                                else:
+                                    print("Else of has Attribute Alt.")
+
+                                super(SaveMixin, self).save(update_fields=["size", "format", "alt", "image"])
+
+
+                            else:
+                                print("Instance Image Name == Image Name")
+                                super(SaveMixin, self).save(*args, **kwargs)
+
                                 try:
                                     if os.path.exists(path=instance.image.path):
                                         os.remove(path=instance.image.path)
@@ -33,13 +70,26 @@ class SaveMixin:
                                 except FileNotFoundError:
                                     super(SaveMixin, self).save(*args, **kwargs)
 
-
-                            else:
-                                print("Instance Image Name == Image Name")
-                                super(SaveMixin, self).save(*args, **kwargs)
-
                                 self.resize_image()
                                 self.update_attributes()
+
+                                if hasattr(self, "alt"):
+                                    print("If has Attribute Alt.")
+                                    if self.alt == getattr(self._meta.get_field("alt"), "default"):
+                                        print("Alt Attribute == Default.")
+                                        if instance.profile.firstname and instance.profile.lastname:
+                                            print("Is Firstname and Lastname.")
+                                            self.alt = f"{instance.profile.firstname.capitalize()} {instance.profile.lastname.capitalize()} profile picture"
+
+                                        else:
+                                            print("Not is Firstname and Lastname.")
+                                            if self.alt != getattr(self._meta.get_field("alt"), "default"):
+                                                self.alt = f"{instance.profile.user.username} profile picture"
+
+                                else:
+                                    print("Else of has Attribute Alt.")
+
+                                super(SaveMixin, self).save(update_fields=["size", "format", "alt", "image"])
 
                         else:
                             print("Instance Image Name == default_profile_image.png.")
@@ -48,19 +98,28 @@ class SaveMixin:
                             self.resize_image()
                             self.update_attributes()
 
-                            if instance.profile.firstname and instance.profile.lastname:
-                                print("Is Firstname and Lastname.")
-                                self.alt = f"{instance.profile.firstname.capitalize()} {instance.profile.lastname.capitalize()} profile picture"
+                            if hasattr(self, "alt"):
+                                print("If has Attribute Alt.")
+                                if self.alt == getattr(self._meta.get_field("alt"), "default"):
+                                    print("Alt Attribute == Default.")
+                                    if instance.profile.firstname and instance.profile.lastname:
+                                        print("Is Firstname and Lastname.")
+                                        self.alt = f"{instance.profile.firstname.capitalize()} {instance.profile.lastname.capitalize()} profile picture"
+
+                                    else:
+                                        print("Not is Firstname and Lastname.")
+                                        if self.alt != getattr(self._meta.get_field("alt"), "default"):
+                                            self.alt = f"{instance.profile.user.username} profile picture"
 
                             else:
-                                print("Not is Firstname and Lastname.")
-                                self.alt = f"{instance.profile.user.username} profile picture"
+                                print("Else of has Attribute Alt.")
 
                             super(SaveMixin, self).save(update_fields=["size", "format", "alt"])
 
                     else:
                         print("Instance Does Not Exists.")
                         super(SaveMixin, self).save(*args, **kwargs)
+
                         self.resize_image()
                         self.update_attributes()
 
@@ -98,3 +157,22 @@ class SaveMixin:
         self.size = os.path.getsize(filename=self.image.path)
         self.width, self.height = image.size
         self.format = image.format
+
+    def update_alt(self, instance):
+        if hasattr(self, "alt"):
+            print("If has Attribute Alt.")
+            if self.alt == getattr(self._meta.get_field("alt"), "default"):
+                print("Alt Attribute == Default.")
+                if instance.profile.firstname and instance.profile.lastname:
+                    print("Is Firstname and Lastname.")
+                    self.alt = f"{instance.profile.firstname.capitalize()} {instance.profile.lastname.capitalize()} profile picture"
+
+                else:
+                    print("Not is Firstname and Lastname.")
+                    if self.alt != getattr(self._meta.get_field("alt"), "default"):
+                        self.alt = f"{instance.profile.user.username} profile picture"
+
+        else:
+            print("Else of has Attribute Alt.")
+
+        super(SaveMixin, self).save(update_fields=["size", "format", "alt", "image"])
