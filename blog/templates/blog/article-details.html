@@ -20,7 +20,7 @@
 
           <h2 class="article__heading heading heading--h2">{{ article.title }}</h2>
 
-          <img src="{{ article.image.url }}" alt="Article main image" class="article__image">
+          <img src="{{ article.article_image.image.url }}" alt="Article main image" class="article__image">
 
           <div class="article__content">
             {{ article.description|safe }}

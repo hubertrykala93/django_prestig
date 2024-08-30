@@ -23,26 +23,28 @@ class SaveMixin:
                 print("Instance Image is not Default.")
                 if not self._is_same_image(instance=instance):
                     print("Instance Image is not the same as uploaded image.")
-                    self.save_image_and_attributes()
+
+                    super(SaveMixin, self).save(*args, **kwargs)
+
+                    self._save_image_and_attributes()
 
                     self._remove_image(instance=instance)
 
                 else:
                     print("Instance image is the same as uploaded image.")
-                    self.save_image_and_attributes()
+                    super(SaveMixin, self).save(*args, **kwargs)
+
+                    self._save_image_and_attributes()
 
                     self._remove_image(instance=instance)
 
             else:
                 print("Instance Image is Default")
-                self.save_image_and_attributes()
+                self._save_image_and_attributes()
 
         else:
             print("Instance does not Exists.")
-            self.save_image_and_attributes()
-
-    def _get_instance(self):
-        return self.__class__
+            self._save_image_and_attributes()
 
     def _get_existing_instance(self):
         if self.__class__.objects.filter(pk=self.pk).exists():
@@ -81,10 +83,8 @@ class SaveMixin:
         self.width, self.height = image.width, image.height
         self.format = image.format
 
-    def save_image_and_attributes(self):
+    def _save_image_and_attributes(self):
         super(SaveMixin, self).save()
 
         self._resize_image()
         self._update_attributes()
-
-        super(SaveMixin, self).save(update_fields=["size", "width", "height", "format", "image"])

@@ -3,6 +3,9 @@ from django.utils.timezone import now
 from accounts.models import User
 from django.utils.text import slugify
 from django.shortcuts import reverse
+from accounts.mixins import SaveMixin
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 
 
 class ArticleCategory(models.Model):
@@ -51,11 +54,28 @@ class ArticleTag(models.Model):
         return super(ArticleTag, self).save(*args, **kwargs)
 
 
+class ArticleImage(SaveMixin, models.Model):
+    created_at = models.DateTimeField(default=now)
+    updated_at = models.DateTimeField(auto_now=True)
+    image = models.ImageField(upload_to="blog/article_images", null=True)
+    size = models.IntegerField(null=True)
+    width = models.IntegerField(null=True)
+    height = models.IntegerField(null=True)
+    format = models.CharField(null=True)
+
+    class Meta:
+        verbose_name = "Article Image"
+        verbose_name_plural = "Article Images"
+
+    def __str__(self):
+        return str(self.id)
+
+
 class Article(models.Model):
     created_at = models.DateTimeField(default=now)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    image = models.ImageField(upload_to="article_images", null=True)
+    article_image = models.OneToOneField(to=ArticleImage, on_delete=models.CASCADE, null=True)
     slug = models.SlugField(max_length=500, unique=True)
     description = models.TextField(max_length=100000)
     article_category = models.ForeignKey(to=ArticleCategory, on_delete=models.SET_NULL, null=True)
@@ -73,6 +93,12 @@ class Article(models.Model):
             "category_slug": self.article_category.slug,
             "article_slug": self.slug,
         })
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+
+        super(Article, self).save(*args, **kwargs)
 
 
 class ArticleComment(models.Model):
@@ -96,3 +122,17 @@ class ArticleComment(models.Model):
             self.email = self.user.email
 
         return super(ArticleComment, self).save(*args, **kwargs)
+
+
+@receiver(signal=post_save, sender=Article)
+def create_article_image(sender=Article, instance=None, created=None, **kwargs):
+    if created and not instance.article_image:
+        article_image = ArticleImage.objects.create()
+        instance.article_image = article_image
+        instance.save()
+
+
+@receiver(signal=post_delete, sender=Article)
+def delete_article_image(sender, instance, **kwargs):
+    if instance.article_image:
+        instance.article_image.delete()

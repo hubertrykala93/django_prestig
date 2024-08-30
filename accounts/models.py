@@ -136,8 +136,7 @@ class Profile(models.Model):
         choices=GENDER_CHOICES,
         default="Undefined")
     dateofbirth = models.DateField(null=True)
-    profilepicture = models.OneToOneField(to=ProfilePicture, on_delete=models.CASCADE, null=True,
-                                          related_name="profile")
+    profilepicture = models.OneToOneField(to=ProfilePicture, on_delete=models.CASCADE, null=True)
 
     # Social Media
     facebook = models.CharField(max_length=50, null=True)

@@ -218,17 +218,11 @@ class AdminProfile(admin.ModelAdmin):
         if obj.profilepicture:
             return obj.profilepicture
 
-        else:
-            return "No Profile Picture"
-
     get_profilepicture_id.short_description = "Profile Picture ID"
 
     def get_profilepicture(self, obj):
         if obj.profilepicture:
             return obj.profilepicture.image
-
-        else:
-            return "No Profile Picture"
 
     get_profilepicture.short_description = "Profile Picture"
 
