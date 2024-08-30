@@ -2,15 +2,32 @@ from django.db import models
 from uuid import uuid4
 from django.utils.timezone import now
 from django.utils.text import slugify
-import os
-from PIL import Image
-from django.conf import settings
+from accounts.mixins import SaveMixin
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete
+
+
+class BrandLogo(SaveMixin, models.Model):
+    created_at = models.DateTimeField(default=now)
+    updated_at = models.DateTimeField(auto_now=True)
+    image = models.ImageField(upload_to="shop/brands")
+    size = models.IntegerField(null=True)
+    width = models.IntegerField(null=True)
+    height = models.IntegerField(null=True)
+    format = models.CharField(null=True)
+
+    class Meta:
+        verbose_name = "Brand Logo"
+        verbose_name_plural = "Brand Logos"
+
+    def __str__(self):
+        return str(self.id)
 
 
 class Brand(models.Model):
     name = models.CharField(max_length=1000, unique=True)
     description = models.TextField(max_length=10000)
-    image = models.ImageField(upload_to='shop/brands')
+    logo = models.OneToOneField(to=BrandLogo, on_delete=models.CASCADE, null=True)
     slug = models.SlugField(unique=True)
 
     class Meta:
@@ -165,3 +182,17 @@ class Product(models.Model):
             self.slug = slugify(self.name)
 
         super(Product, self).save(*args, **kwargs)
+
+
+@receiver(signal=post_save, sender=Brand)
+def create_brand_logo(sender, instance=None, created=None, **kwargs):
+    if created and not instance.logo:
+        logo = BrandLogo.objects.create()
+        instance.logo = logo
+        instance.save()
+
+
+@receiver(signal=post_delete, sender=Brand)
+def delete_brand_logo(sender, instance, **kwargs):
+    if instance.logo:
+        instance.logo.delete()

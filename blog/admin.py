@@ -54,6 +54,7 @@ class AdminArticleImage(admin.ModelAdmin):
         "size",
         "width",
         "height",
+        "format",
     ]
     form = ArticleImageForm
     fieldsets = (
@@ -86,7 +87,7 @@ class AdminArticleImage(admin.ModelAdmin):
 
         return "No Article Image"
 
-    formatted_image_name.short_description = "Article Image Name"
+    formatted_image_name.short_description = "Image Name"
 
 
 @admin.register(Article)
@@ -156,7 +157,7 @@ class AdminArticle(SummernoteModelAdmin):
 
     def get_image_name(self, obj):
         if obj.article_image:
-            return obj.article_image.image.name.split(sep="/")[-1]
+            return obj.article_image.image
 
     get_image_name.short_description = "Image"
 

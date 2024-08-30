@@ -9,6 +9,7 @@ from .models import (
     Size,
     Stock,
     ProductGallery,
+    BrandLogo,
 )
 from .forms import (
     BrandForm,
@@ -20,7 +21,54 @@ from .forms import (
     ProductGalleryForm,
     StockForm,
     ProductForm,
+    BrandLogoForm,
 )
+
+
+@admin.register(BrandLogo)
+class AdminBrandLogo(admin.ModelAdmin):
+    """
+    Admin options and functionalities for BrandLogo model.
+    """
+    list_display = [
+        "id",
+        "formatted_created_at",
+        "formatted_updated_at",
+        "image",
+        "get_image_name",
+        "size",
+        "width",
+        "height",
+        "format",
+    ]
+    form = BrandLogoForm
+    fieldsets = (
+        (
+            "Uploading", {
+                "fields": [
+                    "image",
+                ],
+            },
+        ),
+    )
+
+    def formatted_created_at(self, obj):
+        if obj.created_at:
+            return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_created_at.short_description = "Created At"
+
+    def formatted_updated_at(self, obj):
+        if obj.updated_at:
+            return obj.updated_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_updated_at.description = "Updated At"
+
+    def get_image_name(self, obj):
+        if obj.image:
+            return obj.image.name.split("/")[-1]
+
+    get_image_name.short_description = "Image Name"
 
 
 @admin.register(Brand)
@@ -28,7 +76,14 @@ class AdminBrand(admin.ModelAdmin):
     """
     Admin options and functionalities for Brand model.
     """
-    list_display = ["id", "name", "slug", "description", "image"]
+    list_display = [
+        "id",
+        "name",
+        "slug",
+        "description",
+        "get_logo",
+        "get_logo_name",
+    ]
     list_editable = ["slug"]
     prepopulated_fields = {"slug": ["name"]}
     form = BrandForm
@@ -44,11 +99,23 @@ class AdminBrand(admin.ModelAdmin):
         (
             "Uploading", {
                 "fields": [
-                    "image",
+                    "logo",
                 ],
             },
         ),
     )
+
+    def get_logo(self, obj):
+        if obj.logo:
+            return obj.logo
+
+    get_logo.short_description = "Logo ID"
+
+    def get_logo_name(self, obj):
+        if obj.logo:
+            return obj.logo.image
+
+    get_logo_name.short_description = "Logo"
 
 
 @admin.register(ProductTags)

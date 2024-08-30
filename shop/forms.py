@@ -9,7 +9,25 @@ from .models import (
     ProductGallery,
     Stock,
     Product,
+    BrandLogo,
 )
+
+
+class BrandLogoForm(forms.ModelForm):
+    size = forms.IntegerField(required=False)
+    width = forms.IntegerField(required=False)
+    height = forms.IntegerField(required=False)
+    format = forms.CharField(required=False)
+
+    class Meta:
+        model = BrandLogo
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(BrandLogoForm, self).__init__(*args, **kwargs)
+        self.fields["image"].help_text = "Upload image to the brand."
+        self.fields["image"].label = "Logo"
+        self.fields["image"].required = True
 
 
 class BrandForm(forms.ModelForm):
@@ -17,11 +35,17 @@ class BrandForm(forms.ModelForm):
     slug = forms.SlugField(required=False)
     description = forms.CharField(max_length=10000, help_text="Provide a brief description of the brand.",
                                   label="Description", widget=forms.Textarea)
-    image = forms.ImageField(help_text="Upload the brand logo.", label="Logo")
 
     class Meta:
         model = Brand
         fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(BrandForm, self).__init__(*args, **kwargs)
+
+        self.fields["logo"].help_text = "Choose the brand logo."
+        self.fields["logo"].label = "Logo"
+        self.fields["logo"].required = True
 
 
 class ProductTagsForm(forms.ModelForm):

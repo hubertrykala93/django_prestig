@@ -88,3 +88,5 @@ class SaveMixin:
 
         self._resize_image()
         self._update_attributes()
+
+        super(SaveMixin, self).save(update_fields=["image", "size", "width", "height", "format"])
