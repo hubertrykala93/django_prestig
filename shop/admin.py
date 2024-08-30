@@ -10,6 +10,7 @@ from .models import (
     Stock,
     ProductGallery,
     BrandLogo,
+    ProductCategoryImage,
 )
 from .forms import (
     BrandForm,
@@ -22,6 +23,7 @@ from .forms import (
     StockForm,
     ProductForm,
     BrandLogoForm,
+    ProductCategoryImageForm,
 )
 
 
@@ -138,12 +140,58 @@ class AdminProductTags(admin.ModelAdmin):
     )
 
 
+@admin.register(ProductCategoryImage)
+class AdminProductCategoryImage(admin.ModelAdmin):
+    """
+    Admin options and functionalities for ProductCategoryImage model.
+    """
+    list_display = [
+        "id",
+        "formatted_created_at",
+        "formatted_updated_at",
+        "image",
+        "get_image_name",
+        "size",
+        "width",
+        "height",
+        "format",
+    ]
+    form = ProductCategoryImageForm
+    fieldsets = (
+        (
+            "Uploading", {
+                "fields": [
+                    "image",
+                ],
+            },
+        ),
+    )
+
+    def formatted_created_at(self, obj):
+        if obj.created_at:
+            return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_created_at.short_description = "Created At"
+
+    def formatted_updated_at(self, obj):
+        if obj.updated_at:
+            return obj.updated_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_updated_at.description = "Updated At"
+
+    def get_image_name(self, obj):
+        if obj.image:
+            return obj.image.name.split("/")[-1]
+
+    get_image_name.short_description = "Image Name"
+
+
 @admin.register(ProductCategory)
 class AdminProductCategory(admin.ModelAdmin):
     """
     Admin options and functionalities for ProductCategory model.
     """
-    list_display = ["id", "name", "slug", "formatted_image", "is_active"]
+    list_display = ["id", "name", "slug", "get_category_image_id", "get_category_image", "is_active"]
     prepopulated_fields = {"slug": ["name"]}
     form = ProductCategoryForm
     fieldsets = (
@@ -157,7 +205,7 @@ class AdminProductCategory(admin.ModelAdmin):
         (
             "Uploading", {
                 "fields": [
-                    "image",
+                    "category_image",
                 ],
             },
         ),
@@ -170,10 +218,17 @@ class AdminProductCategory(admin.ModelAdmin):
         ),
     )
 
-    def formatted_image(self, obj):
-        return obj.image.name.split("/")[-1]
+    def get_category_image_id(self, obj):
+        if obj.category_image:
+            return obj.category_image
 
-    formatted_image.short_description = "Image"
+    get_category_image_id.short_description = "Category Image ID"
+
+    def get_category_image(self, obj):
+        if obj.category_image:
+            return obj.category_image.image
+
+    get_category_image.short_description = "Category Image"
 
 
 @admin.register(ProductSubCategory)
@@ -181,7 +236,7 @@ class AdminProductSubCategory(admin.ModelAdmin):
     """
     Admin options and functionalities for ProductSubCategory model.
     """
-    list_display = ["id", "name", "slug", "image", "is_active"]
+    list_display = ["id", "name", "slug", "is_active"]
     prepopulated_fields = {"slug": ["name"]}
     form = ProductSubCategoryForm
     fieldsets = (

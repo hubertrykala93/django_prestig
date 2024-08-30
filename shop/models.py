@@ -4,7 +4,7 @@ from django.utils.timezone import now
 from django.utils.text import slugify
 from accounts.mixins import SaveMixin
 from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, pre_save
 
 
 class BrandLogo(SaveMixin, models.Model):
@@ -62,10 +62,27 @@ class ProductTags(models.Model):
         super(ProductTags, self).save(*args, **kwargs)
 
 
+class ProductCategoryImage(SaveMixin, models.Model):
+    created_at = models.DateTimeField(default=now)
+    updated_at = models.DateTimeField(auto_now=True)
+    image = models.ImageField(upload_to="shop/categories")
+    size = models.IntegerField(null=True)
+    width = models.IntegerField(null=True)
+    height = models.IntegerField(null=True)
+    format = models.CharField(null=True)
+
+    class Meta:
+        verbose_name = "Product Category Image"
+        verbose_name_plural = "Product Category Images"
+
+    def __str__(self):
+        return str(self.id)
+
+
 class ProductCategory(models.Model):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(unique=True)
-    image = models.ImageField(upload_to='shop/categories')
+    category_image = models.OneToOneField(to=ProductCategoryImage, on_delete=models.CASCADE, null=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -196,3 +213,17 @@ def create_brand_logo(sender, instance=None, created=None, **kwargs):
 def delete_brand_logo(sender, instance, **kwargs):
     if instance.logo:
         instance.logo.delete()
+
+
+@receiver(signal=post_save, sender=ProductCategory)
+def created_product_category_image(sender, instance=None, created=None, **kwargs):
+    if created and not instance.category_image:
+        category_image = ProductCategoryImage.objects.create()
+        instance.category_image = category_image
+        instance.save()
+
+
+@receiver(signal=post_delete, sender=ProductCategory)
+def delete_product_category_image(sender, instance, **kwargs):
+    if instance.category_image:
+        instance.category_image.delete()

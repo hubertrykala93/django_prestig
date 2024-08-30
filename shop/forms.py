@@ -10,6 +10,7 @@ from .models import (
     Stock,
     Product,
     BrandLogo,
+    ProductCategoryImage,
 )
 
 
@@ -57,15 +58,39 @@ class ProductTagsForm(forms.ModelForm):
         fields = "__all__"
 
 
+class ProductCategoryImageForm(forms.ModelForm):
+    size = forms.IntegerField(required=False)
+    width = forms.IntegerField(required=False)
+    height = forms.IntegerField(required=False)
+    format = forms.CharField(required=False)
+
+    class Meta:
+        model = ProductCategoryImage
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(ProductCategoryImageForm, self).__init__(*args, **kwargs)
+
+        self.fields["image"].help_text = "Upload an image to the product category."
+        self.fields["image"].label = "Image"
+        self.fields["image"].required = True
+
+
 class ProductCategoryForm(forms.ModelForm):
     name = forms.CharField(help_text="Provide the category name.", label="Name")
     slug = forms.SlugField(required=False)
-    image = forms.ImageField(help_text="Upload an image for this category.", label="Image")
     is_active = forms.BooleanField(help_text="Indicate whether the category is active.", required=False)
 
     class Meta:
         model = ProductCategory
         fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(ProductCategoryForm, self).__init__(*args, **kwargs)
+
+        self.fields["category_image"].help_text = "Choose the category image."
+        self.fields["category_image"].label = "image"
+        self.fields["category_image"].required = True
 
 
 class ProductSubCategoryForm(forms.ModelForm):
