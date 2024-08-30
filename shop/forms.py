@@ -11,6 +11,7 @@ from .models import (
     Product,
     BrandLogo,
     ProductCategoryImage,
+    ProductSubCategoryImage,
 )
 
 
@@ -89,15 +90,32 @@ class ProductCategoryForm(forms.ModelForm):
         super(ProductCategoryForm, self).__init__(*args, **kwargs)
 
         self.fields["category_image"].help_text = "Choose the category image."
-        self.fields["category_image"].label = "image"
+        self.fields["category_image"].label = "Image"
         self.fields["category_image"].required = True
+
+
+class ProductSubCategoryImageForm(forms.ModelForm):
+    size = forms.IntegerField(required=False)
+    width = forms.IntegerField(required=False)
+    height = forms.IntegerField(required=False)
+    format = forms.CharField(required=False)
+
+    class Meta:
+        model = ProductSubCategoryImage
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(ProductSubCategoryImageForm, self).__init__(*args, **kwargs)
+
+        self.fields["image"].help_text = "Upload an image to the product subcategory."
+        self.fields["image"].label = "Image"
+        self.fields["image"].required = True
 
 
 class ProductSubCategoryForm(forms.ModelForm):
     name = forms.CharField(help_text="Provide the subcategory name.", label="Name")
     slug = forms.SlugField(required=False)
-    image = forms.ImageField(help_text="Upload an image for this subcategory.", label="Image")
-    is_active = forms.BooleanField(help_text="Indicate whether the category is active.", required=False)
+    is_active = forms.BooleanField(help_text="Indicate whether the subcategory is active.", required=False)
 
     class Meta:
         model = ProductSubCategory
@@ -105,6 +123,10 @@ class ProductSubCategoryForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProductSubCategoryForm, self).__init__(*args, **kwargs)
+
+        self.fields["subcategory_image"].help_text = "Choose the subcategory image."
+        self.fields["subcategory_image"].label = "Image"
+        self.fields["subcategory_image"].required = True
 
         self.fields["categories"].help_text = "Add a category for this subcategory."
         self.fields["categories"].label = "Category"

@@ -99,10 +99,27 @@ class ProductCategory(models.Model):
         super(ProductCategory, self).save(*args, **kwargs)
 
 
+class ProductSubCategoryImage(models.Model):
+    created_at = models.DateTimeField(default=now)
+    updated_at = models.DateTimeField(auto_now=True)
+    image = models.ImageField(upload_to="shop/subcategories")
+    size = models.IntegerField(null=True)
+    width = models.IntegerField(null=True)
+    height = models.IntegerField(null=True)
+    format = models.CharField(null=True)
+
+    class Meta:
+        verbose_name = "Product SubCategory Image"
+        verbose_name_plural = "Product SubCategory Images"
+
+    def __str__(self):
+        return str(self.id)
+
+
 class ProductSubCategory(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField()
-    image = models.ImageField(upload_to='shop/subcategories')
+    subcategory_image = models.OneToOneField(to=ProductSubCategoryImage, on_delete=models.CASCADE, null=True)
     categories = models.ManyToManyField(to=ProductCategory, related_name="subcategories")
     is_active = models.BooleanField(default=True)
 
