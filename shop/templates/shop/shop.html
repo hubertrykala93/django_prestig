@@ -35,9 +35,31 @@
       <div class="shop__content">
         <div class="shop__line-head">
           <div class="shop__line-head__counter">Showing 1–12 of 15 results</div>
+
+          <div class="shop__line-head__controls">
+            <form class="shop__products-sorting js-shop-products-sorting">
+              <div class="form__select">
+                <select name="sort" onchange="this.form.submit()">
+                  <option value="">Default sorting</option>
+                  <option value="alphabet">Alphabet sorting</option>
+                  <option value="xxx">XXX sorting</option>
+                </select>
+              </div>
+            </form>
+
+            <div class="shop__products-view js-products-view-buttons">
+              <button class="shop__products-view__button js-products-view-grid-button">
+                <i class="ri-layout-grid-line" aria-hidden="true"></i>
+              </button>
+
+              <button class="shop__products-view__button js-products-view-list-button">
+                <i class="ri-list-view" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div class="shop__cards">
+        <div class="shop__cards js-shop-cards">
           {% for i in '123456'|make_list %}
             <div class="product-card" data-id="1">
               <div class="product-card__top">
@@ -62,6 +84,11 @@
 
               <div class="product-card__bottom">
                   <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
+
+                  <div class="product-card__description">
+                    Our men black t-shirt offers a classic fit and is made from high-quality pure cotton materials to keep you feeling and looking great.
+                  </div>
+
                   <div class="product-card__price">
                       $<span class="product-card__price__figure">250.00</span>
                   </div>
