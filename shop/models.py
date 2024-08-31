@@ -202,7 +202,7 @@ class Product(models.Model):
     short_description = models.CharField(max_length=10000)
     price = models.FloatField()
     quantity = models.ManyToManyField(to=Stock)
-    gallery = models.OneToOneField(to=ProductImage)
+    gallery = models.ManyToManyField(to=ProductImage)
     rate = models.IntegerField()
     tags = models.ManyToManyField(to=ProductTags)
     full_description = models.TextField(max_length=100000)
