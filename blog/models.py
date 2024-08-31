@@ -4,8 +4,9 @@ from accounts.models import User
 from django.utils.text import slugify
 from django.shortcuts import reverse
 from accounts.mixins import SaveMixin
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, pre_delete
 from django.dispatch import receiver
+import os
 
 
 class ArticleCategory(models.Model):
@@ -136,3 +137,12 @@ def create_article_image(sender=Article, instance=None, created=None, **kwargs):
 def delete_article_image(sender, instance, **kwargs):
     if instance.article_image:
         instance.article_image.delete()
+
+
+@receiver(signal=pre_delete, sender=Article)
+def delete_article_image_file(sender, instance, **kwargs):
+    if instance.article_image and instance.article_image.image:
+        image_path = instance.article_image.image.path
+
+        if os.path.isfile(path=image_path):
+            os.remove(path=image_path)

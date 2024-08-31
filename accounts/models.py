@@ -3,9 +3,11 @@ from django.contrib.auth.models import UserManager, AbstractBaseUser, Permission
 from django.utils.timezone import now
 from uuid import uuid4
 from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, pre_delete, pre_save, post_migrate, post_init, pre_init, \
+    pre_migrate
 from shop.models import Product
 from .mixins import SaveMixin
+import os
 
 
 class CustomUserManager(UserManager):
@@ -188,3 +190,23 @@ def delete_delivery_details(sender, instance, **kwargs):
 def delete_profilepicture(sender, instance, **kwargs):
     if instance.profilepicture:
         instance.profilepicture.delete()
+
+
+@receiver(signal=pre_delete, sender=Profile)
+def delete_profilepicture_file_when_profile_is_deleting(sender, instance, **kwargs):
+    if instance.profilepicture and instance.profilepicture.image:
+        image_path = instance.profilepicture.image.path
+
+        if 'default_profile_image.png' not in image_path:
+            if os.path.isfile(path=image_path):
+                os.remove(path=image_path)
+
+
+@receiver(signal=pre_delete, sender=User)
+def delete_profilepicture_file_when_user_is_deleting(sender, instance, **kwargs):
+    if instance.profile.profilepicture and instance.profile.profilepicture.image:
+        image_path = instance.profile.profilepicture.image.path
+
+        if 'default_profile_image.png' not in image_path:
+            if os.path.isfile(path=image_path):
+                os.remove(path=image_path)

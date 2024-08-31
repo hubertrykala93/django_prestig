@@ -1,10 +1,12 @@
+import os
+
 from django.db import models
 from uuid import uuid4
 from django.utils.timezone import now
 from django.utils.text import slugify
 from accounts.mixins import SaveMixin
 from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete, pre_save
+from django.db.models.signals import post_save, post_delete, pre_delete
 
 
 class BrandLogo(SaveMixin, models.Model):
@@ -99,7 +101,7 @@ class ProductCategory(models.Model):
         super(ProductCategory, self).save(*args, **kwargs)
 
 
-class ProductSubCategoryImage(models.Model):
+class ProductSubCategoryImage(SaveMixin, models.Model):
     created_at = models.DateTimeField(default=now)
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to="shop/subcategories")
@@ -233,7 +235,7 @@ def delete_brand_logo(sender, instance, **kwargs):
 
 
 @receiver(signal=post_save, sender=ProductCategory)
-def created_product_category_image(sender, instance=None, created=None, **kwargs):
+def create_product_category_image(sender, instance=None, created=None, **kwargs):
     if created and not instance.category_image:
         category_image = ProductCategoryImage.objects.create()
         instance.category_image = category_image
@@ -244,3 +246,44 @@ def created_product_category_image(sender, instance=None, created=None, **kwargs
 def delete_product_category_image(sender, instance, **kwargs):
     if instance.category_image:
         instance.category_image.delete()
+
+
+@receiver(signal=post_save, sender=ProductSubCategory)
+def create_product_subcategory_image(sender, instance=None, created=None, **kwargs):
+    if created and not instance.subcategory_image:
+        subcategory_image = ProductSubCategoryImage.objects.create()
+        instance.subcategory_image = subcategory_image
+        instance.save()
+
+
+@receiver(signal=post_delete, sender=ProductSubCategory)
+def delete_product_subcategory_image(sender, instance, **kwargs):
+    if instance.subcategory_image:
+        instance.subcategory_image.delete()
+
+
+@receiver(signal=pre_delete, sender=ProductCategory)
+def delete_category_image_file(sender, instance, **kwargs):
+    if instance.category_image and instance.category_image.image:
+        image_path = instance.category_image.image.path
+
+        if os.path.isfile(path=image_path):
+            os.remove(path=image_path)
+
+
+@receiver(signal=pre_delete, sender=ProductSubCategory)
+def delete_subcategory_image_file(sender, instance, **kwargs):
+    if instance.subcategory_image and instance.subcategory_image.image:
+        image_path = instance.subcategory_image.image.path
+
+        if os.path.isfile(path=image_path):
+            os.remove(path=image_path)
+
+
+@receiver(signal=pre_delete, sender=Brand)
+def delete_logo_file(sender, instance, **kwargs):
+    if instance.logo and instance.logo.image:
+        image_path = instance.logo.image.path
+
+        if os.path.isfile(path=image_path):
+            os.remove(path=image_path)

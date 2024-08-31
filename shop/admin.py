@@ -11,6 +11,7 @@ from .models import (
     ProductGallery,
     BrandLogo,
     ProductCategoryImage,
+    ProductSubCategoryImage,
 )
 from .forms import (
     BrandForm,
@@ -24,6 +25,7 @@ from .forms import (
     ProductForm,
     BrandLogoForm,
     ProductCategoryImageForm,
+    ProductSubCategoryImageForm,
 )
 
 
@@ -231,12 +233,30 @@ class AdminProductCategory(admin.ModelAdmin):
     get_category_image.short_description = "Category Image"
 
 
+@admin.register(ProductSubCategoryImage)
+class AdminProductSubCategoryImage(admin.ModelAdmin):
+    """
+    Admin options and functionalities for ProductSubCategoryImage model.
+    """
+    list_display = ["id", "created_at", "updated_at", "image", "size", "width", "height", "format"]
+    form = ProductSubCategoryImageForm
+    fieldsets = (
+        (
+            "Uploading", {
+                "fields": [
+                    "image",
+                ],
+            },
+        ),
+    )
+
+
 @admin.register(ProductSubCategory)
 class AdminProductSubCategory(admin.ModelAdmin):
     """
     Admin options and functionalities for ProductSubCategory model.
     """
-    list_display = ["id", "name", "slug", "is_active"]
+    list_display = ["id", "name", "slug", "subcategory_image", "is_active"]
     prepopulated_fields = {"slug": ["name"]}
     form = ProductSubCategoryForm
     fieldsets = (
@@ -250,7 +270,7 @@ class AdminProductSubCategory(admin.ModelAdmin):
         (
             "Uploading", {
                 "fields": [
-                    "image",
+                    "subcategory_image",
                 ],
             },
         ),
