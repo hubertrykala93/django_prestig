@@ -16,7 +16,7 @@ class BrandLogo(SaveMixin, models.Model):
     size = models.IntegerField(null=True)
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
-    format = models.CharField(null=True)
+    format = models.CharField(max_length=100, null=True)
 
     class Meta:
         verbose_name = "Brand Logo"
@@ -71,7 +71,7 @@ class ProductCategoryImage(SaveMixin, models.Model):
     size = models.IntegerField(null=True)
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
-    format = models.CharField(null=True)
+    format = models.CharField(max_length=100, null=True)
 
     class Meta:
         verbose_name = "Product Category Image"
@@ -108,7 +108,7 @@ class ProductSubCategoryImage(SaveMixin, models.Model):
     size = models.IntegerField(null=True)
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
-    format = models.CharField(null=True)
+    format = models.CharField(max_length=100, null=True)
 
     class Meta:
         verbose_name = "Product SubCategory Image"

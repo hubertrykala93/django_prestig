@@ -62,7 +62,7 @@ class ArticleImage(SaveMixin, models.Model):
     size = models.IntegerField(null=True)
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
-    format = models.CharField(null=True)
+    format = models.CharField(max_length=100, null=True)
 
     class Meta:
         verbose_name = "Article Image"

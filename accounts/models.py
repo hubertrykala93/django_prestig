@@ -111,7 +111,7 @@ class ProfilePicture(SaveMixin, models.Model):
     size = models.IntegerField(null=True)
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
-    format = models.CharField(null=True)
+    format = models.CharField(max_length=100, null=True)
 
     class Meta:
         verbose_name = "Profile Picture"
@@ -136,7 +136,9 @@ class Profile(models.Model):
     bio = models.CharField(max_length=150)
     gender = models.CharField(
         choices=GENDER_CHOICES,
-        default="Undefined")
+        default="Undefined",
+        max_length=100
+    )
     dateofbirth = models.DateField(null=True)
     profilepicture = models.OneToOneField(to=ProfilePicture, on_delete=models.CASCADE, null=True)
 
