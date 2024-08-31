@@ -175,15 +175,21 @@ class Stock(models.Model):
         return f"{self.quantity, self.color.name, self.size.name}"
 
 
-class ProductGallery(models.Model):
-    image = models.ImageField(upload_to="shop/products/gallery", null=True)
+class ProductImage(SaveMixin, models.Model):
+    created_at = models.DateTimeField(default=now)
+    updated_at = models.DateTimeField(auto_now=True)
+    image = models.ImageField(upload_to="shop/products")
+    size = models.IntegerField(null=True)
+    width = models.IntegerField(null=True)
+    height = models.IntegerField(null=True)
+    format = models.CharField(max_length=100, null=True)
 
     class Meta:
-        verbose_name = "Product Gallery"
-        verbose_name_plural = "Products Gallery"
+        verbose_name = "Product Image"
+        verbose_name_plural = "Product Images"
 
     def __str__(self):
-        return f"{self.image.name}"
+        return str(self.id)
 
 
 class Product(models.Model):
@@ -196,8 +202,7 @@ class Product(models.Model):
     short_description = models.CharField(max_length=10000)
     price = models.FloatField()
     quantity = models.ManyToManyField(to=Stock)
-    image = models.ImageField(upload_to="shop/products/thumbnails")
-    gallery = models.ManyToManyField(to=ProductGallery)
+    gallery = models.OneToOneField(to=ProductImage)
     rate = models.IntegerField()
     tags = models.ManyToManyField(to=ProductTags)
     full_description = models.TextField(max_length=100000)
