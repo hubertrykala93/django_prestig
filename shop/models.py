@@ -183,6 +183,7 @@ class ProductImage(SaveMixin, models.Model):
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
     format = models.CharField(max_length=100, null=True)
+    is_featured = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Product Image"
@@ -202,7 +203,7 @@ class Product(models.Model):
     short_description = models.CharField(max_length=10000)
     price = models.FloatField()
     quantity = models.ManyToManyField(to=Stock)
-    gallery = models.ManyToManyField(to=ProductImage)
+    gallery = models.ForeignKey(to=ProductImage, on_delete=models.CASCADE, null=True)
     rate = models.IntegerField()
     tags = models.ManyToManyField(to=ProductTags)
     full_description = models.TextField(max_length=100000)

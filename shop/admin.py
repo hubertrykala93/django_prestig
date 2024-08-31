@@ -8,7 +8,7 @@ from .models import (
     Color,
     Size,
     Stock,
-    ProductGallery,
+    ProductImage,
     BrandLogo,
     ProductCategoryImage,
     ProductSubCategoryImage,
@@ -20,7 +20,7 @@ from .forms import (
     ProductSubCategoryForm,
     ColorForm,
     SizeForm,
-    ProductGalleryForm,
+    ProductImageForm,
     StockForm,
     ProductForm,
     BrandLogoForm,
@@ -328,18 +328,25 @@ class AdminColor(admin.ModelAdmin):
     )
 
 
-@admin.register(ProductGallery)
-class AdminProductGallery(admin.ModelAdmin):
+@admin.register(ProductImage)
+class AdminProductImage(admin.ModelAdmin):
     """
-    Admin options and functionalities for ProductGallery model.
+    Admin options and functionalities for ProductImage model.
     """
-    list_display = ["id", "image"]
-    form = ProductGalleryForm
+    list_display = ["id", "created_at", "updated_at", "image", "size", "width", "height", "format", "is_featured"]
+    form = ProductImageForm
     fieldsets = (
         (
             "Uploading", {
                 "fields": [
                     "image",
+                ],
+            },
+        ),
+        (
+            "Featured", {
+                "fields": [
+                    "is_featured",
                 ],
             },
         ),
@@ -388,7 +395,6 @@ class AdminProduct(admin.ModelAdmin):
         "short_description",
         "price",
         "get_quantity",
-        "image",
         "get_gallery",
         "rate",
         "get_tags",
@@ -417,7 +423,6 @@ class AdminProduct(admin.ModelAdmin):
         (
             "Uploading", {
                 "fields": [
-                    "image",
                     "gallery",
                 ],
             },

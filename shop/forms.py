@@ -6,7 +6,7 @@ from .models import (
     ProductSubCategory,
     Size,
     Color,
-    ProductGallery,
+    ProductImage,
     Stock,
     Product,
     BrandLogo,
@@ -150,12 +150,24 @@ class ColorForm(forms.ModelForm):
         fields = "__all__"
 
 
-class ProductGalleryForm(forms.ModelForm):
-    image = forms.ImageField(help_text="Upload an image for product.", label="Product Image")
+class ProductImageForm(forms.ModelForm):
+    size = forms.IntegerField(required=False)
+    width = forms.IntegerField(required=False)
+    height = forms.IntegerField(required=False)
+    format = forms.CharField(required=False)
+    is_featured = forms.BooleanField(help_text="Check if you want to highlight this photo.", label="Is Featured",
+                                     required=False)
 
     class Meta:
-        model = ProductGallery
+        model = ProductImage
         fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(ProductImageForm, self).__init__(*args, **kwargs)
+
+        self.fields["image"].help_text = "Upload an image to the product."
+        self.fields["image"].label = "Image"
+        self.fields["image"].required = True
 
 
 class StockForm(forms.ModelForm):
@@ -181,7 +193,6 @@ class ProductForm(forms.ModelForm):
     short_description = forms.CharField(help_text="Provide a short description of the product.",
                                         label="Short Description")
     price = forms.FloatField(help_text="Provide the product price.", label="Price")
-    image = forms.ImageField(help_text="Upload a product thumbnail.", label="Thumbnail")
     full_description = forms.CharField(max_length=100000, help_text="Provide a full description of the product.",
                                        label="Full Description")
     is_active = forms.BooleanField(help_text="Indicate if the product is active for sale.", required=False)
@@ -195,13 +206,15 @@ class ProductForm(forms.ModelForm):
         self.fields["quantity"].help_text = "Provide the quantity, and select the color and size of the product."
         self.fields["gallery"].help_text = "Upload a product image gallery or select images from the gallery."
         self.fields["tags"].help_text = "Provide or select the product tag(s)."
-        self.fields["tags"].required = False
 
         self.fields["brand"].label = "Brand"
         self.fields["category"].label = "Category"
         self.fields["quantity"].label = "Quantity, Size and Color"
         self.fields["gallery"].label = "Gallery"
         self.fields["tags"].label = "Tags"
+
+        self.fields["tags"].required = False
+        self.fields["gallery"].required = True
 
     class Meta:
         model = Product
