@@ -130,7 +130,7 @@ class ProductSubCategoryForm(forms.ModelForm):
 
         self.fields["categories"].help_text = "Add a category for this subcategory."
         self.fields["categories"].label = "Category"
-        self.fields["categories"].required = False
+        self.fields["categories"].required = True
 
 
 class SizeForm(forms.ModelForm):
