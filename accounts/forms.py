@@ -7,7 +7,7 @@ class UserForm(forms.ModelForm):
     username = forms.CharField(help_text="Provide the username", label="User Username")
     email = forms.EmailField(help_text="Provide the e-mail address", label="User E-mail Address")
     password = forms.CharField(help_text="Provide the password", label="User Password", widget=forms.PasswordInput())
-    is_verified = forms.BooleanField(help_text="Indicate whether the user is verified.")
+    is_verified = forms.BooleanField(help_text="Indicate whether the user is verified.", required=False)
     is_active = forms.BooleanField(help_text="Indicate whether the user is active.")
     is_staff = forms.BooleanField(help_text="Indicate whether the user is staff.", required=False)
     is_superuser = forms.BooleanField(help_text="Indicate whether the user is superuser.", required=False)
@@ -47,6 +47,7 @@ class ProfilePictureForm(forms.ModelForm):
     width = forms.IntegerField(required=False)
     height = forms.IntegerField(required=False)
     format = forms.CharField(required=False)
+    alt = forms.CharField(help_text="Provide the alternate text.", label="Alt", required=False)
 
     class Meta:
         model = ProfilePicture
@@ -63,7 +64,7 @@ class ProfilePictureForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     firstname = forms.CharField(help_text="Provide the first name.", label="First Name", required=False)
     lastname = forms.CharField(help_text="Provide the last name", label="Last Name", required=False)
-    bio = forms.CharField(help_text="Provide a short bio.", label="Bio", required=False)
+    bio = forms.CharField(help_text="Provide a short bio.", label="Bio", required=False, widget=forms.Textarea)
     gender = forms.ChoiceField(help_text="Select your gender.", label="Gender", choices=(
         ("Male", "Male"),
         ("Female", "Female"),

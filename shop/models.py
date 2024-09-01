@@ -4,12 +4,11 @@ from django.db import models
 from uuid import uuid4
 from django.utils.timezone import now
 from django.utils.text import slugify
-from accounts.mixins import SaveMixin
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_delete
 
 
-class BrandLogo(SaveMixin, models.Model):
+class BrandLogo(models.Model):
     created_at = models.DateTimeField(default=now)
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to="shop/brands")
@@ -17,6 +16,7 @@ class BrandLogo(SaveMixin, models.Model):
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
     format = models.CharField(max_length=100, null=True)
+    alt = models.CharField(max_length=1000, null=True)
 
     class Meta:
         verbose_name = "Brand Logo"
@@ -29,7 +29,7 @@ class BrandLogo(SaveMixin, models.Model):
 class Brand(models.Model):
     name = models.CharField(max_length=1000, unique=True)
     description = models.TextField(max_length=10000)
-    logo = models.OneToOneField(to=BrandLogo, on_delete=models.CASCADE, null=True)
+    logo = models.OneToOneField(to=BrandLogo, on_delete=models.SET_NULL, null=True)
     slug = models.SlugField(unique=True)
 
     class Meta:
@@ -64,7 +64,7 @@ class ProductTags(models.Model):
         super(ProductTags, self).save(*args, **kwargs)
 
 
-class ProductCategoryImage(SaveMixin, models.Model):
+class ProductCategoryImage(models.Model):
     created_at = models.DateTimeField(default=now)
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to="shop/categories")
@@ -72,6 +72,7 @@ class ProductCategoryImage(SaveMixin, models.Model):
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
     format = models.CharField(max_length=100, null=True)
+    alt = models.CharField(max_length=1000, null=True)
 
     class Meta:
         verbose_name = "Product Category Image"
@@ -84,7 +85,7 @@ class ProductCategoryImage(SaveMixin, models.Model):
 class ProductCategory(models.Model):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(unique=True)
-    category_image = models.OneToOneField(to=ProductCategoryImage, on_delete=models.CASCADE, null=True)
+    category_image = models.OneToOneField(to=ProductCategoryImage, on_delete=models.SET_NULL, null=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -101,7 +102,7 @@ class ProductCategory(models.Model):
         super(ProductCategory, self).save(*args, **kwargs)
 
 
-class ProductSubCategoryImage(SaveMixin, models.Model):
+class ProductSubCategoryImage(models.Model):
     created_at = models.DateTimeField(default=now)
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to="shop/subcategories")
@@ -109,6 +110,7 @@ class ProductSubCategoryImage(SaveMixin, models.Model):
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
     format = models.CharField(max_length=100, null=True)
+    alt = models.CharField(max_length=1000, null=True)
 
     class Meta:
         verbose_name = "Product SubCategory Image"
@@ -121,7 +123,7 @@ class ProductSubCategoryImage(SaveMixin, models.Model):
 class ProductSubCategory(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField()
-    subcategory_image = models.OneToOneField(to=ProductSubCategoryImage, on_delete=models.CASCADE, null=True)
+    subcategory_image = models.OneToOneField(to=ProductSubCategoryImage, on_delete=models.SET_NULL, null=True)
     categories = models.ManyToManyField(to=ProductCategory, related_name="subcategories")
     is_active = models.BooleanField(default=True)
 
@@ -175,7 +177,7 @@ class Stock(models.Model):
         return f"{self.quantity, self.color.name, self.size.name}"
 
 
-class ProductImage(SaveMixin, models.Model):
+class ProductImage(models.Model):
     created_at = models.DateTimeField(default=now)
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to="shop/products")
@@ -183,6 +185,7 @@ class ProductImage(SaveMixin, models.Model):
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
     format = models.CharField(max_length=100, null=True)
+    alt = models.CharField(max_length=1000, null=True)
     is_featured = models.BooleanField(default=False)
 
     class Meta:
@@ -203,11 +206,11 @@ class Product(models.Model):
     short_description = models.CharField(max_length=10000)
     price = models.FloatField()
     quantity = models.ManyToManyField(to=Stock)
-    gallery = models.ForeignKey(to=ProductImage, on_delete=models.CASCADE, null=True)
-    rate = models.IntegerField()
+    gallery = models.ManyToManyField(to=ProductImage, blank=True)
+    rate = models.IntegerField(null=True)
     tags = models.ManyToManyField(to=ProductTags)
     full_description = models.TextField(max_length=100000)
-    sku = models.IntegerField(default=0, unique=True)
+    sku = models.CharField(max_length=100, unique=True)
     is_active = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False)
     sales_counter = models.IntegerField(default=0)
@@ -222,6 +225,9 @@ class Product(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
+
+        if not self.sku:
+            self.sku = str(uuid4()).split("-")[-1]
 
         super(Product, self).save(*args, **kwargs)
 
@@ -293,3 +299,20 @@ def delete_logo_file(sender, instance, **kwargs):
 
         if os.path.isfile(path=image_path):
             os.remove(path=image_path)
+
+
+@receiver(signal=pre_delete, sender=Product)
+def delete_product_images(sender, instance, **kwargs):
+    if instance.gallery:
+        for img in instance.gallery.all():
+            img.delete()
+
+
+@receiver(signal=pre_delete, sender=Product)
+def delete_product_image_files(sender, instance, **kwargs):
+    if instance.gallery:
+        image_paths = [obj.image.path for obj in instance.gallery.all()]
+
+        for img in image_paths:
+            if os.path.isfile(path=img):
+                os.remove(path=img)

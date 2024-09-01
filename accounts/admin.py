@@ -99,6 +99,7 @@ class AdminProfilePicture(admin.ModelAdmin):
         "width",
         "height",
         "format",
+        "alt",
     ]
     form = ProfilePictureForm
     fieldsets = (

@@ -3,11 +3,10 @@ from django.contrib.auth.models import UserManager, AbstractBaseUser, Permission
 from django.utils.timezone import now
 from uuid import uuid4
 from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete, pre_delete, pre_save, post_migrate, post_init, pre_init, \
-    pre_migrate
+from django.db.models.signals import post_save, post_delete, pre_delete
 from shop.models import Product
-from .mixins import SaveMixin
 import os
+from PIL import Image
 
 
 class CustomUserManager(UserManager):
@@ -103,7 +102,7 @@ class DeliveryDetails(models.Model):
         return f"{self.id}"
 
 
-class ProfilePicture(SaveMixin, models.Model):
+class ProfilePicture(models.Model):
     created_at = models.DateTimeField(default=now)
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(default="accounts/profile_images/default_profile_image.png",
@@ -112,6 +111,7 @@ class ProfilePicture(SaveMixin, models.Model):
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
     format = models.CharField(max_length=100, null=True)
+    alt = models.CharField(max_length=1000, null=True)
 
     class Meta:
         verbose_name = "Profile Picture"
@@ -119,6 +119,56 @@ class ProfilePicture(SaveMixin, models.Model):
 
     def __str__(self):
         return f"{self.id}"
+
+    def save(self, *args, **kwargs):
+        if self.id:
+            super(ProfilePicture, self).save(*args, **kwargs)
+            print("Is ID.")
+
+            instance = ProfilePicture.objects.get(id=self.id)
+
+            self._resize_image()
+            self._save_attributes(instance=instance)
+
+            super(ProfilePicture, self).save(*args, **kwargs)
+
+        else:
+            print("Not ID.")
+            self._resize_image()
+            self._save_attributes()
+
+            super(ProfilePicture, self).save(*args, **kwargs)
+
+    def _resize_image(self):
+        image = Image.open(fp=self.image.path)
+
+        if image.mode == "RGBA":
+            image = image.convert(mode="RGB")
+
+        image.thumbnail(size=(300, 300))
+        image.save(fp=self.image.path)
+
+        return image
+
+    def _save_attributes(self, instance=None):
+        image = self._resize_image()
+
+        if "default_profile_image.png" in self.image.path:
+            self.alt = "Default profile picture"
+
+        if instance:
+            profile = Profile.objects.get(profilepicture_id=instance.id)
+            user = Profile.objects.get(profilepicture_id=instance.id).user
+
+            if profile.firstname and profile.lastname:
+                self.alt = f"{profile.firstname.capitalize()} {profile.lastname.capitalize()} profile picture"
+
+            else:
+                self.alt = f"{user.username} profile picture"
+
+        self.size = os.path.getsize(filename=self.image.path)
+        self.width, self.height = image.width, image.height
+        self.format = image.format
 
 
 class Profile(models.Model):
@@ -140,7 +190,7 @@ class Profile(models.Model):
         max_length=100
     )
     dateofbirth = models.DateField(null=True)
-    profilepicture = models.OneToOneField(to=ProfilePicture, on_delete=models.CASCADE, null=True)
+    profilepicture = models.OneToOneField(to=ProfilePicture, on_delete=models.SET_NULL, null=True)
 
     # Social Media
     facebook = models.CharField(max_length=50, null=True)
@@ -150,7 +200,7 @@ class Profile(models.Model):
     wishlist = models.ManyToManyField(to=Product)
 
     # Delivery Details
-    delivery_details = models.OneToOneField(to=DeliveryDetails, on_delete=models.CASCADE, null=True)
+    delivery_details = models.OneToOneField(to=DeliveryDetails, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         verbose_name = "Profile"
@@ -160,55 +210,40 @@ class Profile(models.Model):
         return self.user.username
 
 
-@receiver(signal=post_save, sender=User)
-def create_profile(sender, instance=None, created=None, **kwargs):
-    if created:
-        Profile.objects.get_or_create(user=instance)
-
-
-@receiver(signal=post_save, sender=Profile)
-def create_delivery_details(sender, instance=None, created=None, **kwargs):
-    if created and not instance.delivery_details:
-        delivery_details = DeliveryDetails.objects.create()
-        instance.delivery_details = delivery_details
-        instance.save()
-
-
-@receiver(signal=post_save, sender=Profile)
-def create_profilepicture(sender, instance=None, created=None, **kwargs):
-    if created and not instance.profilepicture:
-        profilepicture = ProfilePicture.objects.create()
-        instance.profilepicture = profilepicture
-        instance.save()
-
-
-@receiver(signal=post_delete, sender=Profile)
-def delete_delivery_details(sender, instance, **kwargs):
-    if instance.delivery_details:
-        instance.delivery_details.delete()
-
-
-@receiver(signal=post_delete, sender=Profile)
-def delete_profilepicture(sender, instance, **kwargs):
-    if instance.profilepicture:
-        instance.profilepicture.delete()
-
-
-@receiver(signal=pre_delete, sender=Profile)
-def delete_profilepicture_file_when_profile_is_deleting(sender, instance, **kwargs):
-    if instance.profilepicture and instance.profilepicture.image:
-        image_path = instance.profilepicture.image.path
-
-        if 'default_profile_image.png' not in image_path:
-            if os.path.isfile(path=image_path):
-                os.remove(path=image_path)
+# @receiver(signal=post_save, sender=User)
+# def create_profile(sender, instance=None, created=None, **kwargs):
+#     if created:
+#         profile = Profile.objects.create(user=instance)
+#         profile.save()
+#
+#         if not profile.profilepicture:
+#             profilepicture = ProfilePicture.objects.create()
+#             profile.profilepicture = profilepicture
+#
+#         if not profile.delivery_details:
+#             delivery_details = DeliveryDetails.objects.create()
+#             profile.delivery_details = delivery_details
+#
+#         profile.save()
 
 
 @receiver(signal=pre_delete, sender=User)
-def delete_profilepicture_file_when_user_is_deleting(sender, instance, **kwargs):
-    if instance.profile.profilepicture and instance.profile.profilepicture.image:
-        image_path = instance.profile.profilepicture.image.path
+def delete_profile(sender, instance, **kwargs):
+    if instance.profile:
+        profile = instance.profile
 
-        if 'default_profile_image.png' not in image_path:
-            if os.path.isfile(path=image_path):
-                os.remove(path=image_path)
+        if hasattr(profile, "profilepicture"):
+            if profile.profilepicture and profile.profilepicture.image:
+                image_path = profile.profilepicture.image.path
+
+                if "default_profile_image.png" not in image_path:
+                    if os.path.isfile(path=image_path):
+                        os.remove(path=image_path)
+
+            profile.profilepicture.delete()
+
+    if instance.profile.delivery_details:
+        instance.profile.delivery_details.delete()
+
+    if instance.profile:
+        instance.profile.delete()

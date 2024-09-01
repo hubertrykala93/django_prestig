@@ -27,6 +27,8 @@ from .forms import (
     ProductCategoryImageForm,
     ProductSubCategoryImageForm,
 )
+from django.utils.html import format_html_join
+from django.utils.safestring import mark_safe
 
 
 @admin.register(BrandLogo)
@@ -179,7 +181,7 @@ class AdminProductCategoryImage(admin.ModelAdmin):
         if obj.updated_at:
             return obj.updated_at.strftime("%Y-%m-%d %H:%M:%S")
 
-    formatted_updated_at.description = "Updated At"
+    formatted_updated_at.short_description = "Updated At"
 
     def get_image_name(self, obj):
         if obj.image:
@@ -238,7 +240,8 @@ class AdminProductSubCategoryImage(admin.ModelAdmin):
     """
     Admin options and functionalities for ProductSubCategoryImage model.
     """
-    list_display = ["id", "created_at", "updated_at", "image", "size", "width", "height", "format"]
+    list_display = ["id", "formatted_created_at", "formatted_updated_at", "image", "get_image_name", "size", "width",
+                    "height", "format"]
     form = ProductSubCategoryImageForm
     fieldsets = (
         (
@@ -250,13 +253,31 @@ class AdminProductSubCategoryImage(admin.ModelAdmin):
         ),
     )
 
+    def formatted_created_at(self, obj):
+        if obj.created_at:
+            return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_created_at.short_description = "Created At"
+
+    def formatted_updated_at(self, obj):
+        if obj.updated_at:
+            return obj.updated_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_updated_at.short_description = "Updated At"
+
+    def get_image_name(self, obj):
+        if obj.image:
+            return obj.image.name.split(sep="/")[-1]
+
+    get_image_name.short_description = "Image Name"
+
 
 @admin.register(ProductSubCategory)
 class AdminProductSubCategory(admin.ModelAdmin):
     """
     Admin options and functionalities for ProductSubCategory model.
     """
-    list_display = ["id", "name", "slug", "subcategory_image", "is_active"]
+    list_display = ["id", "name", "slug", "get_subcategory_image_id", "get_subcategory_image_name", "is_active"]
     prepopulated_fields = {"slug": ["name"]}
     form = ProductSubCategoryForm
     fieldsets = (
@@ -289,6 +310,18 @@ class AdminProductSubCategory(admin.ModelAdmin):
             },
         ),
     )
+
+    def get_subcategory_image_id(self, obj):
+        if obj.subcategory_image:
+            return obj.subcategory_image
+
+    get_subcategory_image_id.short_description = "Subcategory Image ID"
+
+    def get_subcategory_image_name(self, obj):
+        if obj.subcategory_image:
+            return obj.subcategory_image.image.name.split(sep="/")[-1]
+
+    get_subcategory_image_name.short_Description = "Subcategory Image Name"
 
 
 @admin.register(Size)
@@ -333,7 +366,8 @@ class AdminProductImage(admin.ModelAdmin):
     """
     Admin options and functionalities for ProductImage model.
     """
-    list_display = ["id", "created_at", "updated_at", "image", "size", "width", "height", "format", "is_featured"]
+    list_display = ["id", "formatted_created_at", "formatted_updated_at", "image", "get_image_name", "size", "width",
+                    "height", "format", "is_featured"]
     form = ProductImageForm
     fieldsets = (
         (
@@ -351,6 +385,24 @@ class AdminProductImage(admin.ModelAdmin):
             },
         ),
     )
+
+    def formatted_created_at(self, obj):
+        if obj.created_at:
+            return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_created_at.short_description = "Created At"
+
+    def formatted_updated_at(self, obj):
+        if obj.updated_at:
+            return obj.updated_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_updated_at.short_description = "Updated At"
+
+    def get_image_name(self, obj):
+        if obj.image:
+            return obj.image.name.split(sep="/")[-1]
+
+    get_image_name.short_description = "Image Name"
 
 
 @admin.register(Stock)
@@ -387,7 +439,7 @@ class AdminProduct(admin.ModelAdmin):
     list_display = [
         "id",
         "uuid",
-        "created_at",
+        "formatted_created_at",
         "brand",
         "category",
         "name",
@@ -395,8 +447,10 @@ class AdminProduct(admin.ModelAdmin):
         "short_description",
         "price",
         "get_quantity",
+        "get_gallery_ids",
         "get_gallery",
         "rate",
+        "get_tags_ids",
         "get_tags",
         "full_description",
         "sku",
@@ -444,11 +498,49 @@ class AdminProduct(admin.ModelAdmin):
         ),
     )
 
+    def formatted_created_at(self, obj):
+        if obj.created_at:
+            return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_created_at.short_description = "Created At"
+
+    def get_gallery_ids(self, obj):
+        return format_html_join(
+            mark_safe('<br>'),
+            '{}',
+            ((img.id,) for img in obj.gallery.all())
+        ) or mark_safe("-")
+
+    get_gallery_ids.short_description = "Gallery ID"
+
     def get_gallery(self, obj):
-        return "\n".join([g.image.name.split("/")[-1] for g in obj.gallery.all()])
+        return format_html_join(
+            mark_safe('<br>'),
+            '{}',
+            ((img.image,) for img in obj.gallery.all())
+        ) or mark_safe("-")
+
+    get_gallery.short_description = "Gallery"
 
     def get_quantity(self, obj):
-        return "\n".join([" ".join([str(s.quantity), s.size.size, s.color.color]) for s in obj.quantity.all()])
+        return "\n".join([" ".join([str(s.quantity), s.size.name, s.color.name]) for s in obj.quantity.all()])
+
+    get_quantity.short_description = "Quantity"
 
     def get_tags(self, obj):
-        return "\n".join([t.name for t in obj.tags.all()])
+        return format_html_join(
+            mark_safe('<br>'),
+            '{}',
+            ((tag.name,) for tag in obj.tags.all())
+        ) or mark_safe("-")
+
+    get_tags.short_description = "Tags"
+
+    def get_tags_ids(self, obj):
+        return format_html_join(
+            mark_safe('<br>'),
+            '{}',
+            ((tag.id,) for tag in obj.tags.all())
+        ) or mark_safe("-")
+
+    get_tags_ids.short_description = "Tag ID"

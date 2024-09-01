@@ -150,26 +150,6 @@ class ColorForm(forms.ModelForm):
         fields = "__all__"
 
 
-class ProductImageForm(forms.ModelForm):
-    size = forms.IntegerField(required=False)
-    width = forms.IntegerField(required=False)
-    height = forms.IntegerField(required=False)
-    format = forms.CharField(required=False)
-    is_featured = forms.BooleanField(help_text="Check if you want to highlight this photo.", label="Is Featured",
-                                     required=False)
-
-    class Meta:
-        model = ProductImage
-        fields = "__all__"
-
-    def __init__(self, *args, **kwargs):
-        super(ProductImageForm, self).__init__(*args, **kwargs)
-
-        self.fields["image"].help_text = "Upload an image to the product."
-        self.fields["image"].label = "Image"
-        self.fields["image"].required = True
-
-
 class StockForm(forms.ModelForm):
     quantity = forms.IntegerField(help_text="Provide the quantity of the product.", label="Quantity")
 
@@ -187,14 +167,33 @@ class StockForm(forms.ModelForm):
         fields = "__all__"
 
 
+class ProductImageForm(forms.ModelForm):
+    size = forms.IntegerField(required=False)
+    width = forms.IntegerField(required=False)
+    height = forms.IntegerField(required=False)
+    format = forms.CharField(required=False)
+    is_featured = forms.BooleanField(help_text="Check if you want to highlight this photo.", required=False)
+
+    class Meta:
+        model = ProductImage
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(ProductImageForm, self).__init__(*args, **kwargs)
+
+        self.fields["image"].help_text = "Upload an image to the product."
+        self.fields["image"].label = "Image"
+        self.fields["image"].required = True
+
+
 class ProductForm(forms.ModelForm):
     name = forms.CharField(help_text="Provide the product name.", label="Name")
     slug = forms.SlugField(required=False)
     short_description = forms.CharField(help_text="Provide a short description of the product.",
-                                        label="Short Description")
+                                        label="Short Description", widget=forms.Textarea)
     price = forms.FloatField(help_text="Provide the product price.", label="Price")
     full_description = forms.CharField(max_length=100000, help_text="Provide a full description of the product.",
-                                       label="Full Description")
+                                       label="Full Description", widget=forms.Textarea)
     is_active = forms.BooleanField(help_text="Indicate if the product is active for sale.", required=False)
     is_featured = forms.BooleanField(help_text="Indicate if you want to feature the product.", required=False)
 

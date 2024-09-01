@@ -3,7 +3,6 @@ from django.utils.timezone import now
 from accounts.models import User
 from django.utils.text import slugify
 from django.shortcuts import reverse
-from accounts.mixins import SaveMixin
 from django.db.models.signals import post_save, post_delete, pre_delete
 from django.dispatch import receiver
 import os
@@ -55,7 +54,7 @@ class ArticleTag(models.Model):
         return super(ArticleTag, self).save(*args, **kwargs)
 
 
-class ArticleImage(SaveMixin, models.Model):
+class ArticleImage(models.Model):
     created_at = models.DateTimeField(default=now)
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to="blog/article_images", null=True)
@@ -63,6 +62,7 @@ class ArticleImage(SaveMixin, models.Model):
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
     format = models.CharField(max_length=100, null=True)
+    alt = models.CharField(max_length=1000, null=True)
 
     class Meta:
         verbose_name = "Article Image"
@@ -76,7 +76,7 @@ class Article(models.Model):
     created_at = models.DateTimeField(default=now)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    article_image = models.OneToOneField(to=ArticleImage, on_delete=models.CASCADE, null=True)
+    article_image = models.OneToOneField(to=ArticleImage, on_delete=models.SET_NULL, null=True)
     slug = models.SlugField(max_length=500, unique=True)
     description = models.TextField(max_length=100000)
     article_category = models.ForeignKey(to=ArticleCategory, on_delete=models.SET_NULL, null=True)

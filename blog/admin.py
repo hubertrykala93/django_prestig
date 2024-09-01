@@ -2,6 +2,8 @@ from django.contrib import admin
 from .models import ArticleCategory, ArticleTag, Article, ArticleComment, ArticleImage
 from .forms import ArticleCategoryForm, ArticleTagForm, ArticleForm, ArticleCommentForm, ArticleImageForm
 from django_summernote.admin import SummernoteModelAdmin
+from django.utils.html import format_html_join
+from django.utils.safestring import mark_safe
 
 
 @admin.register(ArticleCategory)
@@ -172,8 +174,6 @@ class AdminArticle(SummernoteModelAdmin):
     get_category_name.short_description = "Category"
 
     def get_tag_ids(self, obj):
-        from django.utils.html import format_html_join
-        from django.utils.safestring import mark_safe
         return format_html_join(
             mark_safe('<br>'),
             '{}',
