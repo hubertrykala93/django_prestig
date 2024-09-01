@@ -57,6 +57,7 @@ class AdminArticleImage(admin.ModelAdmin):
         "width",
         "height",
         "format",
+        "alt",
     ]
     form = ArticleImageForm
     fieldsets = (
@@ -64,6 +65,13 @@ class AdminArticleImage(admin.ModelAdmin):
             "Uploading", {
                 "fields": [
                     "image",
+                ],
+            },
+        ),
+        (
+            "Alternate Text", {
+                "fields": [
+                    "alt",
                 ],
             },
         ),

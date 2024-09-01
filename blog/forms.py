@@ -26,6 +26,7 @@ class ArticleImageForm(forms.ModelForm):
     width = forms.IntegerField(required=False)
     height = forms.IntegerField(required=False)
     format = forms.CharField(required=False)
+    alt = forms.CharField(help_text="Provide the alternate text.", label="Alt", required=True)
 
     class Meta:
         model = ArticleImage

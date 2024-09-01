@@ -125,12 +125,12 @@ class ArticleComment(models.Model):
         return super(ArticleComment, self).save(*args, **kwargs)
 
 
-@receiver(signal=post_save, sender=Article)
-def create_article_image(sender=Article, instance=None, created=None, **kwargs):
-    if created and not instance.article_image:
-        article_image = ArticleImage.objects.create()
-        instance.article_image = article_image
-        instance.save()
+# @receiver(signal=post_save, sender=Article)
+# def create_article_image(sender=Article, instance=None, created=None, **kwargs):
+#     if created and not instance.article_image:
+#         article_image = ArticleImage.objects.create()
+#         instance.article_image = article_image
+#         instance.save()
 
 
 @receiver(signal=post_delete, sender=Article)

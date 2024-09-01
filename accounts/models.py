@@ -3,7 +3,7 @@ from django.contrib.auth.models import UserManager, AbstractBaseUser, Permission
 from django.utils.timezone import now
 from uuid import uuid4
 from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete, pre_delete
+from django.db.models.signals import pre_delete
 from shop.models import Product
 import os
 from PIL import Image
@@ -66,6 +66,21 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.username}"
+
+    def save(self, *args, **kwargs):
+        super(User, self).save(*args, **kwargs)
+
+        if self.pk:
+            profile, created = Profile.objects.get_or_create(user=self)
+
+            if created:
+                profile_picture = ProfilePicture.objects.create()
+                profile.profilepicture = profile_picture
+
+                delivery_details = DeliveryDetails.objects.create()
+                profile.delivery_details = delivery_details
+
+                profile.save()
 
 
 class OneTimePassword(models.Model):
@@ -210,26 +225,16 @@ class Profile(models.Model):
         return self.user.username
 
 
-# @receiver(signal=post_save, sender=User)
-# def create_profile(sender, instance=None, created=None, **kwargs):
-#     if created:
-#         profile = Profile.objects.create(user=instance)
-#         profile.save()
-#
-#         if not profile.profilepicture:
-#             profilepicture = ProfilePicture.objects.create()
-#             profile.profilepicture = profilepicture
-#
-#         if not profile.delivery_details:
-#             delivery_details = DeliveryDetails.objects.create()
-#             profile.delivery_details = delivery_details
-#
-#         profile.save()
-
-
 @receiver(signal=pre_delete, sender=User)
 def delete_profile(sender, instance, **kwargs):
+    try:
+        profile = instance.profile
+
+    except Profile.DoesNotExist:
+        return
+
     if instance.profile:
+        print("Profile.")
         profile = instance.profile
 
         if hasattr(profile, "profilepicture"):
@@ -241,6 +246,9 @@ def delete_profile(sender, instance, **kwargs):
                         os.remove(path=image_path)
 
             profile.profilepicture.delete()
+
+    else:
+        print("Else")
 
     if instance.profile.delivery_details:
         instance.profile.delivery_details.delete()
