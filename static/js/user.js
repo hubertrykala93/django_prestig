@@ -288,7 +288,7 @@ const resetFileInput = () => {
  * Restores preview image source to default.
  */
 const resetPreviewImage = () => {
-    document.querySelector('.js-form-upload-preview-image').src = '/media/profile_images/default_profile_image.png'
+    document.querySelector('.js-form-upload-preview-image').src = '/media/accounts/profile_images/default_profile_image.png'
 }
 
 /**
