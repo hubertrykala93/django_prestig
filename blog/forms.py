@@ -1,5 +1,5 @@
 from django import forms
-from .models import ArticleCategory, ArticleTag, Article, ArticleComment
+from .models import ArticleCategory, ArticleTag, Article, ArticleComment, ArticleImage
 from django_summernote.widgets import SummernoteWidget
 
 
@@ -21,9 +21,26 @@ class ArticleTagForm(forms.ModelForm):
         fields = "__all__"
 
 
+class ArticleImageForm(forms.ModelForm):
+    size = forms.IntegerField(required=False)
+    width = forms.IntegerField(required=False)
+    height = forms.IntegerField(required=False)
+    format = forms.CharField(required=False)
+    alt = forms.CharField(help_text="Provide the alternate text.", label="Alt", required=True, widget=forms.Textarea)
+
+    class Meta:
+        model = ArticleImage
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(ArticleImageForm, self).__init__(*args, **kwargs)
+        self.fields["image"].help_text = "Upload an image to the article."
+        self.fields["image"].label = "Article Image"
+        self.fields["image"].required = True
+
+
 class ArticleForm(forms.ModelForm):
     title = forms.CharField(max_length=200, help_text="Provide the article title.", label="Title")
-    image = forms.ImageField(help_text="Upload an image of the article.", label="Image", required=True)
     description = forms.CharField(max_length=100000, help_text="Provide the article description.", label="Description",
                                   widget=SummernoteWidget())
     slug = forms.SlugField(required=False)
@@ -37,6 +54,10 @@ class ArticleForm(forms.ModelForm):
 
         self.fields["user"].help_text = "Select the author of the article."
         self.fields["user"].label = "Author"
+
+        self.fields["article_image"].help_text = "Choose an article image."
+        self.fields["article_image"].label = "Article Image"
+        self.fields["article_image"].required = True
 
         self.fields["article_category"].help_text = "Provide the category of the article."
         self.fields["article_category"].help_text = "Category"

@@ -30,7 +30,7 @@
         {% for article in latest_articles %}
         <li class="blog__aside__latest__item">
             <a href="{{ article.get_absolute_url }}" class="blog__aside__latest__item__image">
-                <img src="{{ article.image.url }}" alt="Article thumbnail">
+                <img src="{{ article.article_image.image.url }}" alt="{{ article.article_image.alt }}">
             </a>
 
             <div class="blog__aside__latest__item__content">

@@ -16,7 +16,7 @@
           {% for page in pages %}
             <div class="blog-card">
               <a href="{{ page.get_absolute_url }}" class="blog-card__image">
-                <img src="{{ page.image.url }}" alt="Article thumbnail">
+                <img src="{{ page.article_image.image.url }}" alt="{{ page.article_image.alt }}">
               </a>
 
               <div class="blog-card__date">{{ page.created_at|format_date }}</div>

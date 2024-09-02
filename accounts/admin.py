@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import User, Profile, OneTimePassword, DeliveryDetails, ProfilePicture
 from .forms import UserForm, ProfileForm, OneTimePasswordForm, DeliveryDetailsForm, ProfilePictureForm
 from django.contrib.sessions.models import Session
+from django.utils.html import format_html
 
 
 @admin.register(User)
@@ -20,7 +21,6 @@ class AdminUser(admin.ModelAdmin):
         "is_superuser",
         "formatted_last_login"
     ]
-    list_editable = ["username", "email", "is_verified"]
     form = UserForm
     fieldsets = (
         (
@@ -91,7 +91,15 @@ class AdminProfilePicture(admin.ModelAdmin):
     """
     list_display = [
         "id",
-        "image"
+        "formatted_created_at",
+        "formatted_updated_at",
+        "image",
+        "formatted_image_name",
+        "size",
+        "width",
+        "height",
+        "format",
+        "alt",
     ]
     form = ProfilePictureForm
     fieldsets = (
@@ -104,6 +112,22 @@ class AdminProfilePicture(admin.ModelAdmin):
         ),
     )
 
+    def formatted_created_at(self, obj):
+        return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_created_at.short_description = "Created At"
+
+    def formatted_updated_at(self, obj):
+        return obj.updated_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_updated_at.short_description = "Updated At"
+
+    def formatted_image_name(self, obj):
+        if obj.image:
+            return obj.image.name.split("/")[-1]
+
+    formatted_image_name.short_description = "Image Name"
+
 
 @admin.register(Profile)
 class AdminProfile(admin.ModelAdmin):
@@ -113,13 +137,15 @@ class AdminProfile(admin.ModelAdmin):
     list_display = [
         "id",
         "formatted_created_at",
+        "get_user_id",
         "user",
         "get_first_name",
         "get_last_name",
+        "get_profilepicture_id",
+        "get_profilepicture",
         "bio",
         "gender",
         "formatted_date_of_birth",
-        "formatted_profilepicture",
         "facebook",
         "instagram",
         "delivery_details"
@@ -174,6 +200,11 @@ class AdminProfile(admin.ModelAdmin):
 
     formatted_created_at.short_description = "Created At"
 
+    def get_user_id(self, obj):
+        return obj.user.id
+
+    get_user_id.short_description = "User ID"
+
     def get_first_name(self, obj):
         return obj.firstname
 
@@ -184,17 +215,23 @@ class AdminProfile(admin.ModelAdmin):
 
     get_last_name.short_description = "Last Name"
 
+    def get_profilepicture_id(self, obj):
+        if obj.profilepicture:
+            return obj.profilepicture
+
+    get_profilepicture_id.short_description = "Profile Picture ID"
+
+    def get_profilepicture(self, obj):
+        if obj.profilepicture:
+            return obj.profilepicture.image
+
+    get_profilepicture.short_description = "Profile Picture"
+
     def formatted_date_of_birth(self, obj):
         if obj.dateofbirth:
             return obj.dateofbirth.strftime("%Y-%m-%d")
 
     formatted_date_of_birth.short_description = "Date of Birth"
-
-    def formatted_profilepicture(self, obj):
-        if obj.profilepicture:
-            return obj.profilepicture
-
-    formatted_profilepicture.short_description = "Profile Picture"
 
 
 @admin.register(DeliveryDetails)
@@ -205,7 +242,8 @@ class AdminDeliveryDetails(admin.ModelAdmin):
     list_display = [
         "id",
         "formatted_created_at",
-        "uuid",
+        "get_profile_id",
+        "get_profile",
         "country",
         "state",
         "city",
@@ -214,7 +252,6 @@ class AdminDeliveryDetails(admin.ModelAdmin):
         "get_apartment_number",
         "get_postal_code",
         "phone",
-        "get_username",
     ]
     form = DeliveryDetailsForm
     fieldsets = (
@@ -245,6 +282,16 @@ class AdminDeliveryDetails(admin.ModelAdmin):
 
     formatted_created_at.short_description = "Created At"
 
+    def get_profile_id(self, obj):
+        return obj.profile.id
+
+    get_profile_id.short_description = "Profile ID"
+
+    def get_profile(self, obj):
+        return obj.profile
+
+    get_profile.short_description = "Profile"
+
     def get_house_number(self, obj):
         return obj.housenumber
 
@@ -259,11 +306,6 @@ class AdminDeliveryDetails(admin.ModelAdmin):
         return obj.postalcode
 
     get_postal_code.short_description = "Postal Code"
-
-    def get_username(self, obj):
-        return obj.profile
-
-    get_username.short_description = "Username"
 
 
 @admin.register(Session)

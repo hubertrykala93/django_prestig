@@ -1,7 +1,9 @@
 from django.contrib import admin
-from .models import ArticleCategory, ArticleTag, Article, ArticleComment
-from .forms import ArticleCategoryForm, ArticleTagForm, ArticleForm, ArticleCommentForm
+from .models import ArticleCategory, ArticleTag, Article, ArticleComment, ArticleImage
+from .forms import ArticleCategoryForm, ArticleTagForm, ArticleForm, ArticleCommentForm, ArticleImageForm
 from django_summernote.admin import SummernoteModelAdmin
+from django.utils.html import format_html_join
+from django.utils.safestring import mark_safe
 
 
 @admin.register(ArticleCategory)
@@ -40,18 +42,80 @@ class AdminArticleTag(admin.ModelAdmin):
     )
 
 
+@admin.register(ArticleImage)
+class AdminArticleImage(admin.ModelAdmin):
+    """
+    Admin options and functionalities for ArticleImage model.
+    """
+    list_display = [
+        "id",
+        "formatted_created_at",
+        "formatted_updated_at",
+        "image",
+        "formatted_image_name",
+        "size",
+        "width",
+        "height",
+        "format",
+        "alt",
+    ]
+    form = ArticleImageForm
+    fieldsets = (
+        (
+            "Uploading", {
+                "fields": [
+                    "image",
+                ],
+            },
+        ),
+        (
+            "Alternate Text", {
+                "fields": [
+                    "alt",
+                ],
+            },
+        ),
+    )
+
+    def formatted_created_at(self, obj):
+        if obj.created_at:
+            return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_created_at.short_description = "Created At"
+
+    def formatted_updated_at(self, obj):
+        if obj.updated_at:
+            return obj.updated_at.strftime("%Y-%m-%d %H:%M:%S")
+
+        return "No Updated Yet"
+
+    formatted_updated_at.description = "Updated At"
+
+    def formatted_image_name(self, obj):
+        if obj.image:
+            return obj.image.name.split("/")[-1]
+
+        return "No Article Image"
+
+    formatted_image_name.short_description = "Image Name"
+
+
 @admin.register(Article)
 class AdminArticle(SummernoteModelAdmin):
     summernote_fields = ["description"]
     list_display = [
         "id",
         "formatted_created_at",
+        "get_user_id",
         "user",
         "title",
+        "get_image",
         "get_image_name",
         "slug",
-        "get_category",
-        "get_tags",
+        "get_category_id",
+        "get_category_name",
+        "get_tag_ids",
+        "get_tag_names",
     ]
     prepopulated_fields = {
         "slug": ["title"],
@@ -68,7 +132,7 @@ class AdminArticle(SummernoteModelAdmin):
         (
             "Uploading", {
                 "fields": [
-                    "image",
+                    "article_image",
                 ],
             },
         ),
@@ -90,21 +154,52 @@ class AdminArticle(SummernoteModelAdmin):
         ),
     )
 
+    def get_user_id(self, obj):
+        return obj.user.id
+
+    get_user_id.short_description = "User ID"
+
+    def get_image(self, obj):
+        if obj.article_image:
+            return obj.article_image
+
+    get_image.short_description = "Image ID"
+
     def get_image_name(self, obj):
-        if obj.image:
-            return obj.image.name.split("/")[-1]
+        if obj.article_image:
+            return obj.article_image.image
 
     get_image_name.short_description = "Image"
 
-    def get_category(self, obj):
+    def get_category_id(self, obj):
+        return obj.article_category.id
+
+    get_category_id.short_description = "Category ID"
+
+    def get_category_name(self, obj):
         return obj.article_category.name
 
-    get_category.short_description = "Category"
+    get_category_name.short_description = "Category"
 
-    def get_tags(self, obj):
-        return "\n".join([t.name for t in obj.article_tags.all()])
+    def get_tag_ids(self, obj):
+        return format_html_join(
+            mark_safe('<br>'),
+            '{}',
+            ((tag.id,) for tag in obj.article_tags.all())
+        ) or mark_safe("-")
 
-    get_tags.short_description = "Tags"
+    get_tag_ids.short_description = "Tag ID"
+
+    def get_tag_names(self, obj):
+        from django.utils.html import format_html_join
+        from django.utils.safestring import mark_safe
+        return format_html_join(
+            mark_safe('<br>'),
+            '{}',
+            ((tag.name,) for tag in obj.article_tags.all())
+        ) or mark_safe("-")
+
+    get_tag_names.short_description = "Tag"
 
     def formatted_created_at(self, obj):
         return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
@@ -117,8 +212,10 @@ class AdminArticleComment(admin.ModelAdmin):
     list_display = [
         "id",
         "formatted_created_at",
-        "article",
+        "get_user_id",
         "user",
+        "get_article_id",
+        "article",
         "get_fullname",
         "email",
         "comment",
@@ -163,6 +260,16 @@ class AdminArticleComment(admin.ModelAdmin):
         return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
 
     formatted_created_at.short_description = "Created At"
+
+    def get_user_id(self, obj):
+        return obj.user.id
+
+    get_user_id.short_description = "User ID"
+
+    def get_article_id(self, obj):
+        return str(obj.article.id)
+
+    get_article_id.short_description = "Article ID"
 
     def get_fullname(self, obj):
         return obj.fullname

@@ -3,11 +3,10 @@ from django.contrib.auth.models import UserManager, AbstractBaseUser, Permission
 from django.utils.timezone import now
 from uuid import uuid4
 from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import pre_delete
 from shop.models import Product
-from PIL import Image
 import os
-from django.conf import settings
+from PIL import Image
 
 
 class CustomUserManager(UserManager):
@@ -68,6 +67,21 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return f"{self.username}"
 
+    def save(self, *args, **kwargs):
+        super(User, self).save(*args, **kwargs)
+
+        if self.pk:
+            profile, created = Profile.objects.get_or_create(user=self)
+
+            if created:
+                profile_picture = ProfilePicture.objects.create()
+                profile.profilepicture = profile_picture
+
+                delivery_details = DeliveryDetails.objects.create()
+                profile.delivery_details = delivery_details
+
+                profile.save()
+
 
 class OneTimePassword(models.Model):
     created_at = models.DateTimeField(default=now)
@@ -104,15 +118,70 @@ class DeliveryDetails(models.Model):
 
 
 class ProfilePicture(models.Model):
+    created_at = models.DateTimeField(default=now)
+    updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(default="accounts/profile_images/default_profile_image.png",
                               upload_to="accounts/profile_images", null=True)
+    size = models.IntegerField(null=True)
+    width = models.IntegerField(null=True)
+    height = models.IntegerField(null=True)
+    format = models.CharField(max_length=100, null=True)
+    alt = models.CharField(max_length=1000, null=True)
 
     class Meta:
         verbose_name = "Profile Picture"
         verbose_name_plural = "Profile Pictures"
 
     def __str__(self):
-        return f"({self.id}, {self.image.name})"
+        return f"{self.id}"
+
+    def save(self, *args, **kwargs):
+        if self.id:
+            super(ProfilePicture, self).save(*args, **kwargs)
+
+            instance = ProfilePicture.objects.get(id=self.id)
+
+            self._resize_image()
+            self._save_attributes(instance=instance)
+
+            super(ProfilePicture, self).save(*args, **kwargs)
+
+        else:
+            self._resize_image()
+            self._save_attributes()
+
+            super(ProfilePicture, self).save(*args, **kwargs)
+
+    def _resize_image(self):
+        image = Image.open(fp=self.image.path)
+
+        if image.mode == "RGBA":
+            image = image.convert(mode="RGB")
+
+        image.thumbnail(size=(300, 300))
+        image.save(fp=self.image.path)
+
+        return image
+
+    def _save_attributes(self, instance=None):
+        image = self._resize_image()
+
+        if "default_profile_image.png" in self.image.path:
+            self.alt = "Default profile picture"
+
+        if instance:
+            profile = Profile.objects.get(profilepicture_id=instance.id)
+            user = Profile.objects.get(profilepicture_id=instance.id).user
+
+            if profile.firstname and profile.lastname:
+                self.alt = f"{profile.firstname.capitalize()} {profile.lastname.capitalize()} profile picture"
+
+            else:
+                self.alt = f"{user.username} profile picture"
+
+        self.size = os.path.getsize(filename=self.image.path)
+        self.width, self.height = image.width, image.height
+        self.format = image.format
 
 
 class Profile(models.Model):
@@ -130,9 +199,11 @@ class Profile(models.Model):
     bio = models.CharField(max_length=150)
     gender = models.CharField(
         choices=GENDER_CHOICES,
-        default="Undefined")
+        default="Undefined",
+        max_length=100
+    )
     dateofbirth = models.DateField(null=True)
-    profilepicture = models.OneToOneField(to=ProfilePicture, on_delete=models.CASCADE, null=True)
+    profilepicture = models.OneToOneField(to=ProfilePicture, on_delete=models.SET_NULL, null=True)
 
     # Social Media
     facebook = models.CharField(max_length=50, null=True)
@@ -142,7 +213,7 @@ class Profile(models.Model):
     wishlist = models.ManyToManyField(to=Product)
 
     # Delivery Details
-    delivery_details = models.OneToOneField(to=DeliveryDetails, on_delete=models.CASCADE, null=True)
+    delivery_details = models.OneToOneField(to=DeliveryDetails, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         verbose_name = "Profile"
@@ -151,80 +222,30 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
-    # def save(self, *args, **kwargs):
-    #     if not getattr(self, "_is_saving", False):
-    #         self._is_saving = True
-    #
-    #         if self.profilepicture:
-    #             if Profile.objects.filter(pk=self.pk).exists():
-    #                 instance = Profile.objects.get(pk=self.pk)
-    #
-    #                 if instance.profilepicture.image.path.split("/")[-1] != "default_profile_image.png":
-    #                     try:
-    #                         os.remove(path=instance.profilepicture.image.path)
-    #
-    #                     except FileNotFoundError:
-    #                         instance.profilepicture = "profile_images/default_profile_image.png"
-    #                         super(Profile, self).save(*args, **kwargs)
-    #
-    #             super(Profile, self).save(*args, **kwargs)
-    #
-    #             original_path = self.profilepicture.image.path
-    #
-    #             image = Image.open(fp=original_path)
-    #             image.thumbnail(size=(300, 300))
-    #
-    #             file_extension = original_path.split(".")[-1]
-    #             new_name = str(uuid4()) + "." + file_extension
-    #             new_path = os.path.join(os.path.dirname(original_path), new_name)
-    #
-    #             if original_path.split("/")[-1] != "default_profile_image.png":
-    #                 image.save(fp=new_path)
-    #
-    #                 self.profilepicture.image.name = os.path.relpath(path=new_path, start=settings.MEDIA_ROOT)
-    #
-    #                 os.remove(path=original_path)
-    #
-    #             super(Profile, self).save(update_fields=["profilepicture"])
-    #
-    #         else:
-    #             super(Profile, self).save(*args, **kwargs)
-    #
-    #         self._is_saving = True
-    #
-    #     else:
-    #         super(Profile, self).save(*args, **kwargs)
 
+@receiver(signal=pre_delete, sender=User)
+def delete_profile(sender, instance, **kwargs):
+    try:
+        profile = instance.profile
 
-@receiver(signal=post_save, sender=User)
-def create_profile(sender, instance=None, created=None, **kwargs):
-    if created:
-        Profile.objects.get_or_create(user=instance)
+    except Profile.DoesNotExist:
+        return
 
+    if instance.profile:
+        profile = instance.profile
 
-@receiver(signal=post_save, sender=Profile)
-def create_delivery_details(sender, instance=None, created=None, **kwargs):
-    if created and not instance.delivery_details:
-        delivery_details = DeliveryDetails.objects.create()
-        instance.delivery_details = delivery_details
-        instance.save()
+        if hasattr(profile, "profilepicture"):
+            if profile.profilepicture and profile.profilepicture.image:
+                image_path = profile.profilepicture.image.path
 
+                if "default_profile_image.png" not in image_path:
+                    if os.path.isfile(path=image_path):
+                        os.remove(path=image_path)
 
-@receiver(signal=post_save, sender=Profile)
-def create_profilepicture(sender, instance=None, created=None, **kwargs):
-    if created and not instance.profilepicture:
-        profilepicture = ProfilePicture.objects.create()
-        instance.profilepicture = profilepicture
-        instance.save()
+            profile.profilepicture.delete()
 
+    if instance.profile.delivery_details:
+        instance.profile.delivery_details.delete()
 
-@receiver(signal=post_delete, sender=Profile)
-def delete_delivery_details(sender, instance, **kwargs):
-    if instance.delivery_details:
-        instance.delivery_details.delete()
-
-
-@receiver(signal=post_delete, sender=Profile)
-def delete_profilepicture(sender, instance, **kwargs):
-    if instance.profilepicture:
-        instance.profilepicture.delete()
+    if instance.profile:
+        instance.profile.delete()

@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from accounts.models import User, OneTimePassword, DeliveryDetails, Profile
+from accounts.models import User, OneTimePassword, DeliveryDetails
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, UpdateAPIView, DestroyAPIView, RetrieveUpdateAPIView
 from .serializers import UserRegisterSerializer, UserLoginSerializer, ProfileUpdateSerializer, \
@@ -255,17 +255,11 @@ class ProfilePictureDeleteAPIView(DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         try:
             instance = self.request.user.profile
-            print(instance)
-
-            print(instance.profilepicture.image.name)
 
             if instance.profilepicture.image.name.split(sep="/")[-1] == "default_profile_image.png":
-                print("Instance Profile Picture Image Name == default_profile_image.png")
                 return Response(
                     data={},
                 )
-
-            print("Instance Profile Picture Image Name != default_profile_image.png")
 
             profilepicture_instance = self.request.user.profile.profilepicture
 
