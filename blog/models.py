@@ -96,6 +96,14 @@ class Article(models.Model):
         })
 
     def save(self, *args, **kwargs):
+        super(Article, self).save(*args, **kwargs)
+
+        if self.pk:
+            article_image, created = ArticleImage.objects.get_or_create(article=self)
+
+            print(article_image, created)
+            self.article_image = article_image
+
         if not self.slug:
             self.slug = slugify(self.title)
 
@@ -125,24 +133,14 @@ class ArticleComment(models.Model):
         return super(ArticleComment, self).save(*args, **kwargs)
 
 
-# @receiver(signal=post_save, sender=Article)
-# def create_article_image(sender=Article, instance=None, created=None, **kwargs):
-#     if created and not instance.article_image:
-#         article_image = ArticleImage.objects.create()
-#         instance.article_image = article_image
-#         instance.save()
-
-
 @receiver(signal=post_delete, sender=Article)
 def delete_article_image(sender, instance, **kwargs):
-    if instance.article_image:
+    if hasattr(instance, "article_image"):
+        if instance.article_image and instance.article_image.image:
+            image_path = instance.article_image.image.path
+            print(image_path)
+
+            if os.path.isfile(path=image_path):
+                os.remove(path=image_path)
+
         instance.article_image.delete()
-
-
-@receiver(signal=pre_delete, sender=Article)
-def delete_article_image_file(sender, instance, **kwargs):
-    if instance.article_image and instance.article_image.image:
-        image_path = instance.article_image.image.path
-
-        if os.path.isfile(path=image_path):
-            os.remove(path=image_path)
