@@ -319,6 +319,41 @@ class ProductImage(models.Model):
     def __str__(self):
         return str(self.id)
 
+    def save(self, *args, **kwargs):
+        super(ProductImage, self).save(*args, **kwargs)
+
+        if self.pk:
+            self._resize_image()
+            self._save_attributes()
+
+            super(ProductImage, self).save(*args, **kwargs)
+
+        else:
+            self._resize_image()
+            self._save_attributes()
+
+            super(ProductImage, self).save(*args, **kwargs)
+
+    def _resize_image(self):
+        image = Image.open(fp=self.image.path)
+
+        if image.mode == "RGBA":
+            image = image.convert(mode="RGB")
+
+        output_size = (1100, image.height * 1100 / image.width)
+
+        image.thumbnail(size=output_size)
+        image.save(fp=self.image.path)
+
+        return image
+
+    def _save_attributes(self):
+        image = self._resize_image()
+
+        self.size = os.path.getsize(filename=self.image.path)
+        self.width, self.height = image.width, image.height
+        self.format = image.format
+
 
 class Product(models.Model):
     uuid = models.UUIDField(default=uuid4, unique=True)
@@ -330,7 +365,7 @@ class Product(models.Model):
     short_description = models.CharField(max_length=10000)
     price = models.FloatField()
     quantity = models.ManyToManyField(to=Stock)
-    gallery = models.ManyToManyField(to=ProductImage, blank=True)
+    gallery = models.ManyToManyField(to=ProductImage, blank=True, related_name="product")
     rate = models.IntegerField(null=True)
     tags = models.ManyToManyField(to=ProductTags)
     full_description = models.TextField(max_length=100000)
@@ -394,16 +429,14 @@ def delete_product_subcategory_image(sender, instance, **kwargs):
 
 @receiver(signal=pre_delete, sender=Product)
 def delete_product_images(sender, instance, **kwargs):
-    if instance.gallery:
-        for img in instance.gallery.all():
-            img.delete()
+    if hasattr(instance, "gallery"):
+        if instance.gallery:
+            image_paths = [obj.image.path for obj in instance.gallery.all()]
 
+            for img in image_paths:
+                if os.path.isfile(path=img):
+                    os.remove(path=img)
 
-@receiver(signal=pre_delete, sender=Product)
-def delete_product_image_files(sender, instance, **kwargs):
-    if instance.gallery:
-        image_paths = [obj.image.path for obj in instance.gallery.all()]
-
-        for img in image_paths:
-            if os.path.isfile(path=img):
-                os.remove(path=img)
+        if instance.gallery:
+            for img in instance.gallery.all():
+                img.delete()
