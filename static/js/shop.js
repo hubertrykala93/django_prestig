@@ -27,6 +27,33 @@ if ($openFilterBtn) {
   $closeFilterBtn.addEventListener('click', closeFilter)
 }
 
+// FILTER ACCORDION
+const $filterAccordion = document.querySelector('.js-filter-accordion')
+
+const handleFilterAccordion = ($heading) => {
+  $body = $heading.nextElementSibling
+  $icon = $heading.querySelector('i')
+  if ($body.offsetHeight == 0) {
+    $body.style.maxHeight = $body.scrollHeight + 'px'
+    $icon.classList.remove('ri-add-line')
+    $icon.classList.add('ri-subtract-line')
+  }
+  else {
+    $body.style.maxHeight = '0px'
+    $icon.classList.remove('ri-subtract-line')
+    $icon.classList.add('ri-add-line')
+  }
+}
+
+if ($filterAccordion) {
+  $filterAccordion.addEventListener('click', e => {
+    const $heading = e.target.closest('.js-filter-accordion-heading')
+    if ($heading) {
+      handleFilterAccordion($heading);
+    }
+  })
+}
+
 // CHANGE VIEW
 const $changeProductsViewButtons = document.querySelector('.js-products-view-buttons')
 const $shopCards = document.querySelector('.js-shop-cards')
