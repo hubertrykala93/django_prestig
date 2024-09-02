@@ -46,6 +46,7 @@ class AdminBrandLogo(admin.ModelAdmin):
         "width",
         "height",
         "format",
+        "alt",
     ]
     form = BrandLogoForm
     fieldsets = (
@@ -53,6 +54,13 @@ class AdminBrandLogo(admin.ModelAdmin):
             "Uploading", {
                 "fields": [
                     "image",
+                ],
+            },
+        ),
+        (
+            "Alternate Text", {
+                "fields": [
+                    "alt",
                 ],
             },
         ),
@@ -159,6 +167,7 @@ class AdminProductCategoryImage(admin.ModelAdmin):
         "width",
         "height",
         "format",
+        "alt",
     ]
     form = ProductCategoryImageForm
     fieldsets = (
@@ -166,6 +175,13 @@ class AdminProductCategoryImage(admin.ModelAdmin):
             "Uploading", {
                 "fields": [
                     "image",
+                ],
+            },
+        ),
+        (
+            "Alternate Text", {
+                "fields": [
+                    "alt",
                 ],
             },
         ),
@@ -241,13 +257,20 @@ class AdminProductSubCategoryImage(admin.ModelAdmin):
     Admin options and functionalities for ProductSubCategoryImage model.
     """
     list_display = ["id", "formatted_created_at", "formatted_updated_at", "image", "get_image_name", "size", "width",
-                    "height", "format"]
+                    "height", "format", "alt"]
     form = ProductSubCategoryImageForm
     fieldsets = (
         (
             "Uploading", {
                 "fields": [
                     "image",
+                ],
+            },
+        ),
+        (
+            "Alternate Text", {
+                "fields": [
+                    "alt",
                 ],
             },
         ),
@@ -367,13 +390,20 @@ class AdminProductImage(admin.ModelAdmin):
     Admin options and functionalities for ProductImage model.
     """
     list_display = ["id", "formatted_created_at", "formatted_updated_at", "image", "get_image_name", "size", "width",
-                    "height", "format", "is_featured"]
+                    "height", "format", "alt", "is_featured"]
     form = ProductImageForm
     fieldsets = (
         (
             "Uploading", {
                 "fields": [
                     "image",
+                ],
+            },
+        ),
+        (
+            "Altenate Text", {
+                "fields": [
+                    "alt",
                 ],
             },
         ),

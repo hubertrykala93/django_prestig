@@ -3,9 +3,10 @@ from django.utils.timezone import now
 from accounts.models import User
 from django.utils.text import slugify
 from django.shortcuts import reverse
-from django.db.models.signals import post_save, post_delete, pre_delete
+from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 import os
+from PIL import Image
 
 
 class ArticleCategory(models.Model):
@@ -71,6 +72,41 @@ class ArticleImage(models.Model):
     def __str__(self):
         return str(self.id)
 
+    def save(self, *args, **kwargs):
+        super(ArticleImage, self).save(*args, **kwargs)
+
+        if self.pk:
+            self._resize_image()
+            self._save_attributes()
+
+            super(ArticleImage, self).save(*args, **kwargs)
+
+        else:
+            self._resize_image()
+            self._save_attributes()
+
+            super(ArticleImage, self).save(*args, **kwargs)
+
+    def _resize_image(self):
+        image = Image.open(fp=self.image.path)
+
+        if image.mode == "RGBA":
+            image = image.convert(mode="RGB")
+
+        output_size = (1100, image.height * 1100 / image.width)
+
+        image.thumbnail(size=output_size)
+        image.save(fp=self.image.path)
+
+        return image
+
+    def _save_attributes(self):
+        image = self._resize_image()
+
+        self.size = os.path.getsize(filename=self.image.path)
+        self.width, self.height = image.width, image.height
+        self.format = image.format
+
 
 class Article(models.Model):
     created_at = models.DateTimeField(default=now)
@@ -101,7 +137,6 @@ class Article(models.Model):
         if self.pk:
             article_image, created = ArticleImage.objects.get_or_create(article=self)
 
-            print(article_image, created)
             self.article_image = article_image
 
         if not self.slug:
@@ -133,12 +168,11 @@ class ArticleComment(models.Model):
         return super(ArticleComment, self).save(*args, **kwargs)
 
 
-@receiver(signal=post_delete, sender=Article)
+@receiver(signal=pre_delete, sender=Article)
 def delete_article_image(sender, instance, **kwargs):
     if hasattr(instance, "article_image"):
         if instance.article_image and instance.article_image.image:
             image_path = instance.article_image.image.path
-            print(image_path)
 
             if os.path.isfile(path=image_path):
                 os.remove(path=image_path)

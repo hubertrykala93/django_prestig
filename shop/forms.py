@@ -20,6 +20,7 @@ class BrandLogoForm(forms.ModelForm):
     width = forms.IntegerField(required=False)
     height = forms.IntegerField(required=False)
     format = forms.CharField(required=False)
+    alt = forms.CharField(help_text="Provide the alternate text.", label="Alt", required=True, widget=forms.Textarea)
 
     class Meta:
         model = BrandLogo
@@ -64,6 +65,7 @@ class ProductCategoryImageForm(forms.ModelForm):
     width = forms.IntegerField(required=False)
     height = forms.IntegerField(required=False)
     format = forms.CharField(required=False)
+    alt = forms.CharField(help_text="Provide the alternate text.", label="Alt", required=True, widget=forms.Textarea)
 
     class Meta:
         model = ProductCategoryImage
@@ -99,6 +101,7 @@ class ProductSubCategoryImageForm(forms.ModelForm):
     width = forms.IntegerField(required=False)
     height = forms.IntegerField(required=False)
     format = forms.CharField(required=False)
+    alt = forms.CharField(help_text="Provide the alternate text.", label="Alt", required=True, widget=forms.Textarea)
 
     class Meta:
         model = ProductSubCategoryImage
@@ -172,6 +175,7 @@ class ProductImageForm(forms.ModelForm):
     width = forms.IntegerField(required=False)
     height = forms.IntegerField(required=False)
     format = forms.CharField(required=False)
+    alt = forms.CharField(help_text="Provide the alternate text.", label="Alt", required=True, widget=forms.Textarea)
     is_featured = forms.BooleanField(help_text="Check if you want to highlight this photo.", required=False)
 
     class Meta:

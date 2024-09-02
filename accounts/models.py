@@ -138,7 +138,6 @@ class ProfilePicture(models.Model):
     def save(self, *args, **kwargs):
         if self.id:
             super(ProfilePicture, self).save(*args, **kwargs)
-            print("Is ID.")
 
             instance = ProfilePicture.objects.get(id=self.id)
 
@@ -148,7 +147,6 @@ class ProfilePicture(models.Model):
             super(ProfilePicture, self).save(*args, **kwargs)
 
         else:
-            print("Not ID.")
             self._resize_image()
             self._save_attributes()
 
@@ -234,7 +232,6 @@ def delete_profile(sender, instance, **kwargs):
         return
 
     if instance.profile:
-        print("Profile.")
         profile = instance.profile
 
         if hasattr(profile, "profilepicture"):
@@ -246,9 +243,6 @@ def delete_profile(sender, instance, **kwargs):
                         os.remove(path=image_path)
 
             profile.profilepicture.delete()
-
-    else:
-        print("Else")
 
     if instance.profile.delivery_details:
         instance.profile.delivery_details.delete()
