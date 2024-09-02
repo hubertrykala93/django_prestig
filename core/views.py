@@ -21,16 +21,6 @@ def about(request):
     )
 
 
-def product(request):
-    return render(
-        request=request,
-        template_name="core/product.html",
-        context={
-            "title": "Product",
-        }
-    )
-
-
 def contact_us(request):
     return render(
         request=request,

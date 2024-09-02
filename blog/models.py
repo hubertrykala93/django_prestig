@@ -147,7 +147,7 @@ class Article(models.Model):
 
 class ArticleComment(models.Model):
     created_at = models.DateTimeField(default=now)
-    article = models.ForeignKey(to=Article, related_name="comments", on_delete=models.CASCADE)
+    article = models.ForeignKey(to=Article, on_delete=models.CASCADE)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, null=True)
     fullname = models.CharField(max_length=100, blank=True)
     email = models.EmailField(max_length=100, blank=True)

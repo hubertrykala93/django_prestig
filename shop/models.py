@@ -239,9 +239,9 @@ class ProductSubCategoryImage(models.Model):
 
 class ProductSubCategory(models.Model):
     name = models.CharField(max_length=200)
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
     subcategory_image = models.OneToOneField(to=ProductSubCategoryImage, on_delete=models.SET_NULL, null=True)
-    categories = models.ManyToManyField(to=ProductCategory, related_name="subcategories")
+    categories = models.ForeignKey(to=ProductCategory, on_delete=models.CASCADE, null=True, related_name="category")
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -260,7 +260,7 @@ class ProductSubCategory(models.Model):
             self.subcategory_image = subcategory_image
 
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = f"{self.categories.name.lower()}-{slugify(self.name)}"
 
         super(ProductSubCategory, self).save(*args, **kwargs)
 
@@ -365,7 +365,7 @@ class Product(models.Model):
     short_description = models.CharField(max_length=10000)
     price = models.FloatField()
     quantity = models.ManyToManyField(to=Stock)
-    gallery = models.ManyToManyField(to=ProductImage, blank=True, related_name="product")
+    gallery = models.ManyToManyField(to=ProductImage, blank=True)
     rate = models.IntegerField(null=True)
     tags = models.ManyToManyField(to=ProductTags)
     full_description = models.TextField(max_length=100000)

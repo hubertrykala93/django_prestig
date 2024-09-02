@@ -145,53 +145,19 @@
                 <div class="shop__aside__filter__accordion__item__body js-filter-accordion-body">
                   <div class="shop__aside__filter__accordion__item__body__content">
                     <ul class="shop__aside__filter__color">
+                      {% for color in colors %}
                       <li>
                           <div class="form__radio">
-                            <input class="form__radio__input" type="radio" name="color" id="color" value="color">
-                            <label for="color">
+                            <input class="form__radio__input" type="radio" name="color" id="{{ color|lower }}" value="{{ color }}">
+                            <label for="{{ color|lower }}">
                               <span>
-                                <div class="shop__aside__filter__color" style="background-color: #e24229;"></div>
-                                Colors
+                                <div class="shop__aside__filter__color" style="background-color: #{{ color.hex }};"></div>
+                                {{ color }}
                               </span>
                             </label>
                           </div>
                       </li>
-
-                      <li>
-                          <div class="form__radio">
-                            <input class="form__radio__input" type="radio" name="color" id="gray" value="gray">
-                            <label for="gray">
-                              <span>
-                                <div class="shop__aside__filter__color" style="background-color: #3d3d3d;"></div>
-                                Gray
-                              </span>
-                            </label>
-                          </div>
-                      </li>
-
-                      <li>
-                          <div class="form__radio">
-                            <input class="form__radio__input" type="radio" name="color" id="black" value="black">
-                            <label for="black">
-                              <span>
-                                <div class="shop__aside__filter__color" style="background-color: #0d0d0d;"></div>
-                                Black
-                              </span>
-                            </label>
-                          </div>
-                      </li>
-
-                      <li>
-                          <div class="form__radio">
-                            <input class="form__radio__input" type="radio" name="color" id="white" value="white">
-                            <label for="white">
-                              <span>
-                                <div class="shop__aside__filter__color" style="background-color: #ffffff;"></div>
-                                White
-                              </span>
-                            </label>
-                          </div>
-                      </li>
+                      {% endfor %}
                     </ul>
                   </div>
                 </div>
@@ -207,33 +173,14 @@
                 <div class="shop__aside__filter__accordion__item__body js-filter-accordion-body">
                   <div class="shop__aside__filter__accordion__item__body__content">
                     <ul class="shop__aside__filter__size">
+                      {% for size in sizes %}
                       <li>
                           <div class="form__checkbox">
-                            <input class="form__checkbox__input" type="checkbox" name="size" id="s" value="s">
-                            <label for="s"><span>s</span></label>
+                            <input class="form__checkbox__input" type="checkbox" name="size" id="{{ size|lower }}" value="{{ size }}">
+                            <label for="{{ size|lower }}"><span>{{ size }}</span></label>
                           </div>
                       </li>
-
-                      <li>
-                          <div class="form__checkbox">
-                            <input class="form__checkbox__input" type="checkbox" name="size" id="m" value="m">
-                            <label for="m"><span>m</span></label>
-                          </div>
-                      </li>
-
-                      <li>
-                          <div class="form__checkbox">
-                            <input class="form__checkbox__input" type="checkbox" name="size" id="l" value="l">
-                           <label for="l"><span>l</span></label>
-                          </div>
-                      </li>
-
-                      <li>
-                          <div class="form__checkbox">
-                            <input class="form__checkbox__input" type="checkbox" name="size" id="xl" value="xl">
-                            <label for="xl"><span>xl</span></label>
-                          </div>
-                      </li>
+                      {% endfor %}
                     </ul>
                   </div>
                 </div>
@@ -249,47 +196,14 @@
                 <div class="shop__aside__filter__accordion__item__body js-filter-accordion-body">
                   <div class="shop__aside__filter__accordion__item__body__content">
                     <ul class="shop__aside__filter__brand">
+                      {% for brand in brands %}
                       <li>
                           <div class="form__checkbox">
-                            <input class="form__checkbox__input" type="checkbox" name="brand" id="flora" value="flora">
-                            <label for="flora"><span>flora</span></label>
+                            <input class="form__checkbox__input" type="checkbox" name="brand" id="{{ brand|lower }}" value="{{ brand }}">
+                            <label for="{{ brand|lower }}"><span>{{ brand }}</span></label>
                           </div>
                       </li>
-
-                      <li>
-                          <div class="form__checkbox">
-                            <input class="form__checkbox__input" type="checkbox" name="brand" id="fashione" value="fashione">
-                            <label for="fashione"><span>fashione</span></label>
-                          </div>
-                      </li>
-
-                      <li>
-                          <div class="form__checkbox">
-                            <input class="form__checkbox__input" type="checkbox" name="brand" id="zara" value="zara">
-                           <label for="zara"><span>zara</span></label>
-                          </div>
-                      </li>
-
-                      <li>
-                          <div class="form__checkbox">
-                            <input class="form__checkbox__input" type="checkbox" name="brand" id="burino" value="burino">
-                            <label for="burino"><span>burino</span></label>
-                          </div>
-                      </li>
-
-                      <li>
-                          <div class="form__checkbox">
-                            <input class="form__checkbox__input" type="checkbox" name="brand" id="celvine" value="celvine">
-                            <label for="celvine"><span>celvine</span></label>
-                          </div>
-                      </li>
-
-                      <li>
-                          <div class="form__checkbox">
-                            <input class="form__checkbox__input" type="checkbox" name="brand" id="denima" value="denima">
-                            <label for="denima"><span>denima</span></label>
-                          </div>
-                      </li>
+                      {% endfor %}
                     </ul>
                   </div>
                 </div>
