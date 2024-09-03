@@ -11,7 +11,6 @@ from .models import (
     ProductImage,
     BrandLogo,
     ProductCategoryImage,
-    ProductSubCategoryImage,
 )
 from .forms import (
     BrandForm,
@@ -25,7 +24,6 @@ from .forms import (
     ProductForm,
     BrandLogoForm,
     ProductCategoryImageForm,
-    ProductSubCategoryImageForm,
 )
 from django.utils.html import format_html_join
 from django.utils.safestring import mark_safe
@@ -94,7 +92,6 @@ class AdminBrand(admin.ModelAdmin):
         "id",
         "name",
         "slug",
-        "description",
         "get_logo",
         "get_logo_name",
     ]
@@ -251,56 +248,12 @@ class AdminProductCategory(admin.ModelAdmin):
     get_category_image.short_description = "Category Image"
 
 
-@admin.register(ProductSubCategoryImage)
-class AdminProductSubCategoryImage(admin.ModelAdmin):
-    """
-    Admin options and functionalities for ProductSubCategoryImage model.
-    """
-    list_display = ["id", "formatted_created_at", "formatted_updated_at", "image", "get_image_name", "size", "width",
-                    "height", "format", "alt"]
-    form = ProductSubCategoryImageForm
-    fieldsets = (
-        (
-            "Uploading", {
-                "fields": [
-                    "image",
-                ],
-            },
-        ),
-        (
-            "Alternate Text", {
-                "fields": [
-                    "alt",
-                ],
-            },
-        ),
-    )
-
-    def formatted_created_at(self, obj):
-        if obj.created_at:
-            return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
-
-    formatted_created_at.short_description = "Created At"
-
-    def formatted_updated_at(self, obj):
-        if obj.updated_at:
-            return obj.updated_at.strftime("%Y-%m-%d %H:%M:%S")
-
-    formatted_updated_at.short_description = "Updated At"
-
-    def get_image_name(self, obj):
-        if obj.image:
-            return obj.image.name.split(sep="/")[-1]
-
-    get_image_name.short_description = "Image Name"
-
-
 @admin.register(ProductSubCategory)
 class AdminProductSubCategory(admin.ModelAdmin):
     """
     Admin options and functionalities for ProductSubCategory model.
     """
-    list_display = ["id", "name", "slug", "get_subcategory_image_id", "get_subcategory_image_name", "is_active"]
+    list_display = ["id", "name", "slug", "get_category_id", "get_category", "is_active"]
     prepopulated_fields = {"slug": ["name"]}
     form = ProductSubCategoryForm
     fieldsets = (
@@ -312,16 +265,9 @@ class AdminProductSubCategory(admin.ModelAdmin):
             },
         ),
         (
-            "Uploading", {
-                "fields": [
-                    "subcategory_image",
-                ],
-            },
-        ),
-        (
             "Related Category", {
                 "fields": [
-                    "categories",
+                    "category",
                 ],
             },
         ),
@@ -334,17 +280,15 @@ class AdminProductSubCategory(admin.ModelAdmin):
         ),
     )
 
-    def get_subcategory_image_id(self, obj):
-        if obj.subcategory_image:
-            return obj.subcategory_image
+    def get_category_id(self, obj):
+        return obj.category.id
 
-    get_subcategory_image_id.short_description = "Subcategory Image ID"
+    get_category_id.short_description = "Category ID"
 
-    def get_subcategory_image_name(self, obj):
-        if obj.subcategory_image:
-            return obj.subcategory_image.image.name.split(sep="/")[-1]
+    def get_category(self, obj):
+        return obj.category.name
 
-    get_subcategory_image_name.short_Description = "Subcategory Image Name"
+    get_category.short_description = "Category"
 
 
 @admin.register(Size)
@@ -470,19 +414,25 @@ class AdminProduct(admin.ModelAdmin):
         "id",
         "uuid",
         "formatted_created_at",
+        "get_brand_id",
         "brand",
+        "get_category_id",
         "category",
+        "get_subcategory_id",
+        "subcategory",
         "name",
         "slug",
         "short_description",
+        "full_description",
         "price",
         "get_quantity",
+        "get_color",
+        "get_size",
         "get_gallery_ids",
         "get_gallery",
         "rate",
         "get_tags_ids",
         "get_tags",
-        "full_description",
         "sku",
         "is_active",
         "is_featured",
@@ -495,6 +445,7 @@ class AdminProduct(admin.ModelAdmin):
                 "fields": [
                     "brand",
                     "category",
+                    "subcategory",
                     "tags",
                     "name",
                     "price",
@@ -528,11 +479,40 @@ class AdminProduct(admin.ModelAdmin):
         ),
     )
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'subcategory':
+            category_id = request.POST.get('category') or request.GET.get('category')
+
+            if category_id:
+                try:
+                    category = ProductCategory.objects.get(id=category_id)
+                    kwargs["queryset"] = ProductSubCategory.objects.filter(category=category)
+
+                except ProductCategory.DoesNotExist:
+                    kwargs["queryset"] = ProductSubCategory.objects.none()
+
+        return super(AdminProduct, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
     def formatted_created_at(self, obj):
         if obj.created_at:
             return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
 
     formatted_created_at.short_description = "Created At"
+
+    def get_brand_id(self, obj):
+        return obj.brand.id
+
+    get_brand_id.short_description = "Brand ID"
+
+    def get_category_id(self, obj):
+        return obj.category.id
+
+    get_category_id.short_description = "Category ID"
+
+    def get_subcategory_id(self, obj):
+        return obj.subcategory.id
+
+    get_subcategory_id.short_description = "Subcategory ID"
 
     def get_gallery_ids(self, obj):
         return format_html_join(
@@ -553,9 +533,19 @@ class AdminProduct(admin.ModelAdmin):
     get_gallery.short_description = "Gallery"
 
     def get_quantity(self, obj):
-        return "\n".join([" ".join([str(s.quantity), s.size.name, s.color.name]) for s in obj.quantity.all()])
+        return ''.join([str(q.quantity) for q in obj.quantity.all()])
 
     get_quantity.short_description = "Quantity"
+
+    def get_color(self, obj):
+        return ''.join([q.color.name for q in obj.quantity.all()])
+
+    get_color.short_description = "Color"
+
+    def get_size(self, obj):
+        return ''.join([q.size.name for q in obj.quantity.all()])
+
+    get_size.short_description = "Size"
 
     def get_tags(self, obj):
         return format_html_join(

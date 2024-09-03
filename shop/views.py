@@ -1,19 +1,10 @@
 from django.shortcuts import render
-from .models import ProductSubCategory, ProductCategory, Size, Color, Brand, Product
+from .models import ProductCategory, Size, Color, Brand, Product
+from django.db.models import Count
 
 
 def shop(request):
     queryset = Product.objects.filter(is_active=True).order_by("-created_at")
-
-    categories = ProductCategory.objects.prefetch_related("category").all()
-
-    for category in categories:
-        print(f"Category -> {category.name}")
-
-        subcategories = category.category.all()
-
-        for subcategory in subcategories:
-            print(f"Subcategory -> {subcategory.name}")
 
     if request.GET:
         if "sort" in request.GET:

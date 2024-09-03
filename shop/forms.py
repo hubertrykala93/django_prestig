@@ -11,7 +11,6 @@ from .models import (
     Product,
     BrandLogo,
     ProductCategoryImage,
-    ProductSubCategoryImage,
 )
 
 
@@ -96,25 +95,6 @@ class ProductCategoryForm(forms.ModelForm):
         self.fields["category_image"].required = True
 
 
-class ProductSubCategoryImageForm(forms.ModelForm):
-    size = forms.IntegerField(required=False)
-    width = forms.IntegerField(required=False)
-    height = forms.IntegerField(required=False)
-    format = forms.CharField(required=False)
-    alt = forms.CharField(help_text="Provide the alternate text.", label="Alt", required=True, widget=forms.Textarea)
-
-    class Meta:
-        model = ProductSubCategoryImage
-        fields = "__all__"
-
-    def __init__(self, *args, **kwargs):
-        super(ProductSubCategoryImageForm, self).__init__(*args, **kwargs)
-
-        self.fields["image"].help_text = "Upload an image to the product subcategory."
-        self.fields["image"].label = "Image"
-        self.fields["image"].required = True
-
-
 class ProductSubCategoryForm(forms.ModelForm):
     name = forms.CharField(help_text="Provide the subcategory name.", label="Name")
     slug = forms.SlugField(required=False)
@@ -127,13 +107,9 @@ class ProductSubCategoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProductSubCategoryForm, self).__init__(*args, **kwargs)
 
-        self.fields["subcategory_image"].help_text = "Choose the subcategory image."
-        self.fields["subcategory_image"].label = "Image"
-        self.fields["subcategory_image"].required = True
-
-        self.fields["categories"].help_text = "Add a category for this subcategory."
-        self.fields["categories"].label = "Category"
-        self.fields["categories"].required = True
+        self.fields["category"].help_text = "Add a category for this subcategory."
+        self.fields["category"].label = "Category"
+        self.fields["category"].required = True
 
 
 class SizeForm(forms.ModelForm):
@@ -201,17 +177,23 @@ class ProductForm(forms.ModelForm):
     is_active = forms.BooleanField(help_text="Indicate if the product is active for sale.", required=False)
     is_featured = forms.BooleanField(help_text="Indicate if you want to feature the product.", required=False)
 
+    class Meta:
+        model = Product
+        exclude = "__all__"
+
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
 
         self.fields["brand"].help_text = "Provide or select the product brand."
         self.fields["category"].help_text = "Select the product category."
+        self.fields["subcategory"].help_text = "Select the product subcategory."
         self.fields["quantity"].help_text = "Provide the quantity, and select the color and size of the product."
         self.fields["gallery"].help_text = "Upload a product image gallery or select images from the gallery."
         self.fields["tags"].help_text = "Provide or select the product tag(s)."
 
         self.fields["brand"].label = "Brand"
         self.fields["category"].label = "Category"
+        self.fields["subcategory"].label = "Subcategory"
         self.fields["quantity"].label = "Quantity, Size and Color"
         self.fields["gallery"].label = "Gallery"
         self.fields["tags"].label = "Tags"
@@ -219,6 +201,23 @@ class ProductForm(forms.ModelForm):
         self.fields["tags"].required = False
         self.fields["gallery"].required = True
 
-    class Meta:
-        model = Product
-        exclude = ["sales_counter", "rate"]
+        if "category" in self.data:
+            category_id = self.data.get(key="category")
+
+            if category_id.isdigit():
+                try:
+                    category = ProductCategory.objects.get(id=category_id)
+                    self.fields["subcategory"].queryset = ProductSubCategory.objects.filter(category=category)
+
+                except ProductCategory.DoesNotExist:
+                    self.fields["subcategory"].queryset = ProductSubCategory.objects.none()
+
+            else:
+                self.fields["subcategory"].queryset = ProductSubCategory.objects.all()
+
+        elif self.instance.pk:
+            if self.instance.category:
+                self.fields["subcategory"].queryset = ProductSubCategory.objects.filter(category=self.instance.category)
+
+            else:
+                self.fields["subcategory"].queryset = ProductSubCategory.objects.none()

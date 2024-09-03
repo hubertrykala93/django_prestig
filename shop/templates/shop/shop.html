@@ -41,95 +41,25 @@
                 <div class="shop__aside__filter__accordion__item__body js-filter-accordion-body">
                   <div class="shop__aside__filter__accordion__item__body__content">
                     <ul class="shop__aside__filter__categories">
+                      {% for category in categories %}
                       <li>
                           <div class="form__checkbox">
-                            <input class="form__checkbox__input" type="checkbox" name="category" id="men" value="men">
-                            <label for="men"><span>Men (20)</span></label>
+                            <input class="form__checkbox__input" type="checkbox" name="category" id="{{ category.slug }}" value="{{ category }}">
+                            <label for="{{ category.slug }}"><span>{{ category }} ({{ category.product_count }})</span></label>
                           </div>
 
                           <ul>
+                            {% for subcategory in category.category.all %}
                             <li>
                               <div class="form__checkbox">
-                                <input class="form__checkbox__input" type="checkbox" name="category" id="sub1" value="sub1">
-                                <label for="sub1"><span>Sub 1 (5)</span></label>
+                                <input class="form__checkbox__input" type="checkbox" name="category" id="{{ subcategory.slug }}" value="{{ subcategory }}">
+                                <label for="{{ subcategory.slug }}"><span>{{ subcategory }} ({{ subcategory.product_set.count }})</span></label>
                               </div>
                             </li>
-
-                            <li>
-                              <div class="form__checkbox">
-                                <input class="form__checkbox__input" type="checkbox" name="category" id="sub2" value="sub2">
-                                <label for="sub2"><span>Sub 2 (10)</span></label>
-                              </div>
-                            </li>
-
-                            <li>
-                              <div class="form__checkbox">
-                                <input class="form__checkbox__input" type="checkbox" name="category" id="sub3" value="sub3">
-                                <label for="sub3"><span>Sub 3 (4)</span></label>
-                              </div>
-                            </li>
+                            {% endfor %}
                           </ul>
                       </li>
-
-                      <li>
-                          <div class="form__checkbox">
-                            <input class="form__checkbox__input" type="checkbox" name="category" id="women" value="women">
-                            <label for="women"><span>Women (30)</span></label>
-                          </div>
-
-                          <ul>
-                            <li>
-                              <div class="form__checkbox">
-                                <input class="form__checkbox__input" type="checkbox" name="category" id="sub1" value="sub1">
-                                <label for="sub1"><span>Sub 1 (5)</span></label>
-                              </div>
-                            </li>
-
-                            <li>
-                              <div class="form__checkbox">
-                                <input class="form__checkbox__input" type="checkbox" name="category" id="sub2" value="sub2">
-                                <label for="sub2"><span>Sub 2 (10)</span></label>
-                              </div>
-                            </li>
-
-                            <li>
-                              <div class="form__checkbox">
-                                <input class="form__checkbox__input" type="checkbox" name="category" id="sub3" value="sub3">
-                                <label for="sub3"><span>Sub 3 (4)</span></label>
-                              </div>
-                            </li>
-                          </ul>
-                      </li>
-
-                      <li>
-                          <div class="form__checkbox">
-                            <input class="form__checkbox__input" type="checkbox" name="category" id="kids" value="kids">
-                            <label for="kids"><span>Kids (10)</span></label>
-                          </div>
-
-                          <ul>
-                            <li>
-                              <div class="form__checkbox">
-                                <input class="form__checkbox__input" type="checkbox" name="category" id="sub1" value="sub1">
-                                <label for="sub1"><span>Sub 1 (5)</span></label>
-                              </div>
-                            </li>
-
-                            <li>
-                              <div class="form__checkbox">
-                                <input class="form__checkbox__input" type="checkbox" name="category" id="sub2" value="sub2">
-                                <label for="sub2"><span>Sub 2 (10)</span></label>
-                              </div>
-                            </li>
-
-                            <li>
-                              <div class="form__checkbox">
-                                <input class="form__checkbox__input" type="checkbox" name="category" id="sub3" value="sub3">
-                                <label for="sub3"><span>Sub 3 (4)</span></label>
-                              </div>
-                            </li>
-                          </ul>
-                      </li>
+                      {% endfor %}
                     </ul>
                   </div>
                 </div>
@@ -204,8 +134,8 @@
                       {% for brand in brands %}
                       <li>
                           <div class="form__checkbox">
-                            <input class="form__checkbox__input" type="checkbox" name="brand" id="{{ brand|lower }}" value="{{ brand }}">
-                            <label for="{{ brand|lower }}"><span>{{ brand }}</span></label>
+                            <input class="form__checkbox__input" type="checkbox" name="brand" id="{{ brand.slug }}" value="{{ brand }}">
+                            <label for="{{ brand.slug }}"><span>{{ brand }}</span></label>
                           </div>
                       </li>
                       {% endfor %}

@@ -5,7 +5,7 @@ from uuid import uuid4
 from django.utils.timezone import now
 from django.utils.text import slugify
 from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete, pre_delete
+from django.db.models.signals import pre_delete
 
 
 class BrandLogo(models.Model):
@@ -184,64 +184,11 @@ class ProductCategory(models.Model):
         super(ProductCategory, self).save(*args, **kwargs)
 
 
-class ProductSubCategoryImage(models.Model):
-    created_at = models.DateTimeField(default=now)
-    updated_at = models.DateTimeField(auto_now=True)
-    image = models.ImageField(upload_to="shop/subcategories")
-    size = models.IntegerField(null=True)
-    width = models.IntegerField(null=True)
-    height = models.IntegerField(null=True)
-    format = models.CharField(max_length=100, null=True)
-    alt = models.CharField(max_length=1000, null=True)
-
-    class Meta:
-        verbose_name = "Product SubCategory Image"
-        verbose_name_plural = "Product SubCategory Images"
-
-    def __str__(self):
-        return str(self.id)
-
-    def save(self, *args, **kwargs):
-        super(ProductSubCategoryImage, self).save(*args, **kwargs)
-
-        if self.pk:
-            self._resize_image()
-            self._save_attributes()
-
-            super(ProductSubCategoryImage, self).save(*args, **kwargs)
-
-        else:
-            self._resize_image()
-            self._save_attributes()
-
-            super(ProductSubCategoryImage, self).save(*args, **kwargs)
-
-    def _resize_image(self):
-        image = Image.open(fp=self.image.path)
-
-        if image.mode == "RGBA":
-            image = image.convert(mode="RGB")
-
-        output_size = (1100, image.height * 1100 / image.width)
-
-        image.thumbnail(size=output_size)
-        image.save(fp=self.image.path)
-
-        return image
-
-    def _save_attributes(self):
-        image = self._resize_image()
-
-        self.size = os.path.getsize(filename=self.image.path)
-        self.width, self.height = image.width, image.height
-        self.format = image.format
-
-
 class ProductSubCategory(models.Model):
     name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True)
-    subcategory_image = models.OneToOneField(to=ProductSubCategoryImage, on_delete=models.SET_NULL, null=True)
-    categories = models.ForeignKey(to=ProductCategory, on_delete=models.CASCADE, null=True, related_name="category")
+    slug = models.SlugField(blank=True)
+    category = models.ForeignKey(to=ProductCategory, on_delete=models.CASCADE, null=True,
+                                   related_name="subcategories")
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -252,15 +199,8 @@ class ProductSubCategory(models.Model):
         return f"{self.name}"
 
     def save(self, *args, **kwargs):
-        super(ProductSubCategory, self).save(*args, **kwargs)
-
-        if self.pk:
-            subcategory_image, created = ProductSubCategoryImage.objects.get_or_create(productsubcategory=self)
-
-            self.subcategory_image = subcategory_image
-
         if not self.slug:
-            self.slug = f"{self.categories.name.lower()}-{slugify(self.name)}"
+            self.slug = slugify(self.name)
 
         super(ProductSubCategory, self).save(*args, **kwargs)
 
@@ -359,7 +299,8 @@ class Product(models.Model):
     uuid = models.UUIDField(default=uuid4, unique=True)
     created_at = models.DateTimeField(default=now)
     brand = models.ForeignKey(to=Brand, on_delete=models.CASCADE)
-    category = models.ForeignKey(to=ProductCategory, on_delete=models.CASCADE)
+    category = models.ForeignKey(to=ProductCategory, on_delete=models.CASCADE, null=True)
+    subcategory = models.ForeignKey(to=ProductSubCategory, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=1000, unique=True)
     slug = models.SlugField(unique=True)
     short_description = models.CharField(max_length=10000)
@@ -413,18 +354,6 @@ def delete_product_category_image(sender, instance, **kwargs):
                 os.remove(path=image_path)
 
         instance.category_image.delete()
-
-
-@receiver(signal=pre_delete, sender=ProductSubCategory)
-def delete_product_subcategory_image(sender, instance, **kwargs):
-    if hasattr(instance, "subcategory_image"):
-        if instance.subcategory_image and instance.subcategory_image.image:
-            image_path = instance.subcategory_image.image.path
-
-            if os.path.isfile(path=image_path):
-                os.remove(path=image_path)
-
-        instance.subcategory_image.delete()
 
 
 @receiver(signal=pre_delete, sender=Product)
