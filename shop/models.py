@@ -188,7 +188,7 @@ class ProductSubCategory(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(blank=True)
     category = models.ForeignKey(to=ProductCategory, on_delete=models.CASCADE, null=True,
-                                   related_name="subcategories")
+                                 related_name="subcategories")
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -330,6 +330,11 @@ class Product(models.Model):
             self.sku = str(uuid4()).split("-")[-1]
 
         super(Product, self).save(*args, **kwargs)
+
+    def get_featured_image(self):
+        for image in self.gallery.all():
+            if image.is_featured:
+                return image
 
 
 @receiver(signal=pre_delete, sender=Brand)

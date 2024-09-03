@@ -1,10 +1,12 @@
 from django.shortcuts import render
-from .models import ProductCategory, Size, Color, Brand, Product
+from .models import ProductCategory, Size, Color, Brand, Product, ProductTags
 from django.db.models import Count
+from blog.views import pagination
 
 
 def shop(request):
     queryset = Product.objects.filter(is_active=True).order_by("-created_at")
+    p = pagination(request=request, object_list=queryset, per_page=4)
 
     if request.GET:
         if "sort" in request.GET:
@@ -24,8 +26,15 @@ def shop(request):
             "title": "Shop",
             "img": "/media/page-title/shop.jpg",
             "queryset": queryset,
+            "categories": ProductCategory.objects.annotate(
+                product_count=Count('product')
+            ).prefetch_related(
+                'subcategories__product_set'
+            ).order_by("-name"),
             "sizes": Size.objects.all(),
             "colors": Color.objects.all().order_by("-name"),
             "brands": Brand.objects.all().order_by("name"),
+            "rates": Product.objects.values_list("rate", flat=True).distinct(),
+            "pages": pagination(request=request, object_list=queryset, per_page=4),
         }
     )

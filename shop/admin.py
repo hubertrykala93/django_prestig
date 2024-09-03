@@ -423,7 +423,6 @@ class AdminProduct(admin.ModelAdmin):
         "name",
         "slug",
         "short_description",
-        "full_description",
         "price",
         "get_quantity",
         "get_color",
@@ -474,6 +473,7 @@ class AdminProduct(admin.ModelAdmin):
             "Additional", {
                 "fields": [
                     "is_featured",
+                    "rate",
                 ],
             },
         ),

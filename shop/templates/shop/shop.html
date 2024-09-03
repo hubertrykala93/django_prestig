@@ -49,7 +49,7 @@
                           </div>
 
                           <ul>
-                            {% for subcategory in category.category.all %}
+                            {% for subcategory in category.subcategories.all %}
                             <li>
                               <div class="form__checkbox">
                                 <input class="form__checkbox__input" type="checkbox" name="category" id="{{ subcategory.slug }}" value="{{ subcategory }}">
@@ -146,6 +146,7 @@
               {% endif %}
 
               <!-- rating -->
+              {% if rates %}
               <div class="shop__aside__filter__accordion__item">
                 <button type="button" class="shop__aside__filter__accordion__item__heading js-filter-accordion-heading">
                   Customer Rating
@@ -249,6 +250,7 @@
                 </div>
               </div>
             </div>
+            {% endif %}
 
             <button class="btn btn--accent btn--full-width" type="submit">Filter products</button>
           </form>
@@ -257,7 +259,7 @@
 
       <div class="shop__content">
         <div class="shop__line-head">
-          <div class="shop__line-head__counter">Showing 1–12 of 15 results</div>
+          <div class="shop__line-head__counter">Showing 1–{{ pages.paginator.count }} of {{ pages.paginator.count }} {% if pages.paginator.count == 1 %}result{% else %}results{% endif %}</div>
 
           <div class="shop__line-head__controls">
             <form class="shop__products-sorting js-shop-products-sorting">
@@ -283,15 +285,15 @@
         </div>
 
         <div class="shop__cards js-shop-cards">
-          {% for i in '123456'|make_list %}
-            <div class="product-card" data-id="1">
+          {% for page in pages %}
+            <div class="product-card" data-id="{{ page.uuid }}">
               <div class="product-card__top">
-                  <img class="product-card__top__image" src="https://i.pinimg.com/736x/e4/64/f6/e464f67ced879835b32e4c84318bf7a2.jpg" alt="Product image">
+                  <img class="product-card__top__image" src="{{ page.get_featured_image.image.url }}" alt="{{ page.get_featured_image.alt }}">
 
                   <div class="product-card__top__elements">
                       <div class="product-card__top__elements__buttons">
                           <button class="product-card__top__elements__buttons__btn">
-                              <span class="visually-hidden">Add to favourities</span>
+                              <span class="visually-hidden">Add to favourites</span>
                               <i class="ri-heart-line" aria-hidden="true"></i>
                           </button>
 
@@ -306,14 +308,14 @@
               </div>
 
               <div class="product-card__bottom">
-                  <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
+                  <a href="#" class="product-card__title heading heading--h6">{{ page.name }}</a>
 
                   <div class="product-card__description">
-                    Our men black t-shirt offers a classic fit and is made from high-quality pure cotton materials to keep you feeling and looking great.
+                    {{ page.short_description }}
                   </div>
 
                   <div class="product-card__price">
-                      $<span class="product-card__price__figure">250.00</span>
+                      $<span class="product-card__price__figure">{{ page.price }}</span>
                   </div>
               </div>
             </div>
@@ -321,6 +323,7 @@
         </div>
       </div>
     </div>
+    {% include 'blog/pagination.html' %}
   </div>
 </section>
 {% endblock %}

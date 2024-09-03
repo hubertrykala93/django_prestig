@@ -176,6 +176,7 @@ class ProductForm(forms.ModelForm):
                                        label="Full Description", widget=forms.Textarea)
     is_active = forms.BooleanField(help_text="Indicate if the product is active for sale.", required=False)
     is_featured = forms.BooleanField(help_text="Indicate if you want to feature the product.", required=False)
+    rate = forms.IntegerField(help_text="Provide the rate of the product.", label="Rate", required=False)
 
     class Meta:
         model = Product
