@@ -136,6 +136,7 @@
               </div>
 
               <!-- color -->
+              {% if colors %}
               <div class="shop__aside__filter__accordion__item">
                 <button type="button" class="shop__aside__filter__accordion__item__heading js-filter-accordion-heading">
                   Color
@@ -162,8 +163,10 @@
                   </div>
                 </div>
               </div>
+              {% endif %}
 
               <!-- size -->
+              {% if sizes %}
               <div class="shop__aside__filter__accordion__item">
                 <button type="button" class="shop__aside__filter__accordion__item__heading js-filter-accordion-heading">
                   Size
@@ -185,8 +188,10 @@
                   </div>
                 </div>
               </div>
+              {% endif %}
 
               <!-- brand -->
+              {% if brands %}
               <div class="shop__aside__filter__accordion__item">
                 <button type="button" class="shop__aside__filter__accordion__item__heading js-filter-accordion-heading">
                   Brand
@@ -208,6 +213,7 @@
                   </div>
                 </div>
               </div>
+              {% endif %}
 
               <!-- rating -->
               <div class="shop__aside__filter__accordion__item">
@@ -327,9 +333,9 @@
             <form class="shop__products-sorting js-shop-products-sorting">
               <div class="form__select">
                 <select name="sort" onchange="this.form.submit()">
-                  <option value="">Default sorting</option>
-                  <option value="alphabet">Alphabet sorting</option>
-                  <option value="xxx">XXX sorting</option>
+                  <option value="default">Sort by: Default</option>
+                  <option value="alphabetically" {% if request.GET.sort == 'alphabetically' %}selected{% endif %}>Sort by: Alphabetically</option>
+                  <option value="price" {% if request.GET.sort == 'price' %}selected{% endif %}>Sort by: Price</option>
                 </select>
               </div>
             </form>
