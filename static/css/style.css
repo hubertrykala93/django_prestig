@@ -2578,6 +2578,10 @@ textarea::placeholder{
   color: var(--clr-gray-300);
 }
 
+.shop__content__heading {
+  margin-bottom: 1em;
+}
+
 .shop__cards {
   display: grid;
   gap: var(--column-gap);
@@ -3345,7 +3349,9 @@ textarea::placeholder{
     transform: unset;
   }
 
-
+  .shop__aside__filter__close-button {
+    display: none;
+  }
 
   /**
   * FOOTER

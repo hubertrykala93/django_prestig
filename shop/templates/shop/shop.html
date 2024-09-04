@@ -19,9 +19,9 @@
             <form class="shop__products-sorting js-shop-products-sorting">
               <div class="form__select">
                 <select name="sort" onchange="this.form.submit()">
-                  <option value="default">Sort by: Default</option>
-                  <option value="alphabetically" {% if request.GET.sort == 'alphabetically' %}selected{% endif %}>Sort by: Alphabetically</option>
-                  <option value="price" {% if request.GET.sort == 'price' %}selected{% endif %}>Sort by: Price</option>
+                  <option value="default">Default sorting</option>
+                  <option value="alphabetically" {% if request.GET.sort == 'alphabetically' %}selected{% endif %}>Alphabetical sorting</option>
+                  <option value="price" {% if request.GET.sort == 'price' %}selected{% endif %}>Sort by price</option>
                 </select>
               </div>
             </form>
@@ -38,6 +38,8 @@
           </div>
         </div>
 
+        <h5 class="shop__content__heading heading heading--h5">Category/Tag: wartość</h5>
+
         <div class="shop__cards js-shop-cards">
           {% for page in pages %}
             <div class="product-card" data-id="{{ page.uuid }}">
@@ -46,10 +48,12 @@
 
                   <div class="product-card__top__elements">
                       <div class="product-card__top__elements__buttons">
-                          <button class="product-card__top__elements__buttons__btn">
-                              <span class="visually-hidden">Add to favourites</span>
-                              <i class="ri-heart-line" aria-hidden="true"></i>
-                          </button>
+                          <!-- warunek -->
+                            <button class="product-card__top__elements__buttons__btn js-add-to-wishlist">
+                                <span class="visually-hidden">Add to favourites</span>
+                                <i class="ri-heart-line" aria-hidden="true"></i>
+                            </button>
+                          <!-- koniec warunku -->
 
                           <a href="#" class="product-card__top__elements__buttons__btn">
                               <span class="visually-hidden">See more details</span>
@@ -75,11 +79,12 @@
             </div>
           {% endfor %} 
         </div>
+
+        {% if pages.paginator.count > 9 %}
+        {% include 'blog/pagination.html' %}
+        {% endif %}
       </div>
     </div>
-    {% if pages.paginator.count > 9 %}
-    {% include 'blog/pagination.html' %}
-    {% endif %}
   </div>
 </section>
 {% endblock %}
