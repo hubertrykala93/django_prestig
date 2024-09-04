@@ -136,11 +136,14 @@ class StockForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(StockForm, self).__init__(*args, **kwargs)
 
+        self.fields["product"].help_text = "Select the related product."
         self.fields["color"].help_text = "Provide the color of the product."
         self.fields["size"].help_text = "Provide the size of the product."
 
+        self.fields["product"].label = "Product"
         self.fields["color"].label = "Color"
         self.fields["size"].label = "Size"
+
 
     class Meta:
         model = Stock
@@ -188,14 +191,12 @@ class ProductForm(forms.ModelForm):
         self.fields["brand"].help_text = "Provide or select the product brand."
         self.fields["category"].help_text = "Select the product category."
         self.fields["subcategory"].help_text = "Select the product subcategory."
-        self.fields["quantity"].help_text = "Provide the quantity, and select the color and size of the product."
         self.fields["gallery"].help_text = "Upload a product image gallery or select images from the gallery."
         self.fields["tags"].help_text = "Provide or select the product tag(s)."
 
         self.fields["brand"].label = "Brand"
         self.fields["category"].label = "Category"
         self.fields["subcategory"].label = "Subcategory"
-        self.fields["quantity"].label = "Quantity, Size and Color"
         self.fields["gallery"].label = "Gallery"
         self.fields["tags"].label = "Tags"
 

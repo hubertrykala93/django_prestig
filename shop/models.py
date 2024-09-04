@@ -228,19 +228,6 @@ class Color(models.Model):
         return f"{self.name}"
 
 
-class Stock(models.Model):
-    quantity = models.IntegerField()
-    color = models.ForeignKey(to=Color, on_delete=models.CASCADE)
-    size = models.ForeignKey(to=Size, on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name = "Stock"
-        verbose_name_plural = "Stocks"
-
-    def __str__(self):
-        return f"{self.quantity, self.color.name, self.size.name}"
-
-
 class ProductImage(models.Model):
     created_at = models.DateTimeField(default=now)
     updated_at = models.DateTimeField(auto_now=True)
@@ -305,7 +292,6 @@ class Product(models.Model):
     slug = models.SlugField(unique=True)
     short_description = models.CharField(max_length=10000)
     price = models.FloatField()
-    quantity = models.ManyToManyField(to=Stock)
     gallery = models.ManyToManyField(to=ProductImage, blank=True)
     tags = models.ManyToManyField(to=ProductTags)
     full_description = models.TextField(max_length=100000)
@@ -334,6 +320,21 @@ class Product(models.Model):
         for image in self.gallery.all():
             if image.is_featured:
                 return image
+
+
+class Stock(models.Model):
+    product = models.ForeignKey(to=Product, on_delete=models.CASCADE, null=True)
+    quantity = models.IntegerField()
+    color = models.ForeignKey(to=Color, on_delete=models.CASCADE)
+    size = models.ForeignKey(to=Size, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Stock"
+        verbose_name_plural = "Stocks"
+        unique_together = ("product", "color", "size")
+
+    def __str__(self):
+        return f"{self.product.id, self.quantity, self.color.name, self.size.name}"
 
 
 class ProductReview(models.Model):

@@ -1,0 +1,248 @@
+<aside class="shop__aside">
+        <div class="shop__line-head">
+          <button class="shop__line-head__filter-button js-open-filter-btn">
+            <i class="ri-equalizer-2-line" aria-hidden="true"></i>
+            Filter
+          </button>
+
+          <span class="shop__line-head__filter-text">
+            <i class="ri-equalizer-2-line" aria-hidden="true"></i>
+            Filter
+          </span>
+        </div>
+
+        <div class="shop__aside__filter js-filter">
+          <button class="shop__aside__filter__close-button js-close-filter-btn">
+            <span class="visually-hidden">Close filter</span>
+            <i class="ri-close-line" aria-hidden="true"></i>
+          </button>
+
+          <form class="shop__aside__filter__form">
+            <div class="shop__aside__filter__accordion js-filter-accordion">
+              {% if categories %}
+              <!-- categories -->
+              <div class="shop__aside__filter__accordion__item">
+                <button type="button" class="shop__aside__filter__accordion__item__heading js-filter-accordion-heading">
+                  Categories
+                  <i class="ri-subtract-line" aria-hidden="true"></i>
+                </button>
+
+                <div class="shop__aside__filter__accordion__item__body js-filter-accordion-body">
+                  <div class="shop__aside__filter__accordion__item__body__content">
+                    <ul class="shop__aside__filter__categories">
+                      {% for category in categories %}
+                      <li>
+                          <div class="form__checkbox">
+                            <input class="form__checkbox__input" type="checkbox" name="category" id="{{ category.slug }}" value="{{ category }}">
+                            <label for="{{ category.slug }}"><span>{{ category }} ({{ category.product_count }})</span></label>
+                          </div>
+
+                          <ul>
+                            {% for subcategory in category.subcategories.all %}
+                            <li>
+                              <div class="form__checkbox">
+                                <input class="form__checkbox__input" type="checkbox" name="category" id="{{ subcategory.slug }}" value="{{ subcategory }}">
+                                <label for="{{ subcategory.slug }}"><span>{{ subcategory }} ({{ subcategory.product_set.count }})</span></label>
+                              </div>
+                            </li>
+                            {% endfor %}
+                          </ul>
+                      </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+
+              <!-- color -->
+              {% if colors %}
+              <div class="shop__aside__filter__accordion__item">
+                <button type="button" class="shop__aside__filter__accordion__item__heading js-filter-accordion-heading">
+                  Color
+                  <i class="ri-subtract-line" aria-hidden="true"></i>
+                </button>
+
+                <div class="shop__aside__filter__accordion__item__body js-filter-accordion-body">
+                  <div class="shop__aside__filter__accordion__item__body__content">
+                    <ul class="shop__aside__filter__color">
+                      {% for color in colors %}
+                      <li>
+                          <div class="form__radio">
+                            <input class="form__radio__input" type="radio" name="color" id="{{ color|lower }}" value="{{ color }}">
+                            <label for="{{ color|lower }}">
+                              <span>
+                                <div class="shop__aside__filter__color" style="background-color: #{{ color.hex }};"></div>
+                                {{ color }}
+                              </span>
+                            </label>
+                          </div>
+                      </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+
+              <!-- size -->
+              {% if sizes %}
+              <div class="shop__aside__filter__accordion__item">
+                <button type="button" class="shop__aside__filter__accordion__item__heading js-filter-accordion-heading">
+                  Size
+                  <i class="ri-subtract-line" aria-hidden="true"></i>
+                </button>
+
+                <div class="shop__aside__filter__accordion__item__body js-filter-accordion-body">
+                  <div class="shop__aside__filter__accordion__item__body__content">
+                    <ul class="shop__aside__filter__size">
+                      {% for size in sizes %}
+                      <li>
+                          <div class="form__checkbox">
+                            <input class="form__checkbox__input" type="checkbox" name="size" id="{{ size|lower }}" value="{{ size }}">
+                            <label for="{{ size|lower }}"><span>{{ size }}</span></label>
+                          </div>
+                      </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+
+              <!-- brand -->
+              {% if brands %}
+              <div class="shop__aside__filter__accordion__item">
+                <button type="button" class="shop__aside__filter__accordion__item__heading js-filter-accordion-heading">
+                  Brand
+                  <i class="ri-subtract-line" aria-hidden="true"></i>
+                </button>
+
+                <div class="shop__aside__filter__accordion__item__body js-filter-accordion-body">
+                  <div class="shop__aside__filter__accordion__item__body__content">
+                    <ul class="shop__aside__filter__brand">
+                      {% for brand in brands %}
+                      <li>
+                          <div class="form__checkbox">
+                            <input class="form__checkbox__input" type="checkbox" name="brand" id="{{ brand.slug }}" value="{{ brand }}">
+                            <label for="{{ brand.slug }}"><span>{{ brand }}</span></label>
+                          </div>
+                      </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+
+              <!-- rating -->
+              {% if rates %}
+              <div class="shop__aside__filter__accordion__item">
+                <button type="button" class="shop__aside__filter__accordion__item__heading js-filter-accordion-heading">
+                  Customer Rating
+                  <i class="ri-subtract-line" aria-hidden="true"></i>
+                </button>
+
+                <div class="shop__aside__filter__accordion__item__body js-filter-accordion-body">
+                  <div class="shop__aside__filter__accordion__item__body__content">
+                    <ul class="shop__aside__filter__rating">
+                      <li>
+                          <div class="form__checkbox">
+                            <input class="form__checkbox__input" type="checkbox" name="rating" id="5" value="5">
+                            <label for="5">
+                              <span>
+                                <div class="shop__aside__filter__rating__stars">
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star" aria-hidden="true"></i>
+                                </div>
+                                5
+                              </span>
+                            </label>
+                          </div>
+                      </li>
+
+                      <li>
+                          <div class="form__checkbox">
+                            <input class="form__checkbox__input" type="checkbox" name="rating" id="4" value="4">
+                            <label for="4">
+                              <span>
+                                <div class="shop__aside__filter__rating__stars">
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star shop__aside__filter__rating__stars__star--gray" aria-hidden="true"></i>
+                                </div>
+                                4 & Up
+                              </span>
+                            </label>
+                          </div>
+                      </li>
+
+                      <li>
+                          <div class="form__checkbox">
+                            <input class="form__checkbox__input" type="checkbox" name="rating" id="3" value="3">
+                            <label for="3">
+                              <span>
+                                <div class="shop__aside__filter__rating__stars">
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star shop__aside__filter__rating__stars__star--gray" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star shop__aside__filter__rating__stars__star--gray" aria-hidden="true"></i>
+                                </div>
+                                3 & Up
+                              </span>
+                            </label>
+                          </div>
+                      </li>
+
+                      <li>
+                          <div class="form__checkbox">
+                            <input class="form__checkbox__input" type="checkbox" name="rating" id="2" value="2">
+                            <label for="2">
+                              <span>
+                                <div class="shop__aside__filter__rating__stars">
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star shop__aside__filter__rating__stars__star--gray" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star shop__aside__filter__rating__stars__star--gray" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star shop__aside__filter__rating__stars__star--gray" aria-hidden="true"></i>
+                                </div>
+                                2 & Up
+                              </span>
+                            </label>
+                          </div>
+                      </li>
+
+                      <li>
+                          <div class="form__checkbox">
+                            <input class="form__checkbox__input" type="checkbox" name="rating" id="1" value="1">
+                            <label for="1">
+                              <span>
+                                <div class="shop__aside__filter__rating__stars">
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star shop__aside__filter__rating__stars__star--gray" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star shop__aside__filter__rating__stars__star--gray" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star shop__aside__filter__rating__stars__star--gray" aria-hidden="true"></i>
+                                  <i class="ri-star-fill shop__aside__filter__rating__stars__star shop__aside__filter__rating__stars__star--gray" aria-hidden="true"></i>
+                                </div>
+                                1 & Up
+                              </span>
+                            </label>
+                          </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+
+            <button class="btn btn--accent btn--full-width" type="submit">Filter products</button>
+          </form>
+        </div>
+      </aside>

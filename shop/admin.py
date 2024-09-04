@@ -381,14 +381,72 @@ class AdminProductImage(admin.ModelAdmin):
     get_image_name.short_description = "Image Name"
 
 
+class StockInLine(admin.TabularInline):
+    """
+    Admin options and functionalities for Stock model.
+    """
+    model = Stock
+    extra = 1
+    # list_display = ["id", "get_product_id", "product", "quantity", "get_size_id", "size", "get_color_id", "color"]
+    form = StockForm
+    # fieldsets = (
+    #     (
+    #         "Product", {
+    #             "fields": [
+    #                 "product",
+    #             ],
+    #         },
+    #     ),
+    #     (
+    #         "Product Quantity", {
+    #             "fields": [
+    #                 "quantity",
+    #             ],
+    #         },
+    #     ),
+    #     (
+    #         "Product Details", {
+    #             "fields": [
+    #                 "size",
+    #                 "color",
+    #             ],
+    #         },
+    #     ),
+    # )
+    #
+    # def get_product_id(self, obj):
+    #     return obj.product.id
+    #
+    # get_product_id.short_description = "Product ID"
+    #
+    # def get_size_id(self, obj):
+    #     return obj.size.id
+    #
+    # get_size_id.short_description = "Size ID"
+    #
+    # def get_color_id(self, obj):
+    #     return obj.color.id
+    #
+    # get_color_id.short_description = "Color ID"
+
+
 @admin.register(Stock)
 class AdminStock(admin.ModelAdmin):
     """
     Admin options and functionalities for Stock model.
     """
-    list_display = ["id", "quantity", "size", "color"]
+    model = Stock
+    extra = 1
+    list_display = ["id", "get_product_id", "product", "quantity", "get_size_id", "size", "get_color_id", "color"]
     form = StockForm
     fieldsets = (
+        (
+            "Product", {
+                "fields": [
+                    "product",
+                ],
+            },
+        ),
         (
             "Product Quantity", {
                 "fields": [
@@ -405,6 +463,21 @@ class AdminStock(admin.ModelAdmin):
             },
         ),
     )
+
+    def get_product_id(self, obj):
+        return obj.product.id
+
+    get_product_id.short_description = "Product ID"
+
+    def get_size_id(self, obj):
+        return obj.size.id
+
+    get_size_id.short_description = "Size ID"
+
+    def get_color_id(self, obj):
+        return obj.color.id
+
+    get_color_id.short_description = "Color ID"
 
 
 @admin.register(Product)
@@ -426,9 +499,6 @@ class AdminProduct(admin.ModelAdmin):
         "slug",
         "short_description",
         "price",
-        "get_quantity",
-        "get_color",
-        "get_size",
         "get_gallery_ids",
         "get_gallery",
         "get_tags_ids",
@@ -451,7 +521,6 @@ class AdminProduct(admin.ModelAdmin):
                     "price",
                     "short_description",
                     "full_description",
-                    "quantity",
                 ],
             },
         ),
@@ -478,6 +547,7 @@ class AdminProduct(admin.ModelAdmin):
             },
         ),
     )
+    inlines = [StockInLine]
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'subcategory':
@@ -531,21 +601,6 @@ class AdminProduct(admin.ModelAdmin):
         ) or mark_safe("-")
 
     get_gallery.short_description = "Gallery"
-
-    def get_quantity(self, obj):
-        return ''.join([str(q.quantity) for q in obj.quantity.all()])
-
-    get_quantity.short_description = "Quantity"
-
-    def get_color(self, obj):
-        return ''.join([q.color.name for q in obj.quantity.all()])
-
-    get_color.short_description = "Color"
-
-    def get_size(self, obj):
-        return ''.join([q.size.name for q in obj.quantity.all()])
-
-    get_size.short_description = "Size"
 
     def get_tags(self, obj):
         return format_html_join(
