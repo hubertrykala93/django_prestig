@@ -216,6 +216,9 @@ class ProductSubCategory(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
 
+        else:
+            self.slug = slugify(self.name)
+
         super(ProductSubCategory, self).save(*args, **kwargs)
 
 
