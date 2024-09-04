@@ -6,6 +6,8 @@ from django.utils.timezone import now
 from django.utils.text import slugify
 from django.dispatch import receiver
 from django.db.models.signals import pre_delete
+from django.shortcuts import reverse
+from django.db.models import Avg
 
 
 class BrandLogo(models.Model):
@@ -142,7 +144,11 @@ class ProductCategoryImage(models.Model):
         if image.mode == "RGBA":
             image = image.convert(mode="RGB")
 
-        output_size = (1100, image.height * 1100 / image.width)
+        if image.width > image.height:
+            output_size = (1100, image.height * 1100 / image.width)
+
+        else:
+            output_size = (1100 * image.width / image.height, 1100)
 
         image.thumbnail(size=output_size)
         image.save(fp=self.image.path)
@@ -182,6 +188,14 @@ class ProductCategory(models.Model):
             self.slug = slugify(self.name)
 
         super(ProductCategory, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse(
+            viewname="products-by-category",
+            kwargs={
+                "category_slug": self.slug,
+            }
+        )
 
 
 class ProductSubCategory(models.Model):
@@ -321,6 +335,19 @@ class Product(models.Model):
             if image.is_featured:
                 return image
 
+    def get_absolute_url(self):
+        return reverse(
+            viewname="product-details",
+            kwargs={
+                "category_slug": self.category.slug,
+                "subcategory_slug": self.subcategory.slug,
+                "product_slug": self.slug,
+            }
+        )
+
+    def average_rating(self):
+        return int(self.productreview_set.aggregate(Avg("rate"))["rate__avg"])
+
 
 class Stock(models.Model):
     product = models.ForeignKey(to=Product, on_delete=models.CASCADE, null=True)
@@ -342,11 +369,14 @@ class ProductReview(models.Model):
     user = models.ForeignKey(to="accounts.User", on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(to=Product, on_delete=models.CASCADE, null=True)
     content = models.TextField(max_length=1000)
-    rate = models.IntegerField(null=True)
+    rate = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = "Product Review"
         verbose_name_plural = "Product Reviews"
+
+    def __str__(self):
+        return f"Review by {self.user} for {self.product}"
 
 
 @receiver(signal=pre_delete, sender=Brand)

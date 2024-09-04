@@ -9,11 +9,13 @@
 
 <section class="shop">
   <div class="container">
-    <div class="row">
+    <div class="row{% if request.resolver_match.url_name != 'shop' %} row--no-filter{% endif %}">
+      {% if request.resolver_match.url_name == 'shop' %}
       {% include 'shop/product-filters.html' %}
+      {% endif %}
       <div class="shop__content">
         <div class="shop__line-head">
-          <div class="shop__line-head__counter">Showing 1–{{ pages.paginator.count }} of {{ pages.paginator.count }} {% if pages.paginator.count == 1 %}result{% else %}results{% endif %}</div>
+          <div class="shop__line-head__counter">Showing {{ pages.start_index }}–{{ pages.end_index }} of {{ pages.paginator.count }} {% if pages.paginator.count == 1 %}result{% else %}results{% endif %}</div>
 
           <div class="shop__line-head__controls">
             <form class="shop__products-sorting js-shop-products-sorting">
@@ -38,7 +40,9 @@
           </div>
         </div>
 
-        <h5 class="shop__content__heading heading heading--h5">Category/Tag: wartość</h5>
+        {% if request.resolver_match.url_name != 'shop' %}
+        <h5 class="shop__content__heading heading heading--h5">{% if request.resolver_match.url_name == 'products-by-tag' %}Tag: {{ tag }}{% elif request.resolver_match.url_name == 'products-by-category' %}Category: {{ category }}{% elif request.resolver_match.url_name == 'products-by-subcategory' %}Subcategory: {{ subcategory }}{% endif %}</h5>
+        {% endif %}
 
         <div class="shop__cards js-shop-cards">
           {% for page in pages %}
@@ -49,11 +53,12 @@
                   <div class="product-card__top__elements">
                       <div class="product-card__top__elements__buttons">
                           <!-- warunek -->
+                            {% if request.user.is_authenticated %}
                             <button class="product-card__top__elements__buttons__btn js-add-to-wishlist">
                                 <span class="visually-hidden">Add to favourites</span>
                                 <i class="ri-heart-line" aria-hidden="true"></i>
                             </button>
-                          <!-- koniec warunku -->
+                            {% endif %}
 
                           <a href="#" class="product-card__top__elements__buttons__btn">
                               <span class="visually-hidden">See more details</span>
@@ -66,7 +71,7 @@
               </div>
 
               <div class="product-card__bottom">
-                  <a href="#" class="product-card__title heading heading--h6">{{ page.name }}</a>
+                  <a href="{{ page.get_absolute_url }}" class="product-card__title heading heading--h6">{{ page.name }}</a>
 
                   <div class="product-card__description">
                     {{ page.short_description }}

@@ -8,6 +8,11 @@
 <section class="product">
   <div class="container">
     <div class="row">
+      <h1>{{ category.name }}</h1>
+      <h1>{{ subcategory.name }}</h1>
+      {% for img in product.gallery.all %}
+      <img src="{{ img.image.url }}" alt="{{ img.alt }}" height="1100">
+      {% endfor %}
     </div>
   </div>
 </section>

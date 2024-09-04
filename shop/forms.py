@@ -144,7 +144,6 @@ class StockForm(forms.ModelForm):
         self.fields["color"].label = "Color"
         self.fields["size"].label = "Size"
 
-
     class Meta:
         model = Stock
         fields = "__all__"

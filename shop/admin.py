@@ -387,47 +387,7 @@ class StockInLine(admin.TabularInline):
     """
     model = Stock
     extra = 1
-    # list_display = ["id", "get_product_id", "product", "quantity", "get_size_id", "size", "get_color_id", "color"]
     form = StockForm
-    # fieldsets = (
-    #     (
-    #         "Product", {
-    #             "fields": [
-    #                 "product",
-    #             ],
-    #         },
-    #     ),
-    #     (
-    #         "Product Quantity", {
-    #             "fields": [
-    #                 "quantity",
-    #             ],
-    #         },
-    #     ),
-    #     (
-    #         "Product Details", {
-    #             "fields": [
-    #                 "size",
-    #                 "color",
-    #             ],
-    #         },
-    #     ),
-    # )
-    #
-    # def get_product_id(self, obj):
-    #     return obj.product.id
-    #
-    # get_product_id.short_description = "Product ID"
-    #
-    # def get_size_id(self, obj):
-    #     return obj.size.id
-    #
-    # get_size_id.short_description = "Size ID"
-    #
-    # def get_color_id(self, obj):
-    #     return obj.color.id
-    #
-    # get_color_id.short_description = "Color ID"
 
 
 @admin.register(Stock)

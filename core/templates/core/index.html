@@ -107,35 +107,23 @@
 </section>
 
 <!-- CATEGORIES -->
+{% if categories %}
 <section class="categories">
     <div class="container">
         <div class="row">
+            {% for category in categories %}
             <div class="categories__block">
-                <img src="/media/home/categories/men.jpg" alt="Man in coat in forest" class="categories__block__image">
-                <a href="#" class="categories__block__btn btn btn--primary">
-                    Men
+                <img src="{{ category.category_image.image.url }}" alt="{{ category.category_image.alt }}" class="categories__block__image">
+                <a href="{{ category.get_absolute_url }}" class="categories__block__btn btn btn--primary">
+                    {{ category.name }}
                     <i class="ri-arrow-right-line" aria-hidden="true"></i>
                 </a>
             </div>
-
-            <div class="categories__block">
-                <img src="/media/home/categories/women.jpg" alt="Girl in jeans sitting on yellow armchair" class="categories__block__image">
-                <a href="#" class="categories__block__btn btn btn--primary">
-                    Women
-                    <i class="ri-arrow-right-line" aria-hidden="true"></i>
-                </a>
-            </div>
-
-            <div class="categories__block">
-                <img src="/media/home/categories/children.jpg" alt="Boy in yellow vest holding his hat" class="categories__block__image">
-                <a href="#" class="categories__block__btn btn btn--primary">
-                    Children
-                    <i class="ri-arrow-right-line" aria-hidden="true"></i>
-                </a>
-            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
+{% endif %}
 
 <!-- FEATURED PRODUCTS -->
 <section class="featured js-featured-products">

@@ -12,5 +12,5 @@ def shop_filters(request):
         "sizes": Size.objects.all(),
         "colors": Color.objects.all().order_by("-name"),
         "brands": Brand.objects.all().order_by("name"),
-        "rates": ProductReview.objects.values_list("rate", flat=True).distinct(),
+        "rates": ProductReview.objects.values_list("rate", flat=True).distinct().order_by("-rate"),
     }

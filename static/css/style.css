@@ -3322,6 +3322,10 @@ textarea::placeholder{
     column-gap: 3.125rem;
   }
 
+  .shop > .container > .row--no-filter {
+    display: block;
+  }
+
   .shop__line-head {
     margin-bottom: 4.375rem;
   }
