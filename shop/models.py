@@ -307,7 +307,6 @@ class Product(models.Model):
     price = models.FloatField()
     quantity = models.ManyToManyField(to=Stock)
     gallery = models.ManyToManyField(to=ProductImage, blank=True)
-    rate = models.IntegerField(null=True)
     tags = models.ManyToManyField(to=ProductTags)
     full_description = models.TextField(max_length=100000)
     sku = models.CharField(max_length=100, unique=True)
@@ -335,6 +334,18 @@ class Product(models.Model):
         for image in self.gallery.all():
             if image.is_featured:
                 return image
+
+
+class ProductReview(models.Model):
+    created_at = models.DateTimeField(default=now)
+    user = models.ForeignKey(to="accounts.User", on_delete=models.CASCADE, null=True)
+    product = models.ForeignKey(to=Product, on_delete=models.CASCADE, null=True)
+    content = models.TextField(max_length=1000)
+    rate = models.IntegerField(null=True)
+
+    class Meta:
+        verbose_name = "Product Review"
+        verbose_name_plural = "Product Reviews"
 
 
 @receiver(signal=pre_delete, sender=Brand)

@@ -11,6 +11,7 @@ from .models import (
     ProductImage,
     BrandLogo,
     ProductCategoryImage,
+    ProductReview,
 )
 from .forms import (
     BrandForm,
@@ -24,6 +25,7 @@ from .forms import (
     ProductForm,
     BrandLogoForm,
     ProductCategoryImageForm,
+    ProductReviewForm,
 )
 from django.utils.html import format_html_join
 from django.utils.safestring import mark_safe
@@ -429,7 +431,6 @@ class AdminProduct(admin.ModelAdmin):
         "get_size",
         "get_gallery_ids",
         "get_gallery",
-        "rate",
         "get_tags_ids",
         "get_tags",
         "sku",
@@ -473,7 +474,6 @@ class AdminProduct(admin.ModelAdmin):
             "Additional", {
                 "fields": [
                     "is_featured",
-                    "rate",
                 ],
             },
         ),
@@ -564,3 +564,67 @@ class AdminProduct(admin.ModelAdmin):
         ) or mark_safe("-")
 
     get_tags_ids.short_description = "Tag ID"
+
+
+@admin.register(ProductReview)
+class AdminProductReview(admin.ModelAdmin):
+    """
+    Admin options and functionalities for ProductReview model.
+    """
+    list_display = [
+        "id",
+        "formatted_created_at",
+        "get_user_id",
+        "user",
+        "get_product_id",
+        "product",
+        "content",
+        "rate",
+    ]
+    form = ProductReviewForm
+    fieldsets = (
+        (
+            "Author", {
+                "fields": [
+                    "user",
+                ],
+            },
+        ),
+        (
+            "Reviewing Product", {
+                "fields": [
+                    "product",
+                ],
+            },
+        ),
+        (
+            "Review Content", {
+                "fields": [
+                    "content",
+                ],
+            },
+        ),
+        (
+            "Rate", {
+                "fields": [
+                    "rate",
+                ],
+            },
+        ),
+    )
+
+    def formatted_created_at(self, obj):
+        if obj.created_at:
+            return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_created_at.short_description = "Created At"
+
+    def get_user_id(self, obj):
+        return obj.user.id
+
+    get_user_id.short_description = "User ID"
+
+    def get_product_id(self, obj):
+        return obj.product.id
+
+    get_product_id.short_description = "Product ID"

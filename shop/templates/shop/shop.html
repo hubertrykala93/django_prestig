@@ -31,6 +31,7 @@
 
           <form class="shop__aside__filter__form">
             <div class="shop__aside__filter__accordion js-filter-accordion">
+              {% if categories %}
               <!-- categories -->
               <div class="shop__aside__filter__accordion__item">
                 <button type="button" class="shop__aside__filter__accordion__item__heading js-filter-accordion-heading">
@@ -64,6 +65,7 @@
                   </div>
                 </div>
               </div>
+              {% endif %}
 
               <!-- color -->
               {% if colors %}
@@ -323,7 +325,9 @@
         </div>
       </div>
     </div>
+    {% if pages.paginator.count > 9 %}
     {% include 'blog/pagination.html' %}
+    {% endif %}
   </div>
 </section>
 {% endblock %}

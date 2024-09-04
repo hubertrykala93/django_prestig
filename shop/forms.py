@@ -11,6 +11,7 @@ from .models import (
     Product,
     BrandLogo,
     ProductCategoryImage,
+    ProductReview,
 )
 
 
@@ -176,7 +177,6 @@ class ProductForm(forms.ModelForm):
                                        label="Full Description", widget=forms.Textarea)
     is_active = forms.BooleanField(help_text="Indicate if the product is active for sale.", required=False)
     is_featured = forms.BooleanField(help_text="Indicate if you want to feature the product.", required=False)
-    rate = forms.IntegerField(help_text="Provide the rate of the product.", label="Rate", required=False)
 
     class Meta:
         model = Product
@@ -222,3 +222,24 @@ class ProductForm(forms.ModelForm):
 
             else:
                 self.fields["subcategory"].queryset = ProductSubCategory.objects.none()
+
+
+class ProductReviewForm(forms.ModelForm):
+    content = forms.CharField(help_text="Provide the content of the review.", label="Content", required=True,
+                              widget=forms.Textarea)
+    rate = forms.IntegerField(help_text="Provide the rate of the product.", label="Rate", required=True)
+
+    class Meta:
+        model = ProductReview
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(ProductReviewForm, self).__init__(*args, **kwargs)
+
+        self.fields["user"].help_text = "Select the author of the review."
+        self.fields["user"].label = "Author"
+        self.fields["user"].required = True
+
+        self.fields["product"].help_text = "Select the reviewing product."
+        self.fields["product"].label = "Product"
+        self.fields["product"].required = True
