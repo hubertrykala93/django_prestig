@@ -44,34 +44,50 @@
         <h5 class="shop__content__heading heading heading--h5">{% if request.resolver_match.url_name == 'products-by-tag' %}Tag: {{ tag }}{% elif request.resolver_match.url_name == 'products-by-category' %}Category: {{ category }}{% elif request.resolver_match.url_name == 'products-by-subcategory' %}Subcategory: {{ subcategory }}{% endif %}</h5>
         {% endif %}
 
-        <div class="shop__cards js-shop-cards">
+        <div class="shop__cards js-shop-cards js-products-cards-parent">
           {% for page in pages %}
-            <div class="product-card" data-id="{{ page.uuid }}">
+            <div class="product-card js-product-card" data-id="{{ page.id }}">
               <div class="product-card__top">
                   <img class="product-card__top__image" src="{{ page.get_featured_image.image.url }}" alt="{{ page.get_featured_image.alt }}">
 
                   <div class="product-card__top__elements">
                       <div class="product-card__top__elements__buttons">
-                          <!-- warunek -->
-                            {% if request.user.is_authenticated %}
+                          {% if request.user.is_authenticated %}
                             <button class="product-card__top__elements__buttons__btn js-add-to-wishlist">
                                 <span class="visually-hidden">Add to favourites</span>
                                 <i class="ri-heart-line" aria-hidden="true"></i>
                             </button>
-                            {% endif %}
+                          {% endif %}
 
-                          <a href="#" class="product-card__top__elements__buttons__btn">
+                          <a href="{{ page.get_absolute_url }}" class="product-card__top__elements__buttons__btn">
                               <span class="visually-hidden">See more details</span>
                               <i class="ri-eye-line" aria-hidden="true"></i>
                           </a>
                       </div>
 
-                      <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
+                      <a href="{{ page.get_absolute_url }}" class="product-card__add-to-cart btn btn--accent">Add To Cart</a>
                   </div>
               </div>
 
               <div class="product-card__bottom">
                   <a href="{{ page.get_absolute_url }}" class="product-card__title heading heading--h6">{{ page.name }}</a>
+
+                  <div class="product-card__rating">
+                    <!-- if brak opini -->
+                      <!-- Wypisujesz goły tekst "No reviews" -->
+                    <!-- endif -->
+                    <!-- else jeśli są opinie -->
+                    <div class="product-card__rating__stars">
+                      <i class="ri-star-fill product-card__rating__stars__star" aria-hidden="true"></i>
+                      <i class="ri-star-fill product-card__rating__stars__star" aria-hidden="true"></i>
+                      <i class="ri-star-fill product-card__rating__stars__star" aria-hidden="true"></i>
+                      <i class="ri-star-fill product-card__rating__stars__star" aria-hidden="true"></i>
+                      <i class="ri-star-fill product-card__rating__stars__star product-card__rating__stars__star--gray" aria-hidden="true"></i>
+                    </div>
+
+                    <span class="product-card__rating__counter">(5)</span>
+                    <!-- endelse -->
+                  </div>
 
                   <div class="product-card__description">
                     {{ page.short_description }}
