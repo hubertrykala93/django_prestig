@@ -53,7 +53,7 @@
                   <div class="product-card__top__elements">
                       <div class="product-card__top__elements__buttons">
                           {% if request.user.is_authenticated %}
-                            <button class="product-card__top__elements__buttons__btn js-add-to-wishlist">
+                            <button class="product-card__top__elements__buttons__btn js-add-to-wishlist"{% if page.id in request.session.wishlist %}active{% endif %}>
                                 <span class="visually-hidden">Add to favourites</span>
                                 <i class="ri-heart-line" aria-hidden="true"></i>
                             </button>
@@ -73,20 +73,21 @@
                   <a href="{{ page.get_absolute_url }}" class="product-card__title heading heading--h6">{{ page.name }}</a>
 
                   <div class="product-card__rating">
-                    <!-- if brak opini -->
-                      <!-- Wypisujesz goły tekst "No reviews" -->
-                    <!-- endif -->
-                    <!-- else jeśli są opinie -->
+                    {% if page.get_reviews == 0 %}
+                      No Reviews
+                    {% else %}
                     <div class="product-card__rating__stars">
-                      <i class="ri-star-fill product-card__rating__stars__star" aria-hidden="true"></i>
-                      <i class="ri-star-fill product-card__rating__stars__star" aria-hidden="true"></i>
-                      <i class="ri-star-fill product-card__rating__stars__star" aria-hidden="true"></i>
-                      <i class="ri-star-fill product-card__rating__stars__star" aria-hidden="true"></i>
-                      <i class="ri-star-fill product-card__rating__stars__star product-card__rating__stars__star--gray" aria-hidden="true"></i>
+                      {% for i in stars_range %}
+                        {% if i <= page.average_rating %}
+                        <i class="ri-star-fill product-card__rating__stars__star" aria-hidden="true"></i>
+                        {% else %}
+                        <i class="ri-star-fill product-card__rating__stars__star product-card__rating__stars__star--gray" aria-hidden="true"></i>
+                        {% endif %}
+                      {% endfor %}
                     </div>
 
-                    <span class="product-card__rating__counter">(5)</span>
-                    <!-- endelse -->
+                    <span class="product-card__rating__counter">({{ page.get_reviews }})</span>
+                      {% endif %}
                   </div>
 
                   <div class="product-card__description">

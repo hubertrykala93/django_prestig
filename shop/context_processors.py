@@ -14,3 +14,9 @@ def shop_filters(request):
         "brands": Brand.objects.all().order_by("name"),
         "rates": ProductReview.objects.values_list("rate", flat=True).distinct().order_by("-rate"),
     }
+
+
+def stars_range(request):
+    return {
+        "stars_range": range(1, 6),
+    }

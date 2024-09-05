@@ -8,6 +8,7 @@ from django.dispatch import receiver
 from django.db.models.signals import pre_delete
 from django.shortcuts import reverse
 from django.db.models import Avg
+from math import floor
 
 
 class BrandLogo(models.Model):
@@ -349,22 +350,13 @@ class Product(models.Model):
         )
 
     def average_rating(self):
-        return int(self.productreview_set.aggregate(Avg("rate"))["rate__avg"])
+        avg_rating = self.productreview_set.aggregate(Avg("rate"))["rate__avg"]
 
+        if avg_rating is not None:
+            return floor(avg_rating)
 
-class Stock(models.Model):
-    product = models.ForeignKey(to=Product, on_delete=models.CASCADE, null=True)
-    quantity = models.IntegerField()
-    color = models.ForeignKey(to=Color, on_delete=models.CASCADE)
-    size = models.ForeignKey(to=Size, on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name = "Stock"
-        verbose_name_plural = "Stocks"
-        unique_together = ("product", "color", "size")
-
-    def __str__(self):
-        return f"{self.product.id, self.quantity, self.color.name, self.size.name}"
+    def get_reviews(self):
+        return self.productreview_set.count()
 
 
 class ProductReview(models.Model):
@@ -380,6 +372,21 @@ class ProductReview(models.Model):
 
     def __str__(self):
         return f"Review by {self.user} for {self.product}"
+
+
+class Stock(models.Model):
+    product = models.ForeignKey(to=Product, on_delete=models.CASCADE, null=True)
+    quantity = models.IntegerField()
+    color = models.ForeignKey(to=Color, on_delete=models.CASCADE)
+    size = models.ForeignKey(to=Size, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Stock"
+        verbose_name_plural = "Stocks"
+        unique_together = ("product", "color", "size")
+
+    def __str__(self):
+        return f"{self.product.id, self.quantity, self.color.name, self.size.name}"
 
 
 @receiver(signal=pre_delete, sender=Brand)

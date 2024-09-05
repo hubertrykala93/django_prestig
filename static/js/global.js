@@ -115,7 +115,7 @@ const $productsCardsParents = document.querySelectorAll('.js-products-cards-pare
  * @param {Object} formData - Add to wishlist formdata object.
  */
 const sendAddToWishlistRequest = (formData) => {
-    const url = 'add-to-wishlist'
+    const url = '/api/v1/shop/add-to-wishlist'
 
     fetch(url, {
         method:'POST',

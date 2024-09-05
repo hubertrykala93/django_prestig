@@ -29,6 +29,7 @@ urlpatterns = [
     path(route="", view=include(arg="core.api.urls")),
     path(route="", view=include(arg="accounts.api.urls")),
     path(route="", view=include(arg="blog.api.urls")),
+    path(route="", view=include(arg="shop.api.urls")),
     path(route="summernote/", view=include(arg="django_summernote.urls")),
 ]
 

@@ -2,7 +2,8 @@ from django.contrib import admin
 from .models import User, Profile, OneTimePassword, DeliveryDetails, ProfilePicture
 from .forms import UserForm, ProfileForm, OneTimePasswordForm, DeliveryDetailsForm, ProfilePictureForm
 from django.contrib.sessions.models import Session
-from django.utils.html import format_html
+from django.utils.html import format_html_join
+from django.utils.safestring import mark_safe
 
 
 @admin.register(User)
@@ -148,7 +149,9 @@ class AdminProfile(admin.ModelAdmin):
         "formatted_date_of_birth",
         "facebook",
         "instagram",
-        "delivery_details"
+        "delivery_details",
+        "get_wishlist_ids",
+        "get_wishlist",
     ]
     form = ProfileForm
     fieldsets = (
@@ -232,6 +235,24 @@ class AdminProfile(admin.ModelAdmin):
             return obj.dateofbirth.strftime("%Y-%m-%d")
 
     formatted_date_of_birth.short_description = "Date of Birth"
+
+    def get_wishlist_ids(self, obj):
+        return format_html_join(
+            mark_safe('<br>'),
+            '{}',
+            ((p.id,) for p in obj.wishlist.all())
+        ) or mark_safe("-")
+
+    get_wishlist_ids.short_description = "Wishlist ID"
+
+    def get_wishlist(self, obj):
+        return format_html_join(
+            mark_safe('<br>'),
+            '{}',
+            ((p.name,) for p in obj.wishlist.all())
+        ) or mark_safe("-")
+
+    get_wishlist.short_description = "Wishlist"
 
 
 @admin.register(DeliveryDetails)

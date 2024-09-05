@@ -64,6 +64,7 @@ TEMPLATES = [
                 "core.context_processors.generate_token",
                 "blog.context_processors.blog_sidebar",
                 "shop.context_processors.shop_filters",
+                "shop.context_processors.stars_range",
             ],
         },
     },
@@ -124,5 +125,7 @@ REST_FRAMEWORK = {
 PASSWORD_RESET_TIMEOUT = int(os.environ.get("PASSWORD_RESET_TIMEOUT"))
 
 # Sessions
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
+SESSION_COOKIE_SECURE = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_SAVE_EVERY_REQUEST = True
