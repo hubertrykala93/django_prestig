@@ -8,7 +8,7 @@ class AddToWishlistAPIView(APIView):
     def post(self, request, *args, **kwargs):
         product_id = request.data.get("id", None)
 
-        if product_id == "":
+        if not product_id:
             return Response(
                 data={
                     "error": "Product does not exists.",
@@ -16,54 +16,33 @@ class AddToWishlistAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if product_id is None:
+        try:
+            product = Product.objects.get(id=product_id)
+
+        except Product.DoesNotExist:
             return Response(
                 data={
                     "error": "Product does not exists.",
                 },
-                status=status.HTTP_400_BAD_REQUEST,
+                status=status.HTTP_404_NOT_FOUND,
             )
 
-        if product_id is not None:
-            try:
-                product = Product.objects.get(id=product_id)
+        if product not in request.user.profile.wishlist.all():
+            request.user.profile.wishlist.add(product)
 
-            except Product.DoesNotExist:
-                return Response(
-                    data={
-                        "error": "Product does not exists.",
-                    },
-                    status=status.HTTP_404_NOT_FOUND,
-                )
+            return Response(
+                data={
+                    "success": f"The product '{product.name}' has been added to your favorites list.",
+                },
+                status=status.HTTP_200_OK,
+            )
 
-            if product not in request.user.profile.wishlist.all():
-                request.user.profile.wishlist.add(product)
+        else:
+            request.user.profile.wishlist.remove(product)
 
-                return Response(
-                    data={
-                        "success": f"The product '{product.name}' has been added to your favorites list.",
-                    },
-                    status=status.HTTP_200_OK,
-                )
-
-            else:
-                request.user.profile.wishlist.remove(product)
-
-                return Response(
-                    data={
-                        "success": f"The product '{product.name}' has been removed from your favorites list.",
-                    },
-                    status=status.HTTP_200_OK,
-                )
-
-            # if not request.session.get("wishlist"):
-            #     request.session["wishlist"] = []
-            #
-            # else:
-            #     if product_id not in request.session["wishlist"]:
-            #         request.session["wishlist"].append(int(product_id))
-            #         request.session.modified = True
-            #
-            #     else:
-            #         request.session["wishlist"].pop(product_id)
-            #         request.session.modified = True
+            return Response(
+                data={
+                    "success": f"The product '{product.name}' has been removed from your favorites list.",
+                },
+                status=status.HTTP_200_OK,
+            )
