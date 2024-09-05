@@ -1,5 +1,6 @@
 {% load ratings_tags %}
 {% load ratings_converter %}
+{% load subcategory_filter %}
 
 <aside class="shop__aside">
         <div class="shop__line-head">
@@ -45,7 +46,7 @@
                             <li>
                               <div class="form__checkbox">
                                 <input class="form__checkbox__input" type="checkbox" name="subcategory" id="{{ subcategory.slug }}" value="{{ subcategory }}"{% if subcategory.name in checked_subcategories %}checked{% endif %}>
-                                <label for="{{ subcategory.slug }}"><span>{{ subcategory }} ({{ subcategory.product_set.count }})</span></label>
+                                <label for="{{ subcategory.slug }}"><span>{{ subcategory.name|remove_word }} ({{ subcategory.product_set.count }})</span></label>
                               </div>
                             </li>
                             {% endfor %}
