@@ -53,7 +53,7 @@
                   <div class="product-card__top__elements">
                       <div class="product-card__top__elements__buttons">
                           {% if request.user.is_authenticated %}
-                            <button class="product-card__top__elements__buttons__btn js-add-to-wishlist"{% if page.id in request.session.wishlist %}active{% endif %}>
+                            <button class="product-card__top__elements__buttons__btn js-add-to-wishlist {% if page in request.user.profile.wishlist.all %}active{% endif %}">
                                 <span class="visually-hidden">Add to favourites</span>
                                 <i class="ri-heart-line" aria-hidden="true"></i>
                             </button>

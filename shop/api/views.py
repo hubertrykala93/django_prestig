@@ -36,18 +36,34 @@ class AddToWishlistAPIView(APIView):
                     status=status.HTTP_404_NOT_FOUND,
                 )
 
-            request.user.profile.wishlist.add(product)
+            if product not in request.user.profile.wishlist.all():
+                request.user.profile.wishlist.add(product)
 
-            if not request.session.get("wishlist"):
-                request.session["wishlist"] = []
+                return Response(
+                    data={
+                        "success": f"The product '{product.name}' has been added to your favorites list.",
+                    },
+                    status=status.HTTP_200_OK,
+                )
 
-            if product_id not in request.session["wishlist"]:
-                request.session["wishlist"].append(int(product_id))
-                request.session.modified = True
+            else:
+                request.user.profile.wishlist.remove(product)
 
-            return Response(
-                data={
-                    "success": f"The product '{product.name}' has been added to your favorites list.",
-                },
-                status=status.HTTP_200_OK,
-            )
+                return Response(
+                    data={
+                        "success": f"The product '{product.name}' has been removed from your favorites list.",
+                    },
+                    status=status.HTTP_200_OK,
+                )
+
+            # if not request.session.get("wishlist"):
+            #     request.session["wishlist"] = []
+            #
+            # else:
+            #     if product_id not in request.session["wishlist"]:
+            #         request.session["wishlist"].append(int(product_id))
+            #         request.session.modified = True
+            #
+            #     else:
+            #         request.session["wishlist"].pop(product_id)
+            #         request.session.modified = True
