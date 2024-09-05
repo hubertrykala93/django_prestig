@@ -103,7 +103,6 @@ const closeMessageBar = (e) => {
 
 if ($messageBar) {
     const $closeMessageBar = $messageBar.querySelector('.js-message-bar-close')
-
     $closeMessageBar.addEventListener('click', closeMessageBar)
 }
 
@@ -111,48 +110,47 @@ if ($messageBar) {
 const $productsCardsParents = document.querySelectorAll('.js-products-cards-parent')
 
 /**
- * Sends add to wishlist post data.
- * @param {Object} formData - Add to wishlist formdata object.
+ * Handles add and removes from wishlist product by ajax and changes button activity.
+ * @param {HTMLElement} $addToWishlistBtn - Clicked button on particular product to add.
  */
-const sendAddToWishlistRequest = (formData) => {
+ const handleAddToWishlist = async ($addToWishlistBtn) => {
     const url = '/api/v1/shop/add-to-wishlist'
+    const id = $addToWishlistBtn.closest('.js-product-card').dataset.id
+    const formData = new FormData()
+    formData.append('id', id)
 
+    const response = await 
     fetch(url, {
         method:'POST',
         headers:{
-         'X-CSRFToken':csrfToken,
+        'X-CSRFToken':csrfToken,
         },
         body: formData
     }).then((response) => {
-         return response.json()
+        return response.json()
     }).then((response) => {
         if (response.hasOwnProperty('success')) {
             showAlert(response.success, 'success')
-            return response
+            return true
         }
         else if (response.hasOwnProperty('error')) {
             showAlert(response.error, 'error')
             return false
         }
     })
-}
-
-const handleCardsParent = (e) => {
-    $addToWishlistBtn = e.target.closest('.js-add-to-wishlist')
-    if (!$addToWishlistBtn) {return false}
-
-    const id = $addToWishlistBtn.closest('.js-product-card').dataset.id
-    const formData = new FormData()
-    formData.append('id', id)
-    const response = sendAddToWishlistRequest(formData)
     
     if (response) {
         $addToWishlistBtn.classList.toggle('active')
     }
+    
 }
 
 if ($productsCardsParents) {
     $productsCardsParents.forEach($cardsParent => {
-        $cardsParent.addEventListener('click', handleCardsParent)
+        $cardsParent.addEventListener('click', e => {
+            $addToWishlistBtn = e.target.closest('.js-add-to-wishlist')
+            if (!$addToWishlistBtn) {return false}
+            handleAddToWishlist($addToWishlistBtn)
+        })
     })
 }
