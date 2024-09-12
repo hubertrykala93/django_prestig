@@ -17,6 +17,7 @@ def index(request):
             "top_selling": Product.objects.all().order_by("-sales_counter")[:10],
             "subcategories": subcategories,
             "brands": Brand.objects.all(),
+            "range": range(4),
         })
 
 
