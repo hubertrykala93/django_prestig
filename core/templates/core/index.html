@@ -132,273 +132,24 @@
             <h2 class="featured__heading heading heading--h2">Featured Items</h2>
 
             <ul class="featured__nav js-featured-products-nav">
+                {% for subcategory in subcategories %}
                 <li>
-                    <button class="featured__nav__btn js-featured-products-nav-item active" data-category="t-shirt">T-shirt</button>
+                    <button class="featured__nav__btn js-featured-products-nav-item {% if forloop.first %}active{% endif %}" data-category="{{ subcategory.slug }}">{{ subcategory.name }}</button>
                 </li>
-
-                <li>
-                    <button class="featured__nav__btn js-featured-products-nav-item" data-category="jeans">Jeans</button>
-                </li>
-
-                <li>
-                    <button class="featured__nav__btn js-featured-products-nav-item" data-category="casual-shirt">Casual shirt</button>
-                </li>
-
-                <li>
-                    <button class="featured__nav__btn js-featured-products-nav-item" data-category="leggings">Leggings</button>
-                </li>
-
-                <li>
-                    <button class="featured__nav__btn js-featured-products-nav-item" data-category="skirts">Skirts</button>
-                </li>
-
-                <li>
-                    <button class="featured__nav__btn js-featured-products-nav-item" data-category="shoes">Shoes</button>
-                </li>
-
-                <li>
-                    <button class="featured__nav__btn js-featured-products-nav-item" data-category="accessories">Accessories</button>
-                </li>
+                {% endfor %}
             </ul>
         </div>
     </div>
 
     <div class="container">
         <div class="featured__products">
-            <div class="featured__products__row js-featured-products-row active" data-category="t-shirt">
-                <div class="product-card" data-id="1">
-                    <div class="product-card__top">
-                        <img class="product-card__top__image" src="https://i.pinimg.com/736x/60/09/85/600985155550d49e13f75915e654117a.jpg" alt="Product image">
-
-                        <div class="product-card__top__elements">
-                            <div class="product-card__top__elements__buttons">
-                                <button class="product-card__top__elements__buttons__btn">
-                                    <span class="visually-hidden">Add to favourities</span>
-                                    <i class="ri-heart-line" aria-hidden="true"></i>
-                                </button>
-
-                                <a href="#" class="product-card__top__elements__buttons__btn">
-                                    <span class="visually-hidden">See more details</span>
-                                    <i class="ri-eye-line" aria-hidden="true"></i>
-                                </a>
-                            </div>
-
-                            <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card__bottom">
-                        <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                        <div class="product-card__price">
-                            $<span class="product-card__price__figure">250.00</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-card" data-id="1">
-                    <div class="product-card__top">
-                        <img class="product-card__top__image" src="https://i.pinimg.com/736x/92/f1/4c/92f14c86585af05eee82899937d57616.jpg" alt="Product image">
-
-                        <div class="product-card__top__elements">
-                            <div class="product-card__top__elements__buttons">
-                                <button class="product-card__top__elements__buttons__btn">
-                                    <span class="visually-hidden">Add to favourities</span>
-                                    <i class="ri-heart-line" aria-hidden="true"></i>
-                                </button>
-
-                                <a href="#" class="product-card__top__elements__buttons__btn">
-                                    <span class="visually-hidden">See more details</span>
-                                    <i class="ri-eye-line" aria-hidden="true"></i>
-                                </a>
-                            </div>
-
-                            <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card__bottom">
-                        <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                        <div class="product-card__price">
-                            $<span class="product-card__price__figure">250.00</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-card" data-id="1">
-                    <div class="product-card__top">
-                        <img class="product-card__top__image" src="https://www.bucco.us/wp-content/uploads/2019/08/WearitWednesdays-Sep04.png" alt="Product image">
-
-                        <div class="product-card__top__elements">
-                            <div class="product-card__top__elements__buttons">
-                                <button class="product-card__top__elements__buttons__btn">
-                                    <span class="visually-hidden">Add to favourities</span>
-                                    <i class="ri-heart-line" aria-hidden="true"></i>
-                                </button>
-
-                                <a href="#" class="product-card__top__elements__buttons__btn">
-                                    <span class="visually-hidden">See more details</span>
-                                    <i class="ri-eye-line" aria-hidden="true"></i>
-                                </a>
-                            </div>
-
-                            <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card__bottom">
-                        <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                        <div class="product-card__price">
-                            $<span class="product-card__price__figure">250.00</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="product-card" data-id="1">
-                    <div class="product-card__top">
-                        <img class="product-card__top__image" src="https://www.tu-moda-online.es/wp-content/uploads/2020/04/color-zapatos-para-vestido-azul-electrico.jpg" alt="Product image">
-
-                        <div class="product-card__top__elements">
-                            <div class="product-card__top__elements__buttons">
-                                <button class="product-card__top__elements__buttons__btn">
-                                    <span class="visually-hidden">Add to favourities</span>
-                                    <i class="ri-heart-line" aria-hidden="true"></i>
-                                </button>
-
-                                <a href="#" class="product-card__top__elements__buttons__btn">
-                                    <span class="visually-hidden">See more details</span>
-                                    <i class="ri-eye-line" aria-hidden="true"></i>
-                                </a>
-                            </div>
-
-                            <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card__bottom">
-                        <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                        <div class="product-card__price">
-                            $<span class="product-card__price__figure">250.00</span>
-                        </div>
-                    </div>
-                </div>
+            {% for subcategory in subcategories %}
+            <div class="featured__products__row js-featured-products-row {% if forloop.first %}active{% endif %}" data-category="{{ subcategory.slug }}">
+                {% for obj in subcategory.product_set.all %}
+                {% include 'shop/product-card.html' %}
+                {% endfor %}
             </div>
-            <div class="featured__products__row js-featured-products-row" data-category="jeans">
-                <div class="product-card" data-id="1">
-                    <div class="product-card__top">
-                        <img class="product-card__top__image" src="https://img5.hotnessrater.com/1332324/simone-villas-boas.jpg?w=500&h=750" alt="Product image">
-
-                        <div class="product-card__top__elements">
-                            <div class="product-card__top__elements__buttons">
-                                <button class="product-card__top__elements__buttons__btn">
-                                    <span class="visually-hidden">Add to favourities</span>
-                                    <i class="ri-heart-line" aria-hidden="true"></i>
-                                </button>
-
-                                <a href="#" class="product-card__top__elements__buttons__btn">
-                                    <span class="visually-hidden">See more details</span>
-                                    <i class="ri-eye-line" aria-hidden="true"></i>
-                                </a>
-                            </div>
-
-                            <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card__bottom">
-                        <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                        <div class="product-card__price">
-                            $<span class="product-card__price__figure">250.00</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-card" data-id="1">
-                    <div class="product-card__top">
-                        <img class="product-card__top__image" src="https://i.pinimg.com/originals/65/c7/74/65c7741a27140bdc6d0806327c36c61a.jpg" alt="Product image">
-
-                        <div class="product-card__top__elements">
-                            <div class="product-card__top__elements__buttons">
-                                <button class="product-card__top__elements__buttons__btn">
-                                    <span class="visually-hidden">Add to favourities</span>
-                                    <i class="ri-heart-line" aria-hidden="true"></i>
-                                </button>
-
-                                <a href="#" class="product-card__top__elements__buttons__btn">
-                                    <span class="visually-hidden">See more details</span>
-                                    <i class="ri-eye-line" aria-hidden="true"></i>
-                                </a>
-                            </div>
-
-                            <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card__bottom">
-                        <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                        <div class="product-card__price">
-                            $<span class="product-card__price__figure">250.00</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-card" data-id="1">
-                    <div class="product-card__top">
-                        <img class="product-card__top__image" src="https://www.grazia.it/content/uploads/2020/03/jeans-skinny-500x700.jpg" alt="Product image">
-
-                        <div class="product-card__top__elements">
-                            <div class="product-card__top__elements__buttons">
-                                <button class="product-card__top__elements__buttons__btn">
-                                    <span class="visually-hidden">Add to favourities</span>
-                                    <i class="ri-heart-line" aria-hidden="true"></i>
-                                </button>
-
-                                <a href="#" class="product-card__top__elements__buttons__btn">
-                                    <span class="visually-hidden">See more details</span>
-                                    <i class="ri-eye-line" aria-hidden="true"></i>
-                                </a>
-                            </div>
-
-                            <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card__bottom">
-                        <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                        <div class="product-card__price">
-                            $<span class="product-card__price__figure">250.00</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-card" data-id="1">
-                    <div class="product-card__top">
-                        <img class="product-card__top__image" src="https://i.pinimg.com/564x/bb/8c/2b/bb8c2b8bd7c3b16b7de698bd258c3099.jpg" alt="Product image">
-
-                        <div class="product-card__top__elements">
-                            <div class="product-card__top__elements__buttons">
-                                <button class="product-card__top__elements__buttons__btn">
-                                    <span class="visually-hidden">Add to favourities</span>
-                                    <i class="ri-heart-line" aria-hidden="true"></i>
-                                </button>
-
-                                <a href="#" class="product-card__top__elements__buttons__btn">
-                                    <span class="visually-hidden">See more details</span>
-                                    <i class="ri-eye-line" aria-hidden="true"></i>
-                                </a>
-                            </div>
-
-                            <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card__bottom">
-                        <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                        <div class="product-card__price">
-                            $<span class="product-card__price__figure">250.00</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
@@ -453,7 +204,7 @@
 <section class="new-products js-new-products">
     <div class="container container--narrow">
         <div class="row new-products__heading-row">
-            <h2 class="heading heading--h2">New Items in store</h2>
+            <h2 class="heading heading--h2">New Items in Store</h2>
 
             <div class="new-products__arrows">
                 <div class="swiper-round-arrow js-arrow-left">
@@ -471,191 +222,11 @@
             <div class="swiper js-new-products-carousel">
                 <div class="swiper-wrapper">
 
+                  {% for obj in new_items %}
                   <div class="swiper-slide">
-                    <div class="product-card" data-id="1">
-                        <div class="product-card__top">
-                            <img class="product-card__top__image" src="https://i.pinimg.com/736x/e4/64/f6/e464f67ced879835b32e4c84318bf7a2.jpg" alt="Product image">
-
-                            <div class="product-card__top__elements">
-                                <div class="product-card__top__elements__buttons">
-                                    <button class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">Add to favourities</span>
-                                        <i class="ri-heart-line" aria-hidden="true"></i>
-                                    </button>
-
-                                    <a href="#" class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">See more details</span>
-                                        <i class="ri-eye-line" aria-hidden="true"></i>
-                                    </a>
-                                </div>
-
-                                <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                            </div>
-                        </div>
-
-                        <div class="product-card__bottom">
-                            <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                            <div class="product-card__price">
-                                $<span class="product-card__price__figure">250.00</span>
-                            </div>
-                        </div>
-                    </div>
+                    {% include 'shop/product-card.html' %}
                   </div>
-
-                  <div class="swiper-slide">
-                    <div class="product-card" data-id="1">
-                        <div class="product-card__top">
-                            <img class="product-card__top__image" src="https://i.pinimg.com/736x/d9/76/12/d97612e274cd992d07ea8d54193f8b55.jpg" alt="Product image">
-
-                            <div class="product-card__top__elements">
-                                <div class="product-card__top__elements__buttons">
-                                    <button class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">Add to favourities</span>
-                                        <i class="ri-heart-line" aria-hidden="true"></i>
-                                    </button>
-
-                                    <a href="#" class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">See more details</span>
-                                        <i class="ri-eye-line" aria-hidden="true"></i>
-                                    </a>
-                                </div>
-
-                                <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                            </div>
-                        </div>
-
-                        <div class="product-card__bottom">
-                            <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                            <div class="product-card__price">
-                                $<span class="product-card__price__figure">250.00</span>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="product-card" data-id="1">
-                        <div class="product-card__top">
-                            <img class="product-card__top__image" src="https://i.pinimg.com/736x/22/59/bf/2259bf83ee55fb9f477202ecb9656711.jpg" alt="Product image">
-
-                            <div class="product-card__top__elements">
-                                <div class="product-card__top__elements__buttons">
-                                    <button class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">Add to favourities</span>
-                                        <i class="ri-heart-line" aria-hidden="true"></i>
-                                    </button>
-
-                                    <a href="#" class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">See more details</span>
-                                        <i class="ri-eye-line" aria-hidden="true"></i>
-                                    </a>
-                                </div>
-
-                                <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                            </div>
-                        </div>
-
-                        <div class="product-card__bottom">
-                            <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                            <div class="product-card__price">
-                                $<span class="product-card__price__figure">250.00</span>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="product-card" data-id="1">
-                        <div class="product-card__top">
-                            <img class="product-card__top__image" src="https://i.pinimg.com/736x/47/cb/df/47cbdf53716a6e9b7f8d81ba98504d6c--new-york-fashion-fashion-fashion.jpg" alt="Product image">
-
-                            <div class="product-card__top__elements">
-                                <div class="product-card__top__elements__buttons">
-                                    <button class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">Add to favourities</span>
-                                        <i class="ri-heart-line" aria-hidden="true"></i>
-                                    </button>
-
-                                    <a href="#" class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">See more details</span>
-                                        <i class="ri-eye-line" aria-hidden="true"></i>
-                                    </a>
-                                </div>
-
-                                <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                            </div>
-                        </div>
-
-                        <div class="product-card__bottom">
-                            <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                            <div class="product-card__price">
-                                $<span class="product-card__price__figure">250.00</span>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="product-card" data-id="1">
-                        <div class="product-card__top">
-                            <img class="product-card__top__image" src="https://i.pinimg.com/736x/e2/47/6d/e2476d72185f68499510998ff6168a3b--oakley-sunglasses-cheap-ray-ban-sunglasses.jpg" alt="Product image">
-
-                            <div class="product-card__top__elements">
-                                <div class="product-card__top__elements__buttons">
-                                    <button class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">Add to favourities</span>
-                                        <i class="ri-heart-line" aria-hidden="true"></i>
-                                    </button>
-
-                                    <a href="#" class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">See more details</span>
-                                        <i class="ri-eye-line" aria-hidden="true"></i>
-                                    </a>
-                                </div>
-
-                                <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                            </div>
-                        </div>
-
-                        <div class="product-card__bottom">
-                            <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                            <div class="product-card__price">
-                                $<span class="product-card__price__figure">250.00</span>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="product-card" data-id="1">
-                        <div class="product-card__top">
-                            <img class="product-card__top__image" src="https://i.pinimg.com/736x/d0/df/9c/d0df9c55c7d08ac57c4bb5acb501e1bf.jpg" alt="Product image">
-
-                            <div class="product-card__top__elements">
-                                <div class="product-card__top__elements__buttons">
-                                    <button class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">Add to favourities</span>
-                                        <i class="ri-heart-line" aria-hidden="true"></i>
-                                    </button>
-
-                                    <a href="#" class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">See more details</span>
-                                        <i class="ri-eye-line" aria-hidden="true"></i>
-                                    </a>
-                                </div>
-
-                                <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                            </div>
-                        </div>
-
-                        <div class="product-card__bottom">
-                            <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                            <div class="product-card__price">
-                                $<span class="product-card__price__figure">250.00</span>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
+                  {% endfor %}
 
                 </div>
             </div>
@@ -669,29 +240,11 @@
         <div class="row">
             <div class="swiper js-logos-carousel">
                 <div class="swiper-wrapper">
+                  {% for brand in brands %}
                   <div class="swiper-slide">
-                    <img src="/media/home/logos/divante.png" alt="Divante logo ">
+                    <img src="{{ brand.logo.image.url }}" alt="{{ brand.logo.alt }}">
                   </div>
-
-                  <div class="swiper-slide">
-                    <img src="/media/home/logos/e-vantage.png" alt="E-vantage logo">
-                  </div>
-
-                  <div class="swiper-slide">
-                    <img src="/media/home/logos/fashion-tv.png" alt="fashion-tv logo">
-                  </div>
-
-                  <div class="swiper-slide">
-                    <img src="/media/home/logos/intershop.png" alt="intershop logo">
-                  </div>
-
-                  <div class="swiper-slide">
-                    <img src="/media/home/logos/lucky-brand.png" alt="Lucky brand logo">
-                  </div>
-
-                  <div class="swiper-slide">
-                    <img src="/media/home/logos/fashion.png" alt="Fashion logo">
-                  </div>
+                  {% endfor %}
                 </div>
               </div>
         </div>
@@ -783,7 +336,7 @@
 <section class="top-products js-top-products">
     <div class="container container--narrow">
         <div class="row top-products__heading-row">
-            <h2 class="heading heading--h2">Top selling accessories</h2>
+            <h2 class="heading heading--h2">Top Selling Items</h2>
 
             <div class="top-products__arrows">
                 <div class="swiper-round-arrow js-arrow-left">
@@ -801,191 +354,11 @@
             <div class="swiper js-top-products-carousel">
                 <div class="swiper-wrapper">
 
+                  {% for obj in top_selling %}
                   <div class="swiper-slide">
-                    <div class="product-card" data-id="1">
-                        <div class="product-card__top">
-                            <img class="product-card__top__image" src="https://style-avenue.ru/wp-content/uploads/2020/12/1-1-16.png" alt="Product image">
-
-                            <div class="product-card__top__elements">
-                                <div class="product-card__top__elements__buttons">
-                                    <button class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">Add to favourities</span>
-                                        <i class="ri-heart-line" aria-hidden="true"></i>
-                                    </button>
-
-                                    <a href="#" class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">See more details</span>
-                                        <i class="ri-eye-line" aria-hidden="true"></i>
-                                    </a>
-                                </div>
-
-                                <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                            </div>
-                        </div>
-
-                        <div class="product-card__bottom">
-                            <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                            <div class="product-card__price">
-                                $<span class="product-card__price__figure">250.00</span>
-                            </div>
-                        </div>
-                    </div>
+                    {% include 'shop/product-card.html' %}
                   </div>
-
-                  <div class="swiper-slide">
-                    <div class="product-card" data-id="1">
-                        <div class="product-card__top">
-                            <img class="product-card__top__image" src="https://lequotidiendugout.wordpress.com/wp-content/uploads/2011/12/scarlett_johansson_moet_chandon_1.jpg" alt="Product image">
-
-                            <div class="product-card__top__elements">
-                                <div class="product-card__top__elements__buttons">
-                                    <button class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">Add to favourities</span>
-                                        <i class="ri-heart-line" aria-hidden="true"></i>
-                                    </button>
-
-                                    <a href="#" class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">See more details</span>
-                                        <i class="ri-eye-line" aria-hidden="true"></i>
-                                    </a>
-                                </div>
-
-                                <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                            </div>
-                        </div>
-
-                        <div class="product-card__bottom">
-                            <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                            <div class="product-card__price">
-                                $<span class="product-card__price__figure">250.00</span>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="product-card" data-id="1">
-                        <div class="product-card__top">
-                            <img class="product-card__top__image" src="https://women-tusovka.ru/wp-content/uploads/2017/07/ofisnyj-stil-kakie-veshhi-dobavit-k-bazovym-chtoby-vyglyadet-modno-v-2017-g-5.jpg" alt="Product image">
-
-                            <div class="product-card__top__elements">
-                                <div class="product-card__top__elements__buttons">
-                                    <button class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">Add to favourities</span>
-                                        <i class="ri-heart-line" aria-hidden="true"></i>
-                                    </button>
-
-                                    <a href="#" class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">See more details</span>
-                                        <i class="ri-eye-line" aria-hidden="true"></i>
-                                    </a>
-                                </div>
-
-                                <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                            </div>
-                        </div>
-
-                        <div class="product-card__bottom">
-                            <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                            <div class="product-card__price">
-                                $<span class="product-card__price__figure">250.00</span>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="product-card" data-id="1">
-                        <div class="product-card__top">
-                            <img class="product-card__top__image" src="https://mtdata.ru/u9/photo905E/20290275892-0/original.png" alt="Product image">
-
-                            <div class="product-card__top__elements">
-                                <div class="product-card__top__elements__buttons">
-                                    <button class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">Add to favourities</span>
-                                        <i class="ri-heart-line" aria-hidden="true"></i>
-                                    </button>
-
-                                    <a href="#" class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">See more details</span>
-                                        <i class="ri-eye-line" aria-hidden="true"></i>
-                                    </a>
-                                </div>
-
-                                <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                            </div>
-                        </div>
-
-                        <div class="product-card__bottom">
-                            <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                            <div class="product-card__price">
-                                $<span class="product-card__price__figure">250.00</span>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="product-card" data-id="1">
-                        <div class="product-card__top">
-                            <img class="product-card__top__image" src="https://i.pinimg.com/564x/a5/20/7d/a5207d44237b53901450b69ae48e9109.jpg" alt="Product image">
-
-                            <div class="product-card__top__elements">
-                                <div class="product-card__top__elements__buttons">
-                                    <button class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">Add to favourities</span>
-                                        <i class="ri-heart-line" aria-hidden="true"></i>
-                                    </button>
-
-                                    <a href="#" class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">See more details</span>
-                                        <i class="ri-eye-line" aria-hidden="true"></i>
-                                    </a>
-                                </div>
-
-                                <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                            </div>
-                        </div>
-
-                        <div class="product-card__bottom">
-                            <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                            <div class="product-card__price">
-                                $<span class="product-card__price__figure">250.00</span>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-
-                  <div class="swiper-slide">
-                    <div class="product-card" data-id="1">
-                        <div class="product-card__top">
-                            <img class="product-card__top__image" src="https://cdn0.matrimonio.com/usr/0/4/5/5/cfb_603437.jpg" alt="Product image">
-
-                            <div class="product-card__top__elements">
-                                <div class="product-card__top__elements__buttons">
-                                    <button class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">Add to favourities</span>
-                                        <i class="ri-heart-line" aria-hidden="true"></i>
-                                    </button>
-
-                                    <a href="#" class="product-card__top__elements__buttons__btn">
-                                        <span class="visually-hidden">See more details</span>
-                                        <i class="ri-eye-line" aria-hidden="true"></i>
-                                    </a>
-                                </div>
-
-                                <button class="product-card__add-to-cart btn btn--accent">Add To Cart</button>
-                            </div>
-                        </div>
-
-                        <div class="product-card__bottom">
-                            <a href="#" class="product-card__title heading heading--h6">Pure black cotton men T-shirt</a>
-                            <div class="product-card__price">
-                                $<span class="product-card__price__figure">250.00</span>
-                            </div>
-                        </div>
-                    </div>
-                  </div>
+                  {% endfor %}
 
                 </div>
             </div>

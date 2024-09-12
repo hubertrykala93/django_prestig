@@ -1,12 +1,22 @@
 from django.shortcuts import render
+from shop.models import Product, ProductSubCategory, BrandLogo, Brand
+from django.db.models import Prefetch
 
 
 def index(request):
+    subcategories = ProductSubCategory.objects.prefetch_related(
+        Prefetch("product_set", queryset=Product.objects.filter(is_featured=True).order_by('-created_at'))
+    )[:6]
+
     return render(
         request=request,
         template_name='core/index.html',
         context={
             "title": "Home",
+            "new_items": Product.objects.all().order_by("-created_at")[:10],
+            "top_selling": Product.objects.all().order_by("-sales_counter")[:10],
+            "subcategories": subcategories,
+            "brands": Brand.objects.all(),
         })
 
 
@@ -42,7 +52,7 @@ def privacy_policy(request):
     )
 
 
-def error404(request, exception):
+def error404(request, exception=None):
     return render(
         request=request,
         template_name="core/404.html",

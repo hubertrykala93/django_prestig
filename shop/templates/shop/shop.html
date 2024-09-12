@@ -45,60 +45,8 @@
         {% endif %}
 
         <div class="shop__cards js-shop-cards js-products-cards-parent">
-          {% for page in pages %}
-            <div class="product-card js-product-card" data-id="{{ page.id }}">
-              <div class="product-card__top">
-                  <img class="product-card__top__image" src="{{ page.get_featured_image.image.url }}" alt="{{ page.get_featured_image.alt }}">
-
-                  <div class="product-card__top__elements">
-                      <div class="product-card__top__elements__buttons">
-                          {% if request.user.is_authenticated %}
-                            <button class="product-card__top__elements__buttons__btn js-add-to-wishlist {% if page in request.user.profile.wishlist.all %}active{% endif %}">
-                                <span class="visually-hidden">Add to favourites</span>
-                                <i class="ri-heart-line" aria-hidden="true"></i>
-                            </button>
-                          {% endif %}
-
-                          <a href="{{ page.get_absolute_url }}" class="product-card__top__elements__buttons__btn">
-                              <span class="visually-hidden">See more details</span>
-                              <i class="ri-eye-line" aria-hidden="true"></i>
-                          </a>
-                      </div>
-
-                      <a href="{{ page.get_absolute_url }}" class="product-card__add-to-cart btn btn--accent">Add To Cart</a>
-                  </div>
-              </div>
-
-              <div class="product-card__bottom">
-                  <a href="{{ page.get_absolute_url }}" class="product-card__title heading heading--h6">{{ page.name }}</a>
-
-                  <div class="product-card__rating">
-                    {% if page.get_reviews == 0 %}
-                      No Reviews
-                    {% else %}
-                    <div class="product-card__rating__stars">
-                      {% for i in stars_range %}
-                        {% if i <= page.average_rating %}
-                        <i class="ri-star-fill product-card__rating__stars__star" aria-hidden="true"></i>
-                        {% else %}
-                        <i class="ri-star-fill product-card__rating__stars__star product-card__rating__stars__star--gray" aria-hidden="true"></i>
-                        {% endif %}
-                      {% endfor %}
-                    </div>
-
-                    <span class="product-card__rating__counter">({{ page.get_reviews }})</span>
-                      {% endif %}
-                  </div>
-
-                  <div class="product-card__description">
-                    {{ page.short_description }}
-                  </div>
-
-                  <div class="product-card__price">
-                      $<span class="product-card__price__figure">{{ page.price }}</span>
-                  </div>
-              </div>
-            </div>
+          {% for obj in pages %}
+            {% include 'shop/product-card.html' %}
           {% endfor %} 
         </div>
 

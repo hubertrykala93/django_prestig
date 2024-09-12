@@ -4,7 +4,7 @@ from rest_framework import status
 from shop.models import Product
 
 
-class AddToWishlistAPIView(APIView):
+class AddOrRemoveFromWishlistAPIView(APIView):
     def post(self, request, *args, **kwargs):
         product_id = request.data.get("id", None)
 
