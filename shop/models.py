@@ -199,11 +199,69 @@ class ProductCategory(models.Model):
         )
 
 
+class SizeGuideImage(models.Model):
+    created_at = models.DateTimeField(default=now)
+    updated_at = models.DateTimeField(auto_now=True)
+    image = models.ImageField(upload_to="shop/size_guides")
+    size = models.IntegerField(null=True)
+    width = models.IntegerField(null=True)
+    height = models.IntegerField(null=True)
+    format = models.CharField(max_length=100, null=True)
+    alt = models.CharField(max_length=1000, null=True)
+
+    class Meta:
+        verbose_name = "Size Guide Image"
+        verbose_name_plural = "Size Guide Images"
+
+    def __str__(self):
+        return f"{self.id}"
+
+    def save(self, *args, **kwargs):
+        super(SizeGuideImage, self).save(*args, **kwargs)
+
+        if self.pk:
+            self._resize_image()
+            self._save_attributes()
+
+            super(SizeGuideImage, self).save(*args, **kwargs)
+
+        else:
+            self._resize_image()
+            self._save_attributes()
+
+            super(SizeGuideImage, self).save(*args, **kwargs)
+
+    def _resize_image(self):
+        image = Image.open(fp=self.image.path)
+
+        if image.mode == "RGBA":
+            image = image.convert(mode="RGB")
+
+        if image.width > image.height:
+            output_size = (1100, image.height * 1100 / image.width)
+
+        else:
+            output_size = (1100 * image.width / image.height, 1100)
+
+        image.thumbnail(size=output_size)
+        image.save(fp=self.image.path)
+
+        return image
+
+    def _save_attributes(self):
+        image = self._resize_image()
+
+        self.size = os.path.getsize(filename=self.image.path)
+        self.width, self.height = image.width, image.height
+        self.format = image.format
+
+
 class ProductSubCategory(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(blank=True)
     category = models.ForeignKey(to=ProductCategory, on_delete=models.CASCADE, null=True,
                                  related_name="subcategories")
+    size_guide_image = models.OneToOneField(to=SizeGuideImage, on_delete=models.CASCADE, null=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -285,7 +343,11 @@ class ProductImage(models.Model):
         if image.mode == "RGBA":
             image = image.convert(mode="RGB")
 
-        output_size = (1100, image.height * 1100 / image.width)
+        if image.width > image.height:
+            output_size = (1100, image.height * 1100 / image.width)
+
+        else:
+            output_size = (1100 * image.width / image.height, 1100)
 
         image.thumbnail(size=output_size)
         image.save(fp=self.image.path)
@@ -298,6 +360,30 @@ class ProductImage(models.Model):
         self.size = os.path.getsize(filename=self.image.path)
         self.width, self.height = image.width, image.height
         self.format = image.format
+
+
+class AdditionalInformation(models.Model):
+    name = models.CharField(max_length=200)
+    size_guide_image = models.OneToOneField(to=SizeGuideImage, on_delete=models.CASCADE, null=True)
+    # Dresses, Skirts, Blouses
+    chest = models.CharField(max_length=10, null=True, blank=True)  # biust
+    shoulder = models.CharField(max_length=10, null=True, blank=True)  # ramiona
+    waist = models.CharField(max_length=10, null=True, blank=True)  # talia
+    hip = models.CharField(max_length=10, null=True, blank=True)  # biodro
+    sleeve = models.CharField(max_length=10, null=True, blank=True)  # rękaw
+    length = models.CharField(max_length=10, null=True, blank=True)  # długość
+    width = models.CharField(max_length=10, null=True, blank=True)
+
+    # Shoes
+    inches = models.CharField(max_length=10, null=True, blank=True)  # długość stopy
+
+    # Pants
+    knee = models.CharField(max_length=10, null=True, blank=True)  # szerokość w kolanie
+    leg_opening = models.CharField(max_length=10, null=True, blank=True)  # końcówka spodni
+
+    class Meta:
+        verbose_name = "Size Guide"
+        verbose_name_plural = "Sizes Guides"
 
 
 class Product(models.Model):
@@ -317,6 +403,7 @@ class Product(models.Model):
     is_active = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False)
     sales_counter = models.IntegerField(default=0)
+    additional_information = models.OneToOneField(to=AdditionalInformation, on_delete=models.CASCADE, null=True)
 
     class Meta:
         verbose_name = "Product"
