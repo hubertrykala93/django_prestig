@@ -126,3 +126,38 @@ if ($changeProductsViewButtons) {
 if ($shopCards) {
   changeProductsView()
 }
+
+// RELATED PRODUCTS CAROUSEL
+
+const $relatedProductsSection = document.querySelector('.js-related-products')
+
+if ($relatedProductsSection) {
+    const $leftArrow = $relatedProductsSection.querySelector('.js-arrow-left')
+    const $rightArrow = $relatedProductsSection.querySelector('.js-arrow-right')
+
+    const relatedProductsCarousel = new Swiper('.js-related-products-carousel', {
+        draggable: true,
+        grabCursor: true,
+        effect: 'slide',
+        autoplay: {
+            delay: 5000,
+        },
+        speed: 1000,
+        navigation: {
+            nextEl: $rightArrow,
+            prevEl: $leftArrow,
+        },
+        spaceBetween: 30,
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+            },
+            992: {
+                slidesPerView: 3,
+            },
+            1200: {
+                slidesPerView: 4,
+            }
+        }
+    });
+}

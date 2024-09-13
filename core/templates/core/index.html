@@ -142,7 +142,7 @@
     </div>
 
     <div class="container">
-        <div class="featured__products">
+        <div class="featured__products js-products-cards-parent">
             {% for subcategory in subcategories %}
             <div class="featured__products__row js-featured-products-row {% if forloop.first %}active{% endif %}" data-category="{{ subcategory.slug }}">
                 {% for obj in subcategory.product_set.all %}
@@ -218,7 +218,7 @@
     </div>
 
     <div class="container">
-        <div class="row">
+        <div class="row js-products-cards-parent">
             <div class="swiper js-new-products-carousel">
                 <div class="swiper-wrapper">
 
@@ -350,7 +350,7 @@
     </div>
 
     <div class="container">
-        <div class="row">
+        <div class="row js-products-cards-parent">
             <div class="swiper js-top-products-carousel">
                 <div class="swiper-wrapper">
 

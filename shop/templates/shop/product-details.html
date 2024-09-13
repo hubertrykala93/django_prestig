@@ -5,15 +5,103 @@
 
 
 {% block content %}
+<!-- PRODUCT DETAILS -->
 <section class="product">
-  <div class="container">
-    <div class="row">
-      <h1>{{ category.name }}</h1>
-      <h1>{{ subcategory.name }}</h1>
-      {% for img in product.gallery.all %}
-      <img src="{{ img.image.url }}" alt="{{ img.alt }}" height="1100">
-      {% endfor %}
+  <div class="container container--narrow">
+    <div class="product__breadcrubms">
+      <a href="/">Home</a>
+      <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
+      <a href="{% url 'shop' %}">Shop</a>
+      <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
+      <a href="{% url 'shop' %}">{{ category.name }}</a>
+      <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
+      <a href="{% url 'shop' %}">{{ subcategory.name }}</a>
     </div>
+
+    <div class="row row--top">
+      <div class="product__content">
+        <h3 class="heading heading--h3">Tytuł produktu</h3>
+      </div>
+
+      <div class="product__images">
+
+      </div>
+
+      <!-- {% for img in product.gallery.all %}
+      <img src="{{ img.image.url }}" alt="{{ img.alt }}" height="1100">
+      {% endfor %} -->
+    </div>
+
+    <div class="row row--bottom">
+      <div class="tabs">
+        <ul class="tabs__nav">
+          <li class="active">
+            <button class="tabs__nav__button js-tabs-nav-button active">Description</button>
+          </li>
+          <li>
+            <button class="tabs__nav__button js-tabs-nav-button">Additional information</button>
+          </li>
+          <li>
+            <button class="tabs__nav__button js-tabs-nav-button">Size Guide</button>
+          </li>
+          <li>
+            <button class="tabs__nav__button js-tabs-nav-button">Reviews (tutaj dynamiczna liczba opinii)</button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="tabs__contents">
+        <div class="tabs__contents__item js-tab-contents-item active">
+          Długi opis produktu
+        </div>
+
+        <div class="tabs__contents__item js-tab-contents-item">
+          Informacje
+        </div>
+
+        <div class="tabs__contents__item js-tab-contents-item">
+          Rozmiary
+        </div>
+
+        <div class="tabs__contents__item js-tab-contents-item">
+          Opinie
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REALATED PRODUCTS -->
+<section class="new-products related-products js-related-products">
+  <div class="container container--narrow">
+      <div class="row new-products__heading-row">
+          <h2 class="heading heading--h2">Related Products</h2>
+
+          <div class="new-products__arrows">
+              <div class="swiper-round-arrow js-arrow-left">
+                  <i class="ri-arrow-left-s-line" aria-hidden="true"></i>
+              </div>
+              <div class="swiper-round-arrow js-arrow-right">
+                  <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <div class="container">
+      <div class="row js-products-cards-parent">
+          <div class="swiper js-related-products-carousel">
+              <div class="swiper-wrapper">
+
+                {% for obj in related_items %}
+                <div class="swiper-slide">
+                  {% include 'shop/product-card.html' %}
+                </div>
+                {% endfor %}
+
+              </div>
+          </div>
+      </div>
   </div>
 </section>
 {% endblock %}
