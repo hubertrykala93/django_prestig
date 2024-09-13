@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Product, ProductTags, ProductCategory, ProductSubCategory, Color, Brand
+from .models import Product, ProductTags, ProductCategory, ProductSubCategory, Color, Brand, ProductImage
 from blog.views import pagination
 from django.contrib import messages
 from django.db.models import Avg
@@ -165,6 +165,7 @@ def product_details(request, category_slug, subcategory_slug, product_slug):
     category = ProductCategory.objects.get(slug=category_slug)
     subcategory = ProductSubCategory.objects.get(category=category, slug=subcategory_slug)
     product = Product.objects.get(category=category, subcategory=subcategory, slug=product_slug)
+    product_images = Product.objects.get(slug=product_slug).gallery.order_by("-is_featured")
 
     return render(
         request=request,
@@ -174,6 +175,8 @@ def product_details(request, category_slug, subcategory_slug, product_slug):
             "category": category,
             "subcategory": subcategory,
             "product": product,
-            "related_products": Product.objects.filter(subcategory=subcategory).exclude(id=product.id).order_by("created_at")[:10],
+            "related_products": Product.objects.filter(subcategory=subcategory).exclude(id=product.id).order_by(
+                "created_at")[:10],
+            "product_images": product_images,
         }
     )

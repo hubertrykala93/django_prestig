@@ -26,7 +26,7 @@
       <div class="product__images">
         <div class="swiper product__images__slider js-product-images-slider">
           <div class="swiper-wrapper">
-            {% for img in product.gallery.all %}
+            {% for img in product_images %}
               <div class="swiper-slide">
                 <img src="{{ img.image.url }}" alt="{{ img.alt }}">
               </div>
@@ -34,7 +34,7 @@
           </div>
         </div>
 
-        <img class="product__images__main-image js-product-main-image" src="{{ product.gallery.all.0.image.url }}" alt="{{ product.gallery.all.0.alt }}">
+        <img class="product__images__main-image js-product-main-image" src="{{ product_images.0.image.url }}" alt="{{ product_images.0.alt }}">
       </div>
     </div>
 
