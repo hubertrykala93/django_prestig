@@ -13,6 +13,7 @@ from .models import (
     ProductCategoryImage,
     ProductReview,
 )
+from django_summernote.widgets import SummernoteWidget
 
 
 class BrandLogoForm(forms.ModelForm):
@@ -176,7 +177,7 @@ class ProductForm(forms.ModelForm):
                                         label="Short Description", widget=forms.Textarea)
     price = forms.FloatField(help_text="Provide the product price.", label="Price")
     full_description = forms.CharField(max_length=100000, help_text="Provide a full description of the product.",
-                                       label="Full Description", widget=forms.Textarea)
+                                       label="Full Description", widget=SummernoteWidget())
     is_active = forms.BooleanField(help_text="Indicate if the product is active for sale.", required=False)
     is_featured = forms.BooleanField(help_text="Indicate if you want to feature the product.", required=False)
 

@@ -13,14 +13,14 @@
       <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
       <a href="{% url 'shop' %}">Shop</a>
       <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
-      <a href="{% url 'shop' %}">{{ category.name }}</a>
+      <a href="{% url 'products-by-category' category.slug %}">{{ category.name }}</a>
       <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
-      <a href="{% url 'shop' %}">{{ subcategory.name }}</a>
+      <a href="{% url 'products-by-subcategory' subcategory.slug %}">{{ subcategory.name }}</a>
     </div>
 
     <div class="row row--top">
       <div class="product__content">
-        <h3 class="heading heading--h3">Tytuł produktu</h3>
+        <h3 class="heading heading--h3">{{ product.name }}</h3>
       </div>
 
       <div class="product__images">
@@ -45,14 +45,14 @@
             <button class="tabs__nav__button js-tabs-nav-button">Size Guide</button>
           </li>
           <li>
-            <button class="tabs__nav__button js-tabs-nav-button">Reviews (tutaj dynamiczna liczba opinii)</button>
+            <button class="tabs__nav__button js-tabs-nav-button">Reviews ({{ product.get_reviews }})</button>
           </li>
         </ul>
       </div>
 
       <div class="tabs__contents">
         <div class="tabs__contents__item js-tab-contents-item active">
-          Długi opis produktu
+            {{ product.full_description }}
         </div>
 
         <div class="tabs__contents__item js-tab-contents-item">
@@ -93,7 +93,7 @@
           <div class="swiper js-related-products-carousel">
               <div class="swiper-wrapper">
 
-                {% for obj in related_items %}
+                {% for obj in related_products %}
                 <div class="swiper-slide">
                   {% include 'shop/product-card.html' %}
                 </div>

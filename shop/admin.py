@@ -29,6 +29,7 @@ from .forms import (
 )
 from django.utils.html import format_html_join
 from django.utils.safestring import mark_safe
+from django_summernote.admin import SummernoteModelAdmin
 
 
 @admin.register(BrandLogo)
@@ -441,7 +442,7 @@ class AdminStock(admin.ModelAdmin):
 
 
 @admin.register(Product)
-class AdminProduct(admin.ModelAdmin):
+class AdminProduct(SummernoteModelAdmin):
     """
     Admin options and functionalities for Product model.
     """
