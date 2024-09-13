@@ -24,12 +24,18 @@
       </div>
 
       <div class="product__images">
+        <div class="swiper product__images__slider js-product-images-slider">
+          <div class="swiper-wrapper">
+            {% for img in product.gallery.all %}
+              <div class="swiper-slide">
+                <img src="{{ img.image.url }}" alt="{{ img.alt }}">
+              </div>
+            {% endfor %}
+          </div>
+        </div>
 
+        <img class="product__images__main-image js-product-main-image" src="{{ product.gallery.all.0.image.url }}" alt="{{ product.gallery.all.0.alt }}">
       </div>
-
-      <!-- {% for img in product.gallery.all %}
-      <img src="{{ img.image.url }}" alt="{{ img.alt }}" height="1100">
-      {% endfor %} -->
     </div>
 
     <div class="row row--bottom">
@@ -71,39 +77,41 @@
   </div>
 </section>
 
-<!-- REALATED PRODUCTS -->
-<section class="new-products related-products js-related-products">
-  <div class="container container--narrow">
-      <div class="row new-products__heading-row">
-          <h2 class="heading heading--h2">Related Products</h2>
+{% if related_products %}
+  <!-- REALATED PRODUCTS -->
+  <section class="new-products related-products js-related-products">
+    <div class="container container--narrow">
+        <div class="row new-products__heading-row">
+            <h2 class="heading heading--h2">Related Products</h2>
 
-          <div class="new-products__arrows">
-              <div class="swiper-round-arrow js-arrow-left">
-                  <i class="ri-arrow-left-s-line" aria-hidden="true"></i>
-              </div>
-              <div class="swiper-round-arrow js-arrow-right">
-                  <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
-              </div>
-          </div>
-      </div>
-  </div>
-
-  <div class="container">
-      <div class="row js-products-cards-parent">
-          <div class="swiper js-related-products-carousel">
-              <div class="swiper-wrapper">
-
-                {% for obj in related_products %}
-                <div class="swiper-slide">
-                  {% include 'shop/product-card.html' %}
+            <div class="new-products__arrows">
+                <div class="swiper-round-arrow js-arrow-left">
+                    <i class="ri-arrow-left-s-line" aria-hidden="true"></i>
                 </div>
-                {% endfor %}
+                <div class="swiper-round-arrow js-arrow-right">
+                    <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 
-              </div>
-          </div>
-      </div>
-  </div>
-</section>
+    <div class="container">
+        <div class="row js-products-cards-parent">
+            <div class="swiper js-related-products-carousel">
+                <div class="swiper-wrapper">
+
+                  {% for obj in related_products %}
+                  <div class="swiper-slide">
+                    {% include 'shop/product-card.html' %}
+                  </div>
+                  {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+  </section>
+{% endif %}
 {% endblock %}
 
 {% block page_scripts_last %}

@@ -174,6 +174,6 @@ def product_details(request, category_slug, subcategory_slug, product_slug):
             "category": category,
             "subcategory": subcategory,
             "product": product,
-            "related_products": Product.objects.filter(subcategory=subcategory).order_by("created_at")[:10],
+            "related_products": Product.objects.filter(subcategory=subcategory).exclude(id=product.id).order_by("created_at")[:10],
         }
     )

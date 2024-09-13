@@ -127,6 +127,45 @@ if ($shopCards) {
   changeProductsView()
 }
 
+// PRODUCT GALLERY
+const $productsImagesSlider = document.querySelector('.js-product-images-slider')
+
+/**
+ * Changes main image src when user clicks on slider image.
+ * @param {string} src - Image src.
+ * @param {alt} src - Image alt text.
+ */
+const changeMainImage = (src, alt) => {
+  document.querySelector('.js-product-main-image').src = src
+  document.querySelector('.js-product-main-image').alt = alt
+}
+
+if ($productsImagesSlider) {
+    const newProductsCarousel = new Swiper('.js-product-images-slider', {
+        effect: 'slide',
+        speed: 1000,
+        spaceBetween: 16,
+        slidesPerView: 3,
+        loopPreventsSliding: true,
+        breakpoints: {
+            1200: {
+                slidesPerView: 4,
+                direction: 'vertical',
+                spaceBetween: 32,
+            },
+        },
+        on: {
+          click: function (e) {
+            if (!e.clickedSlide) { return false }
+            const $image = e.clickedSlide.querySelector('img')
+            if ($image) {
+              changeMainImage($image.src, $image.alt)
+            }
+          }
+        },
+    });
+}
+
 // RELATED PRODUCTS CAROUSEL
 
 const $relatedProductsSection = document.querySelector('.js-related-products')
