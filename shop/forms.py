@@ -12,6 +12,7 @@ from .models import (
     BrandLogo,
     ProductCategoryImage,
     ProductReview,
+    SizeGuideImage,
 )
 from django_summernote.widgets import SummernoteWidget
 
@@ -97,6 +98,25 @@ class ProductCategoryForm(forms.ModelForm):
         self.fields["category_image"].required = True
 
 
+class SizeGuideImageForm(forms.ModelForm):
+    size = forms.IntegerField(required=False)
+    width = forms.IntegerField(required=False)
+    height = forms.IntegerField(required=False)
+    format = forms.CharField(required=False)
+    alt = forms.CharField(help_text="Provide the alternate text.", label="Alt", required=True, widget=forms.Textarea)
+
+    class Meta:
+        model = SizeGuideImage
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(SizeGuideImageForm, self).__init__(*args, **kwargs)
+
+        self.fields["image"].help_text = "Upload an size guide image."
+        self.fields["image"].label = "Image"
+        self.fields["image"].required = True
+
+
 class ProductSubCategoryForm(forms.ModelForm):
     name = forms.CharField(help_text="Provide the subcategory name.", label="Name")
     slug = forms.SlugField(required=False)
@@ -112,6 +132,10 @@ class ProductSubCategoryForm(forms.ModelForm):
         self.fields["category"].help_text = "Add a category for this subcategory."
         self.fields["category"].label = "Category"
         self.fields["category"].required = True
+
+        self.fields["size_guide_image"].help_text = "Add an size guide for this subcategory."
+        self.fields["size_guide_image"].label = "Size Guide"
+        self.fields["size_guide_image"].required = True
 
 
 class SizeForm(forms.ModelForm):
@@ -193,15 +217,18 @@ class ProductForm(forms.ModelForm):
         self.fields["subcategory"].help_text = "Select the product subcategory."
         self.fields["gallery"].help_text = "Upload a product image gallery or select images from the gallery."
         self.fields["tags"].help_text = "Provide or select the product tag(s)."
+        self.fields["additional_information"].help_text = "Provide the additional information for this product."
 
         self.fields["brand"].label = "Brand"
         self.fields["category"].label = "Category"
         self.fields["subcategory"].label = "Subcategory"
         self.fields["gallery"].label = "Gallery"
         self.fields["tags"].label = "Tags"
+        self.fields["additional_information"].label = "Additional Information"
 
         self.fields["tags"].required = False
         self.fields["gallery"].required = True
+        self.fields["additional_information"].required = True
 
         if "category" in self.data:
             category_id = self.data.get(key="category")

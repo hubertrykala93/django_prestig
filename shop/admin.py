@@ -12,6 +12,7 @@ from .models import (
     BrandLogo,
     ProductCategoryImage,
     ProductReview,
+    SizeGuideImage,
 )
 from .forms import (
     BrandForm,
@@ -26,6 +27,7 @@ from .forms import (
     BrandLogoForm,
     ProductCategoryImageForm,
     ProductReviewForm,
+    SizeGuideImageForm,
 )
 from django.utils.html import format_html_join
 from django.utils.safestring import mark_safe
@@ -251,12 +253,67 @@ class AdminProductCategory(admin.ModelAdmin):
     get_category_image.short_description = "Category Image"
 
 
+@admin.register(SizeGuideImage)
+class AdminSizeGuideImage(admin.ModelAdmin):
+    """
+    Admin options and functionalities for SizeGuideImage model.
+    """
+    list_display = [
+        "id",
+        "formatted_created_at",
+        "formatted_updated_at",
+        "image",
+        "get_image_name",
+        "size",
+        "width",
+        "height",
+        "format",
+        "alt",
+    ]
+    form = SizeGuideImageForm
+    fieldsets = (
+        (
+            "Uploading", {
+                "fields": [
+                    "image",
+                ],
+            },
+        ),
+        (
+            "Alternate Text", {
+                "fields": [
+                    "alt",
+                ],
+            },
+        ),
+    )
+
+    def formatted_created_at(self, obj):
+        if obj.created_at:
+            return obj.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_created_at.short_description = "Created At"
+
+    def formatted_updated_at(self, obj):
+        if obj.updated_at:
+            return obj.updated_at.strftime("%Y-%m-%d %H:%M:%S")
+
+    formatted_updated_at.short_description = "Updated At"
+
+    def get_image_name(self, obj):
+        if obj.image:
+            return obj.image.name.split("/")[-1]
+
+    get_image_name.short_description = "Image Name"
+
+
 @admin.register(ProductSubCategory)
 class AdminProductSubCategory(admin.ModelAdmin):
     """
     Admin options and functionalities for ProductSubCategory model.
     """
-    list_display = ["id", "name", "slug", "get_category_id", "get_category", "is_active"]
+    list_display = ["id", "name", "slug", "get_category_id", "get_category", "get_size_guide_id",
+                    "get_size_guide_image_name", "is_active"]
     prepopulated_fields = {"slug": ["name"]}
     form = ProductSubCategoryForm
     fieldsets = (
@@ -271,6 +328,13 @@ class AdminProductSubCategory(admin.ModelAdmin):
             "Related Category", {
                 "fields": [
                     "category",
+                ],
+            },
+        ),
+        (
+            "Uploading", {
+                "fields": [
+                    "size_guide_image",
                 ],
             },
         ),
@@ -292,6 +356,18 @@ class AdminProductSubCategory(admin.ModelAdmin):
         return obj.category.name
 
     get_category.short_description = "Category"
+
+    def get_size_guide_id(self, obj):
+        if obj.size_guide_image:
+            return obj.size_guide_image.id
+
+    get_size_guide_id.short_description = "Size Guide ID"
+
+    def get_size_guide_image_name(self, obj):
+        if obj.size_guide_image:
+            return obj.size_guide_image.image.name
+
+    get_size_guide_image_name.short_description = "Size Guide"
 
 
 @admin.register(Size)
@@ -468,6 +544,7 @@ class AdminProduct(SummernoteModelAdmin):
         "is_active",
         "is_featured",
         "sales_counter",
+        "additional_information",
     ]
     form = ProductForm
     fieldsets = (
@@ -504,6 +581,13 @@ class AdminProduct(SummernoteModelAdmin):
             "Additional", {
                 "fields": [
                     "is_featured",
+                ],
+            },
+        ),
+        (
+            "Additional Information", {
+                "fields": [
+                    "additional_information",
                 ],
             },
         ),
