@@ -13,6 +13,7 @@ from .models import (
     ProductCategoryImage,
     ProductReview,
     SizeGuideImage,
+    ProductSpecification,
 )
 from django_summernote.widgets import SummernoteWidget
 
@@ -217,18 +218,18 @@ class ProductForm(forms.ModelForm):
         self.fields["subcategory"].help_text = "Select the product subcategory."
         self.fields["gallery"].help_text = "Upload a product image gallery or select images from the gallery."
         self.fields["tags"].help_text = "Provide or select the product tag(s)."
-        self.fields["additional_information"].help_text = "Provide the additional information for this product."
+        self.fields["product_specification"].help_text = "Provide the product specification."
 
         self.fields["brand"].label = "Brand"
         self.fields["category"].label = "Category"
         self.fields["subcategory"].label = "Subcategory"
         self.fields["gallery"].label = "Gallery"
         self.fields["tags"].label = "Tags"
-        self.fields["additional_information"].label = "Additional Information"
+        self.fields["product_specification"].label = "Product Specification"
 
         self.fields["tags"].required = False
         self.fields["gallery"].required = True
-        self.fields["additional_information"].required = True
+        self.fields["product_specification"].required = True
 
         if "category" in self.data:
             category_id = self.data.get(key="category")
@@ -271,3 +272,34 @@ class ProductReviewForm(forms.ModelForm):
         self.fields["product"].help_text = "Select the reviewing product."
         self.fields["product"].label = "Product"
         self.fields["product"].required = True
+
+
+class ProductSpecificationForm(forms.ModelForm):
+    chest = forms.CharField(help_text="Provide the chest size.", label="Chest Size", required=False)
+    shoulder = forms.CharField(help_text="Provide the shoulder size.", label="Shoulder Size", required=False)
+    waist = forms.CharField(help_text="Provide the waist size.", label="Waist Size", required=False)
+    hip = forms.CharField(help_text="Provide the hip size.", label="Hip Size", required=False)
+    sleeve = forms.CharField(help_text="Provide the sleeve size.", label="Sleeve Size", required=False)
+    length = forms.CharField(help_text="Provide the length of the product.", label="Product Length", required=False)
+    width = forms.CharField(help_text="Provide the width of the product.", label="Product Width", required=False)
+    inches = forms.CharField(help_text="Provide the inches.", label="Inches", required=False)
+    knee = forms.CharField(help_text="Provide the knee size.", label="Knee Size", required=False)
+    leg_opening = forms.CharField(help_text="Provide the leg opening size.", label="Leg Opening Size", required=False)
+    made_in = forms.CharField(help_text="Provide the country of production.", label="Country of Production",
+                              required=False)
+    washing_temperature = forms.CharField(help_text="Provide the washing temperature.", label="Washing Temperature",
+                                             required=False)
+    material = forms.CharField(help_text="Provide the material.", label="Product Material", required=False)
+    composition = forms.CharField(help_text="Provide the material composition.", label="Material Composition",
+                                  required=False)
+
+    class Meta:
+        model = ProductSpecification
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(ProductSpecificationForm, self).__init__(*args, **kwargs)
+
+        self.fields["size_guide_image"].help_text = "Upload the image of size guide."
+        self.fields["size_guide_image"].label = "Guide Image"
+        self.fields["size_guide_image"].required = True

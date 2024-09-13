@@ -13,6 +13,7 @@ from .models import (
     ProductCategoryImage,
     ProductReview,
     SizeGuideImage,
+    ProductSpecification,
 )
 from .forms import (
     BrandForm,
@@ -28,6 +29,7 @@ from .forms import (
     ProductCategoryImageForm,
     ProductReviewForm,
     SizeGuideImageForm,
+    ProductSpecificationForm,
 )
 from django.utils.html import format_html_join
 from django.utils.safestring import mark_safe
@@ -544,7 +546,7 @@ class AdminProduct(SummernoteModelAdmin):
         "is_active",
         "is_featured",
         "sales_counter",
-        "additional_information",
+        "product_specification",
     ]
     form = ProductForm
     fieldsets = (
@@ -585,9 +587,9 @@ class AdminProduct(SummernoteModelAdmin):
             },
         ),
         (
-            "Additional Information", {
+            "Specification", {
                 "fields": [
-                    "additional_information",
+                    "product_specification",
                 ],
             },
         ),
@@ -728,3 +730,63 @@ class AdminProductReview(admin.ModelAdmin):
         return obj.product.id
 
     get_product_id.short_description = "Product ID"
+
+
+@admin.register(ProductSpecification)
+class AdminProductSpecification(admin.ModelAdmin):
+    """
+    Admin options and functionalities for ProductSpecification model.
+    """
+    list_display = [
+        "size_guide_image",
+        "made_in",
+        "washing_temperature",
+        "material",
+        "composition",
+        "chest",
+        "shoulder",
+        "waist",
+        "hip",
+        "sleeve",
+        "length",
+        "width",
+        "inches",
+        "knee",
+        "leg_opening",
+    ]
+    form = ProductSpecificationForm
+    fieldsets = (
+        (
+            "General", {
+                "fields": [
+                    "made_in",
+                    "washing_temperature",
+                    "material",
+                    "composition",
+                ]
+            },
+        ),
+        (
+            "Sizes", {
+                "fields": [
+                    "chest",
+                    "shoulder",
+                    "waist",
+                    "hip",
+                    "sleeve",
+                    "length",
+                    "width",
+                    "inches",
+                    "knee",
+                    "leg_opening",
+                ],
+            },
+        ),
+        (
+            "Uploading", {
+                "fields": [
+                    "size_guide_image",
+                ],
+            },
+        ),
+    )

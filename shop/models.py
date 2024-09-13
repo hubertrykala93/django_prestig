@@ -362,28 +362,36 @@ class ProductImage(models.Model):
         self.format = image.format
 
 
-class AdditionalInformation(models.Model):
-    name = models.CharField(max_length=200)
-    size_guide_image = models.OneToOneField(to=SizeGuideImage, on_delete=models.CASCADE, null=True)
+class ProductSpecification(models.Model):
+    size_guide_image = models.OneToOneField(to=SizeGuideImage, on_delete=models.SET_NULL, null=True)
     # Dresses, Skirts, Blouses
-    chest = models.CharField(max_length=10, null=True, blank=True)  # biust
-    shoulder = models.CharField(max_length=10, null=True, blank=True)  # ramiona
-    waist = models.CharField(max_length=10, null=True, blank=True)  # talia
-    hip = models.CharField(max_length=10, null=True, blank=True)  # biodro
-    sleeve = models.CharField(max_length=10, null=True, blank=True)  # rękaw
-    length = models.CharField(max_length=10, null=True, blank=True)  # długość
-    width = models.CharField(max_length=10, null=True, blank=True)
+    chest = models.CharField(max_length=100, null=True, blank=True)  # biust
+    shoulder = models.CharField(max_length=100, null=True, blank=True)  # ramiona
+    waist = models.CharField(max_length=100, null=True, blank=True)  # talia
+    hip = models.CharField(max_length=100, null=True, blank=True)  # biodro
+    sleeve = models.CharField(max_length=100, null=True, blank=True)  # rękaw
+    length = models.CharField(max_length=100, null=True, blank=True)  # długość
+    width = models.CharField(max_length=100, null=True, blank=True)
 
     # Shoes
-    inches = models.CharField(max_length=10, null=True, blank=True)  # długość stopy
+    inches = models.CharField(max_length=100, null=True, blank=True)  # długość stopy
 
     # Pants
-    knee = models.CharField(max_length=10, null=True, blank=True)  # szerokość w kolanie
-    leg_opening = models.CharField(max_length=10, null=True, blank=True)  # końcówka spodni
+    knee = models.CharField(max_length=100, null=True, blank=True)  # szerokość w kolanie
+    leg_opening = models.CharField(max_length=100, null=True, blank=True)  # końcówka spodni
+
+    # General
+    made_in = models.CharField(max_length=100, null=True, blank=True)
+    washing_temperature = models.CharField(max_length=100, null=True, blank=True)
+    material = models.CharField(max_length=100, null=True, blank=True)
+    composition = models.CharField(max_length=200, null=True, blank=True)
 
     class Meta:
-        verbose_name = "Size Guide"
-        verbose_name_plural = "Sizes Guides"
+        verbose_name = "Product Specification"
+        verbose_name_plural = "Product Specifications"
+
+    def __str__(self):
+        return f"{self.id}"
 
 
 class Product(models.Model):
@@ -403,7 +411,7 @@ class Product(models.Model):
     is_active = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False)
     sales_counter = models.IntegerField(default=0)
-    additional_information = models.OneToOneField(to=AdditionalInformation, on_delete=models.CASCADE, null=True)
+    product_specification = models.OneToOneField(to=ProductSpecification, on_delete=models.CASCADE, null=True)
 
     class Meta:
         verbose_name = "Product"
