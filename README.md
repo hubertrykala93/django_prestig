@@ -57,145 +57,113 @@ https://github.com/user-attachments/assets/97d30e92-7c6b-4f81-b2d3-d36c4c00ebc2
 
 ```
 django_prestig
+├── prestig
+│   ├── settings
+│   │   ├── __init__.py
+│   │   ├── development.py
+│   │   ├── __pycache__
+│   │   ├── base.py
+│   │   └── production.py
+│   ├── asgi.py
+│   ├── __init__.py
+│   ├── urls.py
+│   └── wsgi.py
 ├── core
 │   ├── templatetags
-│   │   ├── __init__.py
-│   │   └── core_filters.py
+│   │   ├── string_filters.py
+│   │   └── __init__.py
 │   ├── models.py
 │   ├── __init__.py
 │   ├── apps.py
+│   ├── forms.py
 │   ├── context_processors.py
 │   ├── admin.py
 │   ├── api
 │   │   ├── serializers.py
 │   │   ├── __init__.py
-│   │   ├── permissions.py
 │   │   ├── urls.py
 │   │   └── views.py
 │   ├── templates
 │   │   └── core
-│   │       ├── newsletter_mail.html
-│   │       ├── offcanvas.html
-│   │       ├── page-title.html
-│   │       ├── index.html
-│   │       ├── about.html
-│   │       ├── privacy-policy.html
-│   │       ├── base.html
-│   │       ├── contact.html
-│   │       ├── rodo-rules.html
-│   │       ├── main-menu.html
-│   │       ├── footer.html
-│   │       ├── properties-results.html
-│   │       ├── top-agents.html
-│   │       ├── header.html
-│   │       ├── error.html
-│   │       ├── faq.html
-│   │       └── contact_mail.html
 │   ├── tests.py
 │   ├── urls.py
 │   └── views.py
 ├── requirements.txt
-├── db.sqlite3
-├── blog
+├── shop
 │   ├── templatetags
+│   │   ├── ratings_tags.py
+│   │   ├── subcategory_filter.py
 │   │   ├── __init__.py
-│   │   └── pagination_tag.py
+│   │   └── ratings_converter.py
 │   ├── models.py
 │   ├── __init__.py
 │   ├── apps.py
+│   ├── forms.py
 │   ├── context_processors.py
 │   ├── admin.py
 │   ├── api
 │   │   ├── serializers.py
 │   │   ├── __init__.py
-│   │   ├── permissions.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── templates
+│   │   └── shop
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── blog
+│   ├── templatetags
+│   │   ├── article_filters.py
+│   │   ├── date_filters.py
+│   │   ├── decode_filters.py
+│   │   ├── __init__.py
+│   │   └── pagination_filters.py
+│   ├── models.py
+│   ├── __init__.py
+│   ├── apps.py
+│   ├── forms.py
+│   ├── context_processors.py
+│   ├── admin.py
+│   ├── api
+│   │   ├── serializers.py
+│   │   ├── __init__.py
 │   │   ├── urls.py
 │   │   └── views.py
 │   ├── templates
 │   │   └── blog
-│   │       ├── blog.html
-│   │       ├── pagination.html
-│   │       ├── blog-results.html
-│   │       ├── article-categories.html
-│   │       ├── article-details.html
-│   │       ├── article-tags.html
-│   │       ├── comments-section.html
-│   │       └── sidebar.html
 │   ├── tests.py
 │   ├── urls.py
 │   └── views.py
 ├── README.md
-├── properties
-│   ├── templatetags
-│   │   └── property_filters.py
-│   ├── models.py
-│   ├── __init__.py
-│   ├── apps.py
-│   ├── context_processors.py
-│   ├── admin.py
-│   ├── api
-│   │   ├── serializers.py
-│   │   ├── __init__.py
-│   │   ├── permissions.py
-│   │   ├── urls.py
-│   │   ├── filters.py
-│   │   └── views.py
-│   ├── templates
-│   │   └── properties
-│   │       ├── pagination.html
-│   │       ├── properties-category.html
-│   │       ├── properties-cities.html
-│   │       ├── properties.html
-│   │       ├── schedule_mail.html
-│   │       ├── property-details.html
-│   │       ├── sidebar.html
-│   │       └── add-property.html
-│   ├── tests.py
-│   ├── urls.py
-│   └── views.py
+├── .gitignore
 ├── accounts
-│   ├── signals.py
 │   ├── models.py
 │   ├── __init__.py
-│   ├── tokens.py
 │   ├── apps.py
+│   ├── forms.py
 │   ├── admin.py
 │   ├── api
 │   │   ├── serializers.py
 │   │   ├── __init__.py
-│   │   ├── permissions.py
+│   │   ├── tokens.py
 │   │   ├── urls.py
 │   │   └── views.py
 │   ├── templates
 │   │   └── accounts
-│   │       ├── forget-password.html
-│   │       ├── register.html
-│   │       ├── login.html
-│   │       ├── activation_email.html
-│   │       ├── account-details.html
-│   │       ├── password_reset_email.html
-│   │       └── account-settings.html
 │   ├── tests.py
 │   ├── urls.py
 │   └── views.py
+├── .env
 ├── static
 │   ├── css
-│   │   └── styles.css
+│   │   └── style.css
 │   └── js
 │       ├── user.js
-│       ├── animations.js
+│       ├── global.js
 │       ├── blog.js
 │       ├── scripts.js
-│       ├── general.js
-│       ├── add-property.js
-│       └── fslightbox.js
-├── manage.py
-└── global_estate_hub
-    ├── asgi.py
-    ├── __init__.py
-    ├── settings.py
-    ├── urls.py
-    └── wsgi.py
+│       └── shop.js
+└── manage.py
 ```
 
 <br/>
@@ -238,3 +206,5 @@ And then navigate to ```http://127.0.0.1:8000``` or ```http://localhost:8000```.
 - [Szymon Lewandowski - Frontend Developer](https://github.com/Szymon-Levy)
 
 <br/>
+
+## Screenshots and Videos
