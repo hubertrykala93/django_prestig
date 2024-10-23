@@ -22,7 +22,7 @@ https://github.com/user-attachments/assets/97d30e92-7c6b-4f81-b2d3-d36c4c00ebc2
 **1. Accounts**
 
 - Registration verified by an activation link.
-- Password recovery verified by a one-time code during the user session.
+- Password recovery system.
 - User account management regarding user data, password changes, profile information, shipping information, as well as product management.
 
 **2. Blog**
