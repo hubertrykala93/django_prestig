@@ -13,6 +13,6 @@ Global Estate Hub is an online platform that enables users to browse property li
 
 ## Preview
 
-https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/c8d1be33-6094-4002-98bd-28fd13870889
+https://github.com/user-attachments/assets/97d30e92-7c6b-4f81-b2d3-d36c4c00ebc2
 
 <br/>
