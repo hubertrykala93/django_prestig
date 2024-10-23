@@ -365,20 +365,20 @@ class ProductImage(models.Model):
 class ProductSpecification(models.Model):
     size_guide_image = models.OneToOneField(to=SizeGuideImage, on_delete=models.SET_NULL, null=True)
     # Dresses, Skirts, Blouses
-    chest = models.CharField(max_length=100, null=True, blank=True)  # biust
-    shoulder = models.CharField(max_length=100, null=True, blank=True)  # ramiona
-    waist = models.CharField(max_length=100, null=True, blank=True)  # talia
-    hip = models.CharField(max_length=100, null=True, blank=True)  # biodro
-    sleeve = models.CharField(max_length=100, null=True, blank=True)  # rękaw
-    length = models.CharField(max_length=100, null=True, blank=True)  # długość
+    chest = models.CharField(max_length=100, null=True, blank=True)
+    shoulder = models.CharField(max_length=100, null=True, blank=True)
+    waist = models.CharField(max_length=100, null=True, blank=True)
+    hip = models.CharField(max_length=100, null=True, blank=True)
+    sleeve = models.CharField(max_length=100, null=True, blank=True)
+    length = models.CharField(max_length=100, null=True, blank=True)
     width = models.CharField(max_length=100, null=True, blank=True)
 
     # Shoes
-    inches = models.CharField(max_length=100, null=True, blank=True)  # długość stopy
+    inches = models.CharField(max_length=100, null=True, blank=True)
 
     # Pants
-    knee = models.CharField(max_length=100, null=True, blank=True)  # szerokość w kolanie
-    leg_opening = models.CharField(max_length=100, null=True, blank=True)  # końcówka spodni
+    knee = models.CharField(max_length=100, null=True, blank=True)
+    leg_opening = models.CharField(max_length=100, null=True, blank=True)
 
     # General
     made_in = models.CharField(max_length=100, null=True, blank=True)
