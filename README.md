@@ -251,3 +251,5 @@ And then navigate to ```http://127.0.0.1:8000``` or ```http://localhost:8000```.
 https://github.com/user-attachments/assets/592c88a6-1a40-421b-8eaa-ddaba445b19e
 
 https://github.com/user-attachments/assets/b0a56c06-d4aa-4237-a0f0-e8550280d4ce
+
+https://github.com/user-attachments/assets/0974463f-cec7-4d03-9487-daca63b0aec3
