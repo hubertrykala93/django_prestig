@@ -248,6 +248,6 @@ And then navigate to ```http://127.0.0.1:8000``` or ```http://localhost:8000```.
 
 ![profile_screenshot](https://github.com/user-attachments/assets/737b8032-e469-402f-829a-63d644576322)
 
-https://github.com/user-attachments/assets/491a0db0-b547-4512-b651-6243e4e1700a
+https://github.com/user-attachments/assets/592c88a6-1a40-421b-8eaa-ddaba445b19e
 
 https://github.com/user-attachments/assets/b48a6745-47d6-4a66-bb92-19b1f5070a05
