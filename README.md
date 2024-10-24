@@ -243,3 +243,5 @@ And then navigate to ```http://127.0.0.1:8000``` or ```http://localhost:8000```.
 <br/>
 
 ## Screenshots and Videos
+
+![sign_in_sign_up](https://github.com/user-attachments/assets/6902be04-590f-42f0-b75f-bee2eb8f5925)
