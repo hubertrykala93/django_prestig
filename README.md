@@ -166,6 +166,155 @@ django_prestig
 └── manage.py
 ```
 
+```
+.
+├── README.md
+├── accounts
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   ├── serializers.py
+│   │   ├── tokens.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── apps.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── templates
+│   │   └── accounts
+│   │       ├── account-activation-email.html
+│   │       ├── account-aside.html
+│   │       ├── account-settings.html
+│   │       ├── change-password.html
+│   │       ├── comments-summary.html
+│   │       ├── delivery-details.html
+│   │       ├── forgot-password-email.html
+│   │       ├── forgot-password.html
+│   │       ├── login.html
+│   │       ├── my-account.html
+│   │       ├── product-returns.html
+│   │       ├── product-reviews.html
+│   │       ├── profile-page.html
+│   │       ├── profile-settings.html
+│   │       ├── purchased-products.html
+│   │       └── register.html
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── blog
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   ├── serializers.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── apps.py
+│   ├── context_processors.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── templates
+│   │   └── blog
+│   │       ├── article-details.html
+│   │       ├── articles-by-category.html
+│   │       ├── articles-by-tag.html
+│   │       ├── blog.html
+│   │       ├── pagination.html
+│   │       └── sidebar.html
+│   ├── templatetags
+│   │   ├── __init__.py
+│   │   ├── article_filters.py
+│   │   ├── date_filters.py
+│   │   ├── decode_filters.py
+│   │   └── pagination_filters.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── core
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   ├── serializers.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── apps.py
+│   ├── context_processors.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── templates
+│   │   └── core
+│   │       ├── 404.html
+│   │       ├── about.html
+│   │       ├── base.html
+│   │       ├── contact-mail.html
+│   │       ├── contact-us.html
+│   │       ├── footer.html
+│   │       ├── header.html
+│   │       ├── index.html
+│   │       ├── messages.html
+│   │       ├── newsletter-mail.html
+│   │       ├── page-title.html
+│   │       └── privacy-policy.html
+│   ├── templatetags
+│   │   ├── __init__.py
+│   │   └── string_filters.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── manage.py
+├── prestig
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── development.py
+│   │   └── production.py
+│   ├── urls.py
+│   └── wsgi.py
+├── requirements.txt
+├── shop
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   ├── serializers.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── apps.py
+│   ├── context_processors.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── templates
+│   │   └── shop
+│   │       ├── product-card.html
+│   │       ├── product-details.html
+│   │       ├── product-filters.html
+│   │       └── shop.html
+│   ├── templatetags
+│   │   ├── __init__.py
+│   │   ├── ratings_converter.py
+│   │   ├── ratings_tags.py
+│   │   └── subcategory_filter.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── static
+│   ├── css
+│   │   └── style.css
+│   └── js
+│       ├── blog.js
+│       ├── global.js
+│       ├── scripts.js
+│       ├── shop.js
+│       └── user.js
+└── structure.txt
+
+25 directories, 119 files
+```
+
 <br/>
 
 ## Installation
