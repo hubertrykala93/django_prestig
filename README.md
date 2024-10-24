@@ -7,7 +7,7 @@
 
 ## Prestig
 
-Prestig is a modern e-commerce platform designed for selling exclusive clothing for women, children, and youth. The project is built on a responsive and scalable interface, ensuring a smooth and intuitive user experience across various devices. The backend has been optimized for performance and security. The code structure is modular, allowing for easy implementation of new features and scalable growth of the project in the future.
+Prestig is a modern e-commerce platform designed for selling exclusive clothing for men, women, children, and youth. The project is built on a responsive and scalable interface, ensuring a smooth and intuitive user experience across various devices. The backend has been optimized for performance and security. The code structure is modular, allowing for easy implementation of new features and scalable growth of the project in the future.
 
 <br/>
 
