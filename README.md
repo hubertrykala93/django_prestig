@@ -190,18 +190,15 @@ https://github.com/user-attachments/assets/97d30e92-7c6b-4f81-b2d3-d36c4c00ebc2
 │   ├── tests.py
 │   ├── urls.py
 │   └── views.py
-├── static
-│   ├── css
-│   │   └── style.css
-│   └── js
-│       ├── blog.js
-│       ├── global.js
-│       ├── scripts.js
-│       ├── shop.js
-│       └── user.js
-└── structure.txt
-
-25 directories, 119 files
+└── static
+    ├── css
+    │   └── style.css
+    └── js
+        ├── blog.js
+        ├── global.js
+        ├── scripts.js
+        ├── shop.js
+        └── user.js
 ```
 
 <br/>
